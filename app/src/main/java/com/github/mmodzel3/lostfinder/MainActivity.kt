@@ -5,29 +5,31 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
-import androidx.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
+    private val OSMDROID_BASE_CACHE_DIR = "osmdroid"
+    private val OSMDROID_TILE_CACHE_DIR = "tile"
+
     private val REQUEST_PERMISSIONS_CODE = 1
-    private val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
     private val DENIED_MAP_PERMISSIONS_MSG =
-            "Without write and localisation permissions application will not work properly. " +
-                    "Restart application and accept requested permissions."
+            "Without localisation permission application will not work properly. " +
+                    "Restart application and accept requested permission."
 
     private var map : MapView? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx: Context = applicationContext
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
 
         setContentView(R.layout.activity_main)
 
@@ -68,6 +70,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMap() {
+        configMap()
+
         map = findViewById(R.id.map)
         map?.setTileSource(TileSourceFactory.MAPNIK)
 
@@ -75,6 +79,22 @@ class MainActivity : AppCompatActivity() {
         mapController?.setZoom(9.5)
         val startPoint = GeoPoint(48.8583, 2.2944)
         mapController?.setCenter(startPoint)
+    }
+
+    private fun configMap() {
+        val ctx: Context = applicationContext
+
+        configMapCache()
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+    }
+
+    private fun configMapCache() {
+        val osmConfiguration = Configuration.getInstance()
+        val cacheBasePath = File(cacheDir.absolutePath, OSMDROID_BASE_CACHE_DIR)
+        val tileCache = File(cacheBasePath.absolutePath, OSMDROID_TILE_CACHE_DIR)
+
+        osmConfiguration.osmdroidBasePath = cacheBasePath
+        osmConfiguration.osmdroidTileCache = tileCache
     }
 
     private fun requestPermissionsIfNecessary(permissions: Array<String>) {
