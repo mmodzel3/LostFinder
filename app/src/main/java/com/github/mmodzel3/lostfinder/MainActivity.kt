@@ -4,10 +4,10 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -18,6 +18,9 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_PERMISSIONS_CODE = 1
     private val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private val DENIED_MAP_PERMISSIONS_MSG =
+            "Without write and localisation permissions application will not work properly. " +
+                    "Restart application and accept requested permissions."
 
     private var map : MapView? = null;
 
@@ -40,6 +43,28 @@ class MainActivity : AppCompatActivity() {
     public override fun onPause() {
         super.onPause()
         map?.onPause()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_PERMISSIONS_CODE -> {
+                if (!checkGrantedPrivileges(grantResults)) {
+                    Toast.makeText(this, DENIED_MAP_PERMISSIONS_MSG, Toast.LENGTH_LONG)
+                            .show()
+                }
+            }
+        }
+    }
+
+    private fun checkGrantedPrivileges(grants: IntArray): Boolean {
+        for (grant in grants) {
+            if (grant != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+
+        return true
     }
 
     private fun initMap() {
