@@ -75,6 +75,8 @@ class MainActivity : AppCompatActivity() {
         map = findViewById(R.id.map)
         map?.setTileSource(TileSourceFactory.MAPNIK)
 
+        map?.setMultiTouchControls(true);
+
         val mapController = map?.controller
         mapController?.setZoom(9.5)
         val startPoint = GeoPoint(48.8583, 2.2944)
