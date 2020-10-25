@@ -12,6 +12,7 @@ import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 import java.io.File
 
 
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         map?.setTileSource(TileSourceFactory.MAPNIK)
 
         map?.setMultiTouchControls(true);
+        addRotationGestureToMap()
 
         val mapController = map?.controller
         mapController?.setZoom(9.5)
@@ -97,6 +99,12 @@ class MainActivity : AppCompatActivity() {
 
         osmConfiguration.osmdroidBasePath = cacheBasePath
         osmConfiguration.osmdroidTileCache = tileCache
+    }
+
+    private fun addRotationGestureToMap() {
+        val rotationGestureOverlay = RotationGestureOverlay(map)
+        rotationGestureOverlay.setEnabled(true)
+        map?.overlays?.add(rotationGestureOverlay)
     }
 
     private fun requestPermissionsIfNecessary(permissions: Array<String>) {
