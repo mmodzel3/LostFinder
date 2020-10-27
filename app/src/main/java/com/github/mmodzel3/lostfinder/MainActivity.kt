@@ -1,17 +1,27 @@
 package com.github.mmodzel3.lostfinder
 
 import android.Manifest
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.os.IBinder
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
+import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
+import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
+import com.github.mmodzel3.lostfinder.location.CurrentLocationService
+import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 import java.io.File
 
@@ -23,11 +33,20 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_PERMISSIONS_CODE = 1
     private val MAP_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private val DENIED_MAP_PERMISSIONS_MSG =
-            "Without localisation permission application will not work properly. " +
-                    "Restart application and accept requested permission."
+    private lateinit var map : MapView
+    private lateinit var mapController : IMapController
+    private lateinit var currentLocationBinder : CurrentLocationBinder
+    private lateinit var currentLocationMarker: Marker
+    private val currentLocationConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            currentLocationBinder = service as CurrentLocationBinder
+            initCurrentLocationMarker()
+        }
 
-    private var map : MapView? = null;
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,25 +55,30 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissionsIfNecessary(MAP_PERMISSIONS)
         initMap()
+
+        Intent(this, CurrentLocationService::class.java).also { intent ->
+            bindService(intent, currentLocationConnection, Context.BIND_AUTO_CREATE)
+        }
     }
 
     public override fun onResume() {
         super.onResume()
-        map?.onResume()
+        map.onResume()
     }
 
     public override fun onPause() {
         super.onPause()
-        map?.onPause()
+        map.onPause()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_PERMISSIONS_CODE -> {
                 if (!checkGrantedPrivileges(grantResults)) {
-                    Toast.makeText(this, DENIED_MAP_PERMISSIONS_MSG, Toast.LENGTH_LONG)
-                            .show()
+                    val deniedLocationMsg = R.string.denied_location_permission_msg
+                    Toast.makeText(this, deniedLocationMsg, Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -74,15 +98,27 @@ class MainActivity : AppCompatActivity() {
         configMap()
 
         map = findViewById(R.id.map)
-        map?.setTileSource(TileSourceFactory.MAPNIK)
+        map.setTileSource(TileSourceFactory.MAPNIK)
 
-        map?.setMultiTouchControls(true);
+        map.setMultiTouchControls(true);
         addRotationGestureToMap()
 
-        val mapController = map?.controller
-        mapController?.setZoom(9.5)
-        val startPoint = GeoPoint(48.8583, 2.2944)
-        mapController?.setCenter(startPoint)
+        mapController = map.controller
+        mapController.setZoom(9.5)
+    }
+
+    private fun initCurrentLocationMarker() {
+        currentLocationMarker = Marker(map)
+        currentLocationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        map.overlays.add(currentLocationMarker)
+
+        currentLocationBinder.registerListener(object : CurrentLocationListener {
+            override fun onLocalisationChange(location: Location) {
+                val point = GeoPoint(location)
+                currentLocationMarker.position = point
+                mapController.setCenter(point)
+            }
+        })
     }
 
     private fun configMap() {
@@ -104,7 +140,7 @@ class MainActivity : AppCompatActivity() {
     private fun addRotationGestureToMap() {
         val rotationGestureOverlay = RotationGestureOverlay(map)
         rotationGestureOverlay.setEnabled(true)
-        map?.overlays?.add(rotationGestureOverlay)
+        map.overlays.add(rotationGestureOverlay)
     }
 
     private fun requestPermissionsIfNecessary(permissions: Array<String>) {
@@ -115,9 +151,10 @@ class MainActivity : AppCompatActivity() {
 
         if (permissionsToRequest.isNotEmpty()) {
             ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toTypedArray(),
-                    REQUEST_PERMISSIONS_CODE)
+                this,
+                permissionsToRequest.toTypedArray(),
+                REQUEST_PERMISSIONS_CODE
+            )
         }
     }
 }
