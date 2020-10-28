@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">LostFinder</string>
+    <string name="location_notification_title">LostFinder</string>
+
+    <string name="location_notification_message">
+        Your location is used to track your movement.
+    </string>
+
+    <string name="location_notification_channel_name">
+        Location
+    </string>
+
+    <string name="location_notification_channel_description">
+        Location service notification
+    </string>
+
+    <string name="denied_location_permission_msg">
+        Without location permission application will not work properly.
+        Your location is needed to take part in lost finding.
+        Restart application and accept requested permission.
+    </string>
+
+    <string name="desc_center_map_user_location">Center map to user location</string>
 </resources>
