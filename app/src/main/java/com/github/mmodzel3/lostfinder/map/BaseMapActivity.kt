@@ -1,7 +1,6 @@
 package com.github.mmodzel3.lostfinder.map
 
 import android.Manifest
-import android.os.Bundle
 import androidx.preference.PreferenceManager
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.permissions.AppCompactActivityWithPermissionsRequest

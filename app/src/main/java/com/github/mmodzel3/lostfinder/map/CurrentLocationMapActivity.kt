@@ -5,9 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.location.Location
-import android.os.Bundle
 import android.os.IBinder
-import com.github.mmodzel3.lostfinder.R
+import android.view.View
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
@@ -59,9 +58,7 @@ open class CurrentLocationMapActivity : BaseMapActivity() {
     private fun listenToCurrentLocation() {
         currentLocationBinder.registerListener(object : CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
-                val point = GeoPoint(location)
-                currentLocationMarker.position = point
-                mapController.setCenter(point)
+                currentLocationMarker.position = GeoPoint(location)
             }
         })
     }

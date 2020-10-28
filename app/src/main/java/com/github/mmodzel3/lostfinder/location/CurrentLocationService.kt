@@ -101,13 +101,13 @@ class CurrentLocationService : Service() {
             locationRequest = createLocationRequest()
             locationCallback = createLocationCallback()
 
+            fusedLocationClient.requestLocationUpdates(locationRequest,
+                    locationCallback,
+                    Looper.getMainLooper())
+
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 onLocationChange(location)
             }
-
-            fusedLocationClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-                Looper.getMainLooper())
         }
     }
 
