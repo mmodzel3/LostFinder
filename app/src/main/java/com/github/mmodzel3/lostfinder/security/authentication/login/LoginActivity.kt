@@ -1,4 +1,4 @@
-package com.github.mmodzel3.lostfinder.security.authentication.login
+package com.github.mmodzel3.lostfinder.security.authentication.login.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
