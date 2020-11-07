@@ -24,4 +24,5 @@
     <string name="email">Email address</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="account_type">com.github.mmodzel3.lostfinder</string>
 </resources>
