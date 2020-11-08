@@ -11,7 +11,7 @@ import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface
 
 class LoginService : LoginEndpointServiceAbstract() {
     private val binder = LoginServiceBinder(this)
-    private val accountManager = AccountManager.get(applicationContext)
+    private val accountManager: AccountManager by lazy { AccountManager.get(applicationContext) }
     private val accountType
         get() = applicationContext.resources.getString(R.string.account_type)
 
@@ -19,7 +19,7 @@ class LoginService : LoginEndpointServiceAbstract() {
         return binder
     }
 
-    fun login(emailAddress: String, password: String): String {
+    suspend fun login(emailAddress: String, password: String): String {
         val token: String = sendLoginRequestAndGetToken(emailAddress, password)
 
         updateAccount(emailAddress, password)

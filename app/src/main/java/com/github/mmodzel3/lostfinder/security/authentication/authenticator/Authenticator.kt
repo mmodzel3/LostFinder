@@ -10,6 +10,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.security.authentication.login.activity.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
@@ -17,9 +19,14 @@ import com.github.mmodzel3.lostfinder.security.authentication.login.LoginService
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginServiceBinder
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
+import java.util.concurrent.CompletableFuture
 
 
 class Authenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
+
     lateinit var loginServiceBinder: LoginServiceBinder
     lateinit var loginServiceConnection: ServiceConnection
 
@@ -78,7 +85,9 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
                               authTokenType: String,
                               options: Bundle): Bundle {
 
-        val authToken : String = retrieveAccountAuthToken(account, authTokenType)
+        val authToken = runBlocking {
+            retrieveAccountAuthToken(account, authTokenType)
+        }
 
         return if (authToken.isEmpty()) {
             createStoreTokenBundle(account, authToken)
@@ -87,7 +96,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         }
     }
 
-    private fun retrieveAccountAuthToken(account: Account, authTokenType: String) : String {
+    private suspend fun retrieveAccountAuthToken(account: Account, authTokenType: String) : String {
         val accountManager: AccountManager = AccountManager.get(context)
         val authToken: String = accountManager.peekAuthToken(account, authTokenType)
 

@@ -8,6 +8,6 @@ import retrofit2.http.Query
 
 interface LoginEndpoint : ServerEndpointInterface {
     @POST("/login")
-    fun login(@Query("email") emailAddress: String,
-                @Query("password") password : String): Call<String>
+    suspend fun login(@Query("email") emailAddress: String,
+                @Query("password") password : String): LoginInfo
 }

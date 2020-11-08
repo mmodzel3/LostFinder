@@ -8,5 +8,5 @@ abstract class CryptorAbstract protected constructor() {
     }
 
     protected val keyStore: KeyStore
-        get() = KeyStore.getInstance(ANDROID_KEY_STORE)
+        get() = KeyStore.getInstance(ANDROID_KEY_STORE).apply { load(null) }
 }

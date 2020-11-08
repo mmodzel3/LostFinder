@@ -1,21 +1,22 @@
 package com.github.mmodzel3.lostfinder.security.authentication.login.activity
 
-import android.accounts.Account
-import android.accounts.AccountManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
-import android.os.Bundle
-import android.os.IBinder
-import android.view.View
+import android.os.*
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccessErrorException
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginService
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginServiceBinder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     lateinit var loginServiceBinder: LoginServiceBinder
@@ -26,15 +27,20 @@ class LoginActivity : AppCompatActivity() {
 
         bindToLoginService()
         setContentView(R.layout.activity_login)
+
+        initLoginButton()
     }
 
-    fun onLoginClick() {
+    private fun initLoginButton() {
+        val loginButton: Button = findViewById(R.id.activity_login_bt_login)
+        loginButton.setOnClickListener { onLoginClick() }
+    }
+
+    private fun onLoginClick() {
         val emailAddress: EditText = findViewById(R.id.activity_login_et_email_address)
         val password: EditText = findViewById(R.id.activity_login_et_password)
 
-        disableLogin()
-        loginServiceBinder.login(emailAddress.text.toString(), password.text.toString())
-        enableLogin()
+        login(emailAddress.text.toString(), password.text.toString())
     }
 
     private fun bindToLoginService() {
@@ -62,5 +68,23 @@ class LoginActivity : AppCompatActivity() {
     private fun disableLogin() {
         val loginButton: Button = findViewById(R.id.activity_login_bt_login)
         loginButton.isEnabled = false
+    }
+
+    private fun login(emailAddress: String, password: String) {
+        val activity = this
+
+        disableLogin()
+        lifecycleScope.launch {
+            try {
+                loginServiceBinder.login(emailAddress, password)
+                enableLogin()
+            } catch (e: LoginAccessErrorException) {
+                Toast.makeText(activity, R.string.err_login_access, Toast.LENGTH_LONG).show()
+                enableLogin()
+            } catch (e: LoginInvalidCredentialsException) {
+                Toast.makeText(activity, R.string.err_login_invalid_credentials, Toast.LENGTH_LONG).show()
+                enableLogin()
+            }
+        }
     }
 }

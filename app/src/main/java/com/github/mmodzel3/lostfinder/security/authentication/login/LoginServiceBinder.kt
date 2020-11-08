@@ -1,15 +1,20 @@
 package com.github.mmodzel3.lostfinder.security.authentication.login
 
 import android.os.Binder
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class LoginServiceBinder(private val loginService: LoginService) : Binder() {
 
-    fun login(emailAddress: String, password: String): String {
-        return loginService.login(emailAddress, password)
+    suspend fun login(emailAddress: String, password: String): String {
+        return withContext(Dispatchers.IO) {
+            loginService.login(emailAddress, password)
+        }
     }
 
-    fun sendLoginRequestAndGetToken(emailAddress: String, password: String): String {
-        return loginService.sendLoginRequestAndGetToken(emailAddress, password)
+    suspend fun sendLoginRequestAndGetToken(emailAddress: String, password: String): String {
+        return withContext(Dispatchers.IO) {
+            loginService.sendLoginRequestAndGetToken(emailAddress, password)
+        }
     }
 }

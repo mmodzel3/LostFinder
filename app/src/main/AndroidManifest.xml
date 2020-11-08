@@ -21,6 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LostFinder">
 
+        <activity android:name=".security.authentication.login.activity.LoginActivity" />
+
         <service
             android:name=".security.authentication.authenticator.AuthenticatorService"
             android:enabled="true"

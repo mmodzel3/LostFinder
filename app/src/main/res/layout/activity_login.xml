@@ -27,6 +27,7 @@
             android:autofillHints="false"
             android:ems="10"
             android:hint="@string/email"
+            android:text="admin@owner.com"
             android:inputType="textEmailAddress" />
 
         <View
@@ -43,6 +44,7 @@
             android:autofillHints="false"
             android:ems="10"
             android:hint="@string/password"
+            android:text="admin"
             android:inputType="textPassword" />
 
         <View
@@ -63,8 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/login"
-                android:enabled="false"
-                android:onClick="onLoginClick"/>
+                android:enabled="false" />
 
         </LinearLayout>
 
