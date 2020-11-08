@@ -15,6 +15,8 @@ import com.github.mmodzel3.lostfinder.security.authentication.login.exceptions.L
 import com.github.mmodzel3.lostfinder.security.authentication.login.exceptions.LoginInvalidCredentialsException
 import com.github.mmodzel3.lostfinder.security.authentication.login.service.LoginService
 import com.github.mmodzel3.lostfinder.security.authentication.login.service.LoginServiceBinder
+import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
+import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
 
 
 class Authenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
@@ -93,7 +95,12 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
             return authToken
         } else {
             try {
-                return loginServiceBinder.login(account.name, accountManager.getPassword(account))
+                val encryptedPassword: String = accountManager.getPassword(account)
+                        ?: throw LoginInvalidCredentialsException()
+                val decoder: DecryptorInterface = Decryptor.getInstance()
+                val password: String = decoder.decrypt(encryptedPassword, context)
+
+                return loginServiceBinder.login(account.name, password)
             } catch (e : LoginAccessErrorException) {
                 return ""
             } catch (e : LoginInvalidCredentialsException) {
