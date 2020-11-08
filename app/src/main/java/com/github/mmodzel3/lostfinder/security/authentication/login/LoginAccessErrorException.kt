@@ -1,4 +1,4 @@
-package com.github.mmodzel3.lostfinder.security.authentication.login.exceptions
+package com.github.mmodzel3.lostfinder.security.authentication.login
 
 import com.github.mmodzel3.lostfinder.server.ServerEndpointAccessErrorException
 

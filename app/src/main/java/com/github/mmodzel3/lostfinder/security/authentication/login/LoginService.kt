@@ -1,38 +1,71 @@
-package com.github.mmodzel3.lostfinder.security.authentication.login.service
+package com.github.mmodzel3.lostfinder.security.authentication.login
 
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
-import com.github.mmodzel3.lostfinder.security.authentication.login.exceptions.LoginAccessErrorException
-import com.github.mmodzel3.lostfinder.security.authentication.login.exceptions.LoginInvalidCredentialsException
-import com.github.mmodzel3.lostfinder.server.ServerEndpointServiceAbstract
-import retrofit2.Response
+import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
+import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface
 
-class LoginService : ServerEndpointServiceAbstract() {
+class LoginService : LoginEndpointServiceAbstract() {
     private val binder = LoginServiceBinder(this)
-    private val loginEndpoint = createEndpoint<LoginEndpoint>()
-
-    fun login(emailAddress: String, password: String): String {
-        val loginCall = loginEndpoint.login(emailAddress, password)
-        val response = loginCall.execute()
-
-        if (response.isSuccessful) {
-            return extractTokenFromResponse(response)
-        } else {
-            throw LoginAccessErrorException()
-        }
-    }
-
-    private fun extractTokenFromResponse(response: Response<String>) : String {
-        val token: String? = response.body()
-
-        return if (!token.isNullOrEmpty()) {
-            token
-        } else {
-            throw LoginInvalidCredentialsException()
-        }
-    }
+    private val accountManager = AccountManager.get(applicationContext)
+    private val accountType
+        get() = applicationContext.resources.getString(R.string.account_type)
 
     override fun onBind(intent: Intent?): IBinder? {
         return binder
+    }
+
+    fun login(emailAddress: String, password: String): String {
+        val token: String = sendLoginRequestAndGetToken(emailAddress, password)
+
+        updateAccount(emailAddress, password)
+        return token
+    }
+
+    private fun updateAccount(emailAddress: String, password: String?) {
+        val accounts: Array<out Account> = accountManager.getAccountsByType(accountType)
+        val encryptedPassword: String? = password?.let { encryptPassword(it) }
+
+        if (accounts.isEmpty()){
+            addAccount(emailAddress, encryptedPassword)
+        } else {
+            changeAccountCredentials(emailAddress, encryptedPassword)
+        }
+    }
+
+    private fun encryptPassword(password: String) : String {
+        val encryptor: EncryptorInterface = Encryptor.getInstance()
+        return encryptor.encrypt(password, applicationContext)
+    }
+
+    private fun addAccount(emailAddress: String, encryptedPassword: String?) {
+        val account = Account(emailAddress, accountType)
+        accountManager.addAccountExplicitly(account, encryptedPassword, null)
+    }
+
+    private fun removeAccount() {
+        val account: Account = accountManager.getAccountsByType(accountType).first()
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
+            accountManager.removeAccount(account, {}, null)
+        } else {
+            accountManager.removeAccountExplicitly(account)
+        }
+    }
+
+    private fun changeAccountCredentials(emailAddress: String, encryptedPassword: String?) {
+        val account: Account = accountManager.getAccountsByType(accountType).first()
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            accountManager.setPassword(account, encryptedPassword)
+            accountManager.renameAccount(account, emailAddress, null, null)
+        } else {
+            removeAccount()
+            addAccount(emailAddress, encryptedPassword)
+        }
     }
 }

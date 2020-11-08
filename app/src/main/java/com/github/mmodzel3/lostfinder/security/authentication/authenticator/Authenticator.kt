@@ -11,10 +11,10 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import com.github.mmodzel3.lostfinder.security.authentication.login.activity.LoginActivity
-import com.github.mmodzel3.lostfinder.security.authentication.login.exceptions.LoginAccessErrorException
-import com.github.mmodzel3.lostfinder.security.authentication.login.exceptions.LoginInvalidCredentialsException
-import com.github.mmodzel3.lostfinder.security.authentication.login.service.LoginService
-import com.github.mmodzel3.lostfinder.security.authentication.login.service.LoginServiceBinder
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccessErrorException
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginService
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginServiceBinder
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
 
