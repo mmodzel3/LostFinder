@@ -4,11 +4,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.*
+import android.os.Bundle
+import android.os.IBinder
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
@@ -38,8 +40,9 @@ class LoginActivity : AppCompatActivity() {
     private fun onLoginClick() {
         val emailAddress: EditText = findViewById(R.id.activity_login_et_email_address)
         val password: EditText = findViewById(R.id.activity_login_et_password)
+        val savePassword: SwitchCompat = findViewById(R.id.activity_login_sw_save_password)
 
-        login(emailAddress.text.toString(), password.text.toString())
+        login(emailAddress.text.toString(), password.text.toString(), savePassword.isChecked)
     }
 
     private fun bindToLoginService() {
@@ -69,13 +72,13 @@ class LoginActivity : AppCompatActivity() {
         loginButton.isEnabled = false
     }
 
-    private fun login(emailAddress: String, password: String) {
+    private fun login(emailAddress: String, password: String, savePassword: Boolean) {
         val activity = this
 
         disableLogin()
         lifecycleScope.launch {
             try {
-                loginServiceBinder.login(emailAddress, password)
+                loginServiceBinder.login(emailAddress, password, savePassword)
                 enableLogin()
             } catch (e: LoginEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.err_login_access, Toast.LENGTH_LONG).show()

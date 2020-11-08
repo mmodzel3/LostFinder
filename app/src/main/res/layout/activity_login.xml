@@ -59,6 +59,13 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/activity_login_sw_save_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/save_password" />
+
             <Button
                 android:id="@+id/activity_login_bt_login"
                 android:layout_width="0dp"

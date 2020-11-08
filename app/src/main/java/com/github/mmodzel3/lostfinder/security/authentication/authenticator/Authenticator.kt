@@ -104,7 +104,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
                 val decoder: DecryptorInterface = Decryptor.getInstance()
                 val password: String = decoder.decrypt(encryptedPassword, context)
 
-                return loginServiceBinder.login(account.name, password)
+                return loginServiceBinder.login(account.name, password, true)
             } catch (e : LoginEndpointAccessErrorException) {
                 return ""
             } catch (e : LoginInvalidCredentialsException) {

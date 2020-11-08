@@ -21,10 +21,15 @@ class LoginService : LoginEndpointServiceAbstract() {
         return binder
     }
 
-    suspend fun login(emailAddress: String, password: String): String {
+    suspend fun login(emailAddress: String, password: String, savePassword: Boolean = false): String {
         val loginInfo: LoginInfo = retrieveLoginInfoAndCheckToken(emailAddress, password)
 
-        updateAccount(emailAddress, password, loginInfo)
+        if (savePassword) {
+            updateAccount(emailAddress, password, loginInfo)
+        } else {
+            updateAccount(emailAddress, null, loginInfo)
+        }
+
         return loginInfo.token
     }
 

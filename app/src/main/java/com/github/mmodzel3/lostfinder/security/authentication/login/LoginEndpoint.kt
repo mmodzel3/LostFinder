@@ -1,7 +1,6 @@
 package com.github.mmodzel3.lostfinder.security.authentication.login
 
 import com.github.mmodzel3.lostfinder.server.ServerEndpointInterface
-import retrofit2.Call
 import retrofit2.http.POST
 import retrofit2.http.Query
 
