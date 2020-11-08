@@ -1,36 +1,30 @@
 package com.github.mmodzel3.lostfinder.security.authentication.login
 
-import android.util.Log
 import com.github.mmodzel3.lostfinder.server.ServerEndpointServiceAbstract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Response
+import java.io.IOException
 
 abstract class LoginEndpointServiceAbstract : ServerEndpointServiceAbstract() {
     private val loginEndpoint = createEndpoint<LoginEndpoint>()
 
-    suspend fun sendLoginRequestAndGetToken(emailAddress: String, password: String): String {
-        return sendLoginRequest(emailAddress, password).token
-    }
+    protected suspend fun retrieveLoginInfoAndCheckToken(emailAddress: String, password: String): LoginInfo {
+        val loginInfo: LoginInfo = retrieveLoginInfo(emailAddress, password)
 
-    private suspend fun sendLoginRequest(emailAddress: String, password: String): LoginInfo {
-        try {
-            return withContext(Dispatchers.IO)
-                { loginEndpoint.login(emailAddress, password) }
-
-        } catch (e: Exception) {
-            Log.d("LoginService", e.message ?: "Exception")
-            throw e
+        if (loginInfo.token.isNotEmpty()) {
+            return loginInfo
+        } else {
+            throw LoginInvalidCredentialsException()
         }
     }
 
-    private fun extractTokenFromResponse(response: Response<LoginInfo>) : String {
-        val token: String? = response.body()?.token
+    private suspend fun retrieveLoginInfo(emailAddress: String, password: String): LoginInfo {
+        try {
+            return withContext(Dispatchers.IO)
+            { loginEndpoint.login(emailAddress, password) }
 
-        return if (!token.isNullOrEmpty()) {
-            token
-        } else {
-            throw LoginInvalidCredentialsException()
+        } catch (e: IOException) {
+            throw LoginEndpointAccessErrorException()
         }
     }
 }

@@ -10,19 +10,14 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.security.authentication.login.activity.LoginActivity
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccessErrorException
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginService
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginServiceBinder
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.CompletableFuture
 
 
 class Authenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
@@ -110,7 +105,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
                 val password: String = decoder.decrypt(encryptedPassword, context)
 
                 return loginServiceBinder.login(account.name, password)
-            } catch (e : LoginAccessErrorException) {
+            } catch (e : LoginEndpointAccessErrorException) {
                 return ""
             } catch (e : LoginInvalidCredentialsException) {
                 return ""

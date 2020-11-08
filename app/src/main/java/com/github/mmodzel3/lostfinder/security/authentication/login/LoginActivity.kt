@@ -11,11 +11,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccessErrorException
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginService
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginServiceBinder
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -78,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
             try {
                 loginServiceBinder.login(emailAddress, password)
                 enableLogin()
-            } catch (e: LoginAccessErrorException) {
+            } catch (e: LoginEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.err_login_access, Toast.LENGTH_LONG).show()
                 enableLogin()
             } catch (e: LoginInvalidCredentialsException) {

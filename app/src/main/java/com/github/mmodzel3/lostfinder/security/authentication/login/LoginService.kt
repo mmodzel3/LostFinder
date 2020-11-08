@@ -14,19 +14,21 @@ class LoginService : LoginEndpointServiceAbstract() {
     private val accountManager: AccountManager by lazy { AccountManager.get(applicationContext) }
     private val accountType
         get() = applicationContext.resources.getString(R.string.account_type)
+    private val tokenType
+        get() = applicationContext.resources.getString(R.string.token_type)
 
     override fun onBind(intent: Intent?): IBinder? {
         return binder
     }
 
     suspend fun login(emailAddress: String, password: String): String {
-        val token: String = sendLoginRequestAndGetToken(emailAddress, password)
+        val loginInfo: LoginInfo = retrieveLoginInfoAndCheckToken(emailAddress, password)
 
-        updateAccount(emailAddress, password)
-        return token
+        updateAccount(emailAddress, password, loginInfo)
+        return loginInfo.token
     }
 
-    private fun updateAccount(emailAddress: String, password: String?) {
+    private fun updateAccount(emailAddress: String, password: String?, loginInfo: LoginInfo) {
         val accounts: Array<out Account> = accountManager.getAccountsByType(accountType)
         val encryptedPassword: String? = password?.let { encryptPassword(it) }
 
@@ -35,6 +37,8 @@ class LoginService : LoginEndpointServiceAbstract() {
         } else {
             changeAccountCredentials(emailAddress, encryptedPassword)
         }
+
+        updateToken(loginInfo.token)
     }
 
     private fun encryptPassword(password: String) : String {
@@ -67,5 +71,10 @@ class LoginService : LoginEndpointServiceAbstract() {
             removeAccount()
             addAccount(emailAddress, encryptedPassword)
         }
+    }
+
+    private fun updateToken(token: String) {
+        val account: Account = accountManager.getAccountsByType(accountType).first()
+        accountManager.setAuthToken(account, tokenType, token)
     }
 }

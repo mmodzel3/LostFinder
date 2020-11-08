@@ -11,10 +11,4 @@ class LoginServiceBinder(private val loginService: LoginService) : Binder() {
             loginService.login(emailAddress, password)
         }
     }
-
-    suspend fun sendLoginRequestAndGetToken(emailAddress: String, password: String): String {
-        return withContext(Dispatchers.IO) {
-            loginService.sendLoginRequestAndGetToken(emailAddress, password)
-        }
-    }
 }
