@@ -93,22 +93,22 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
 
     private suspend fun retrieveAccountAuthToken(account: Account, authTokenType: String) : String {
         val accountManager: AccountManager = AccountManager.get(context)
-        val authToken: String = accountManager.peekAuthToken(account, authTokenType)
+        val authToken: String? = accountManager.peekAuthToken(account, authTokenType)
 
-        if (authToken.isNotEmpty()) {
+        if (!authToken.isNullOrEmpty()) {
             return authToken
         } else {
-            try {
+            return try {
                 val encryptedPassword: String = accountManager.getPassword(account)
                         ?: throw LoginInvalidCredentialsException()
                 val decoder: DecryptorInterface = Decryptor.getInstance()
                 val password: String = decoder.decrypt(encryptedPassword, context)
 
-                return loginServiceBinder.login(account.name, password, true)
+                loginServiceBinder.login(account.name, password, true)
             } catch (e : LoginEndpointAccessErrorException) {
-                return ""
+                ""
             } catch (e : LoginInvalidCredentialsException) {
-                return ""
+                ""
             }
         }
     }

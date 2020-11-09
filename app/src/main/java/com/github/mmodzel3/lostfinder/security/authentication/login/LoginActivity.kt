@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
+import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
@@ -79,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 loginServiceBinder.login(emailAddress, password, savePassword)
-                enableLogin()
+                goToMainActivity()
             } catch (e: LoginEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.err_login_access, Toast.LENGTH_LONG).show()
                 enableLogin()
@@ -88,5 +89,13 @@ class LoginActivity : AppCompatActivity() {
                 enableLogin()
             }
         }
+    }
+
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+        finish()
     }
 }

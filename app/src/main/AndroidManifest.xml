@@ -21,6 +21,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LostFinder">
 
+
+        <activity
+            android:name=".splash.SplashScreenActivity"
+            android:theme="@style/Theme.LostFinder.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".MainActivity" />
         <activity android:name=".security.authentication.login.activity.LoginActivity" />
 
         <service
@@ -36,20 +47,15 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
         <service
             android:name=".location.CurrentLocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
         <service
             android:name=".security.authentication.login.LoginService"
+            android:exported="false" />
+        <service
+            android:name=".security.authentication.token.TokenAuthService"
             android:exported="false" />
     </application>
 
