@@ -12,6 +12,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.login.activity.Log
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
 import kotlinx.coroutines.runBlocking
+import java.lang.UnsupportedOperationException
 
 
 class Authenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
@@ -24,17 +25,16 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
     private val accountManager: AccountManager = AccountManager.get(context)
     private val loginEndpoint: LoginEndpoint = LoginEndpointFactory.createLoginEndpoint()
 
-    override fun editProperties(response: AccountAuthenticatorResponse,
-                                accountType: String): Bundle {
+    override fun editProperties(response: AccountAuthenticatorResponse?,
+                                accountType: String?): Bundle {
         throw UnsupportedOperationException()
     }
 
-    override fun addAccount(response: AccountAuthenticatorResponse,
-                            accountType: String,
-                            authTokenType: String,
-                            requiredFeatures: Array<out String>,
-                            options: Bundle): Bundle {
-
+    override fun addAccount(response: AccountAuthenticatorResponse?,
+                            accountType: String?,
+                            authTokenType: String?,
+                            requiredFeatures: Array<out String>?,
+                            options: Bundle?): Bundle {
         return createLoginActivityIntentBundle(response)
     }
 
@@ -47,8 +47,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
     override fun getAuthToken(response: AccountAuthenticatorResponse,
                               account: Account,
                               authTokenType: String,
-                              options: Bundle): Bundle {
-
+                              options: Bundle?): Bundle {
         return runBlocking {
             retrieveAccountAuthBundle(response, account, authTokenType)
         }
@@ -71,7 +70,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         throw UnsupportedOperationException()
     }
 
-    private fun createLoginActivityIntentBundle(response: AccountAuthenticatorResponse,
+    private fun createLoginActivityIntentBundle(response: AccountAuthenticatorResponse?,
                                                 info: String = "") : Bundle {
         val intent = Intent(context, LoginActivity::class.java)
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
