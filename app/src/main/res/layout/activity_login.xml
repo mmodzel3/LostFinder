@@ -27,7 +27,6 @@
             android:autofillHints="false"
             android:ems="10"
             android:hint="@string/email"
-            android:text="admin@owner.com"
             android:inputType="textEmailAddress" />
 
         <View
@@ -44,7 +43,6 @@
             android:autofillHints="false"
             android:ems="10"
             android:hint="@string/password"
-            android:text="admin"
             android:inputType="textPassword" />
 
         <View

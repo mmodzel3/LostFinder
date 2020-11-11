@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         initLoginButton()
+        setAccountEmailAddressEditText()
         enableLogin()
     }
 
@@ -143,5 +144,17 @@ class LoginActivity : AppCompatActivity() {
 
         startActivity(intent)
         finish()
+    }
+
+    private fun setAccountEmailAddressEditText() {
+        val accounts: Array<out Account> = accountManager.getAccountsByType(accountType)
+
+        if (accounts.isNotEmpty()) {
+            val account = accounts[0]
+            val emailAddress: String = account.name
+            val emailAddressEditText: EditText = findViewById(R.id.activity_login_et_email_address)
+
+            emailAddressEditText.setText(emailAddress)
+        }
     }
 }
