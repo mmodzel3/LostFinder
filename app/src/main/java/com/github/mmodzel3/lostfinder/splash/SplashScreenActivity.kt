@@ -50,6 +50,7 @@ class SplashScreenActivity: AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 tokenAuthServiceBinder.getToken()
+                tokenAuthServiceBinder.getToken()
                 goToMainActivity()
             } catch (e: InvalidTokenException) {
                 goToLoginActivity()

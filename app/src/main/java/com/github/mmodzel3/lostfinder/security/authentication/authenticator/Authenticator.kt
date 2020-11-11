@@ -7,6 +7,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.github.mmodzel3.lostfinder.security.authentication.login.*
 import com.github.mmodzel3.lostfinder.security.authentication.login.activity.LoginActivity
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
@@ -87,7 +88,8 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
                                                   authTokenType: String) : Bundle {
         return try {
             val token: String = retrieveAccountAuthToken(account, authTokenType)
-            createStoreTokenBundle(account, token)
+            accountManager.setAuthToken(account, authTokenType, token)
+            createTokenBundle(account, token)
         } catch (e: LoginInvalidCredentialsException) {
             createAuthErrorBundle(response, INVALID_CREDENTIALS)
         } catch (e: LoginEndpointAccessErrorException) {
@@ -126,7 +128,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         }
     }
 
-    private fun createStoreTokenBundle(account: Account, authToken: String) : Bundle {
+    private fun createTokenBundle(account: Account, authToken: String) : Bundle {
         val result = Bundle()
         result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name)
         result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type)

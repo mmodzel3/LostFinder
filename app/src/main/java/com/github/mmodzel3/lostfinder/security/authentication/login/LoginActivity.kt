@@ -1,40 +1,28 @@
 package com.github.mmodzel3.lostfinder.security.authentication.login.activity
 
-import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManagerCallback
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
-import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
-import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccountManagerActivityAbstract
 import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
-    private val accountManager: AccountManager by lazy { AccountManager.get(applicationContext) }
-    private val accountType
-        get() = applicationContext.resources.getString(R.string.account_type)
-    private val tokenType
-        get() = applicationContext.resources.getString(R.string.token_type)
-
+class LoginActivity : LoginAccountManagerActivityAbstract() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_login)
 
         initLoginButton()
-        setAccountEmailAddressEditText()
+        setAccountEmailAddressEditTextFromAccount()
         enableLogin()
     }
 
@@ -62,81 +50,31 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(emailAddress: String, password: String, savePassword: Boolean) {
-        val activity = this
-
         disableLogin()
+
         lifecycleScope.launch {
-            try {
-                loginUsingAccountManager(emailAddress, password, savePassword)
-            } catch (e: LoginEndpointAccessErrorException) {
-                Toast.makeText(activity, R.string.err_login_access, Toast.LENGTH_LONG).show()
-                enableLogin()
-            } catch (e: LoginInvalidCredentialsException) {
-                Toast.makeText(activity, R.string.err_login_invalid_credentials, Toast.LENGTH_LONG).show()
-                enableLogin()
-            }
+            loginUsingAccountManager(emailAddress, password,
+                        createLoginAccountManagerCallback(!savePassword))
         }
     }
 
-    private fun loginUsingAccountManager(emailAddress: String, password: String, savePassword: Boolean) {
-        removeAllAccounts()
-        val account: Account = addAccount(emailAddress, password)
+    private fun createLoginAccountManagerCallback(removePassword: Boolean) : AccountManagerCallback<Bundle> {
+        return AccountManagerCallback {
+            removePasswordIfNeeded(removePassword)
 
-        accountManager.getAuthToken(account, tokenType, null, true, AccountManagerCallback {
             if (it.result.getString(AccountManager.KEY_AUTHTOKEN) != null) {
-                removePasswordIfNeeded(!savePassword)
-                goToMainActivity()
+                onLoginSuccess()
             } else {
                 val intent: Intent? = it.result.getParcelable<Intent>(AccountManager.KEY_INTENT)
                 val error: String? = intent?.getStringExtra(Authenticator.AUTHENTICATOR_INFO)
 
-                showAuthError(error)
-                removePasswordIfNeeded(!savePassword)
-                enableLogin()
+                onLoginFailure(error)
             }
-        }, null)
-    }
-
-    private fun removeAllAccounts() {
-        accountManager.getAccountsByType(accountType).forEach { removeAccount(it) }
-    }
-
-    private fun removeAccount(account: Account) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
-            accountManager.removeAccount(account, {}, null)
-        } else {
-            accountManager.removeAccountExplicitly(account)
         }
     }
 
-    private fun addAccount(emailAddress: String, password: String) : Account {
-        val encodedPassword: String = encryptPassword(password)
-        val account = Account(emailAddress, accountType)
-        accountManager.addAccountExplicitly(account, encodedPassword, null)
-
-        return account
-    }
-
-    private fun encryptPassword(password: String) : String {
-        val encryptor: EncryptorInterface = Encryptor.getInstance()
-        return encryptor.encrypt(password, applicationContext)
-    }
-
-    private fun showAuthError(error: String?) {
-        if (error == Authenticator.INVALID_CREDENTIALS) {
-            Toast.makeText(this, R.string.err_login_invalid_credentials, Toast.LENGTH_LONG).show()
-        } else if (error == Authenticator.LOGIN_ENDPOINT_ACCESS_ERROR) {
-            Toast.makeText(this, R.string.err_login_access, Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, R.string.err_login, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun removePasswordIfNeeded(removePassword: Boolean) {
-        if (removePassword) {
-            val account: Account = accountManager.getAccountsByType(accountType)[0]
-            accountManager.setPassword(account, null)
-        }
+    private fun onLoginSuccess() {
+        goToMainActivity()
     }
 
     private fun goToMainActivity() {
@@ -147,11 +85,27 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun setAccountEmailAddressEditText() {
-        val accounts: Array<out Account> = accountManager.getAccountsByType(accountType)
+    private fun onLoginFailure(error: String?) {
+        showLoginError(error)
+        enableLogin()
+    }
 
-        if (accounts.isNotEmpty()) {
-            val account = accounts[0]
+    private fun showLoginError(error: String?) {
+        when (error) {
+            Authenticator.INVALID_CREDENTIALS -> {
+                Toast.makeText(this, R.string.err_login_invalid_credentials, Toast.LENGTH_LONG).show()
+            }
+            Authenticator.LOGIN_ENDPOINT_ACCESS_ERROR -> {
+                Toast.makeText(this, R.string.err_login_access, Toast.LENGTH_LONG).show()
+            }
+            else -> {
+                Toast.makeText(this, R.string.err_login, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun setAccountEmailAddressEditTextFromAccount() {
+        if (isAccountPresent) {
             val emailAddress: String = account.name
             val emailAddressEditText: EditText = findViewById(R.id.activity_login_et_email_address)
 
