@@ -91,6 +91,7 @@ class LoginActivity : AppCompatActivity() {
                 val error: String? = intent?.getStringExtra(Authenticator.AUTHENTICATOR_INFO)
 
                 showAuthError(error)
+                removePasswordIfNeeded(!savePassword)
                 enableLogin()
             }
         }, null)
