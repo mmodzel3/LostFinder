@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ServerEndpointFactory {
-    private const val SERVER_URL = "http://localhost:8080/"
+    var SERVER_URL = "http://localhost:8080/"
 
     inline fun <reified T: ServerEndpointInterface>
             createServerEndpoint(errorInterceptor: ServerEndpointErrorInterceptor): T {

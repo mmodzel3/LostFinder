@@ -12,7 +12,7 @@ open class ServerEndpointErrorInterceptor : Interceptor {
         val originalRequest: Request = chain.request()
         val response: Response = proceedRequest(chain, originalRequest)!!
 
-        return if (response.code() < 400) {
+        return if (response.code < 400) {
             response
         } else {
             throw ServerEndpointAccessErrorException()
