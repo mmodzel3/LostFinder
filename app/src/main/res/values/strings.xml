@@ -29,4 +29,5 @@
     <string name="token_type">jwt</string>
     <string name="err_login_access">Problem with connection to server.</string>
     <string name="err_login_invalid_credentials">Invalid login or password. Try again.</string>
+    <string name="err_login">Problem while trying to login to server.</string>
 </resources>

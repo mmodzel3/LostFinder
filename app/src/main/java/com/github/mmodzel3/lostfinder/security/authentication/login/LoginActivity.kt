@@ -1,11 +1,11 @@
 package com.github.mmodzel3.lostfinder.security.authentication.login.activity
 
-import android.content.ComponentName
-import android.content.Context
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.accounts.AccountManagerCallback
 import android.content.Intent
-import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -14,23 +14,27 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginService
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginServiceBinder
+import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
+import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var loginServiceBinder: LoginServiceBinder
-    lateinit var loginServiceConnection: ServiceConnection
+    private val accountManager: AccountManager by lazy { AccountManager.get(applicationContext) }
+    private val accountType
+        get() = applicationContext.resources.getString(R.string.account_type)
+    private val tokenType
+        get() = applicationContext.resources.getString(R.string.token_type)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bindToLoginService()
         setContentView(R.layout.activity_login)
 
         initLoginButton()
+        enableLogin()
     }
 
     private fun initLoginButton() {
@@ -44,23 +48,6 @@ class LoginActivity : AppCompatActivity() {
         val savePassword: SwitchCompat = findViewById(R.id.activity_login_sw_save_password)
 
         login(emailAddress.text.toString(), password.text.toString(), savePassword.isChecked)
-    }
-
-    private fun bindToLoginService() {
-        loginServiceConnection = object : ServiceConnection {
-            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                loginServiceBinder = service as LoginServiceBinder
-                enableLogin()
-            }
-
-            override fun onServiceDisconnected(name: ComponentName?) {
-
-            }
-        }
-
-        Intent(applicationContext, LoginService::class.java).also { intent ->
-            applicationContext.bindService(intent, loginServiceConnection, Context.BIND_AUTO_CREATE)
-        }
     }
 
     private fun enableLogin() {
@@ -79,8 +66,7 @@ class LoginActivity : AppCompatActivity() {
         disableLogin()
         lifecycleScope.launch {
             try {
-                loginServiceBinder.login(emailAddress, password, savePassword)
-                goToMainActivity()
+                loginUsingAccountManager(emailAddress, password, savePassword)
             } catch (e: LoginEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.err_login_access, Toast.LENGTH_LONG).show()
                 enableLogin()
@@ -88,6 +74,66 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(activity, R.string.err_login_invalid_credentials, Toast.LENGTH_LONG).show()
                 enableLogin()
             }
+        }
+    }
+
+    private fun loginUsingAccountManager(emailAddress: String, password: String, savePassword: Boolean) {
+        removeAllAccounts()
+        val account: Account = addAccount(emailAddress, password)
+
+        accountManager.getAuthToken(account, tokenType, null, true, AccountManagerCallback {
+            if (it.result.getString(AccountManager.KEY_AUTHTOKEN) != null) {
+                removePasswordIfNeeded(!savePassword)
+                goToMainActivity()
+            } else {
+                val intent: Intent? = it.result.getParcelable<Intent>(AccountManager.KEY_INTENT)
+                val error: String? = intent?.getStringExtra(Authenticator.AUTHENTICATOR_INFO)
+
+                showAuthError(error)
+                enableLogin()
+            }
+        }, null)
+    }
+
+    private fun removeAllAccounts() {
+        accountManager.getAccountsByType(accountType).forEach { removeAccount(it) }
+    }
+
+    private fun removeAccount(account: Account) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
+            accountManager.removeAccount(account, {}, null)
+        } else {
+            accountManager.removeAccountExplicitly(account)
+        }
+    }
+
+    private fun addAccount(emailAddress: String, password: String) : Account {
+        val encodedPassword: String = encryptPassword(password)
+        val account = Account(emailAddress, accountType)
+        accountManager.addAccountExplicitly(account, encodedPassword, null)
+
+        return account
+    }
+
+    private fun encryptPassword(password: String) : String {
+        val encryptor: EncryptorInterface = Encryptor.getInstance()
+        return encryptor.encrypt(password, applicationContext)
+    }
+
+    private fun showAuthError(error: String?) {
+        if (error == Authenticator.INVALID_CREDENTIALS) {
+            Toast.makeText(this, R.string.err_login_invalid_credentials, Toast.LENGTH_LONG).show()
+        } else if (error == Authenticator.LOGIN_ENDPOINT_ACCESS_ERROR) {
+            Toast.makeText(this, R.string.err_login_access, Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, R.string.err_login, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun removePasswordIfNeeded(removePassword: Boolean) {
+        if (removePassword) {
+            val account: Account = accountManager.getAccountsByType(accountType)[0]
+            accountManager.setPassword(account, null)
         }
     }
 
