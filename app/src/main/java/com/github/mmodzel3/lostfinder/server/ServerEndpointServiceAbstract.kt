@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 abstract class ServerEndpointServiceAbstract : Service() {
-    private val SERVER_URL = "http://localhost:8080/"
+    private val SERVER_URL = "http://192.168.0.107:8080/"
 
     protected inline fun <reified T: ServerEndpointInterface> createEndpoint(): T {
         return createRetrofit().create(T::class.java)

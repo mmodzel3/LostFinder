@@ -6,7 +6,13 @@ import android.os.IBinder
 import androidx.lifecycle.lifecycleScope
 
 class AuthenticatorService : Service() {
-    private val authenticator: Authenticator by lazy { Authenticator(this) }
+    private lateinit var authenticator: Authenticator
+
+    override fun onCreate() {
+        super.onCreate()
+
+        authenticator = Authenticator(this)
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         return authenticator.iBinder

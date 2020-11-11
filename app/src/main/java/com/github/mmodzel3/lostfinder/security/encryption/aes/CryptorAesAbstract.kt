@@ -15,6 +15,7 @@ abstract class CryptorAesAbstract : CryptorAbstract() {
     companion object {
         private const val SECRET_KEY_ALIAS = "key_aes"
         private const val CIPHER_TRANSFORMATION = "AES/GCM/NoPadding"
+        const val KEY_SIZE = 128
     }
 
     val aesKey: SecretKey?
@@ -32,6 +33,7 @@ abstract class CryptorAesAbstract : CryptorAbstract() {
                 KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setKeySize(KEY_SIZE)
                 .build()
 
         keyGenerator.init(keyGenParameterSpec)

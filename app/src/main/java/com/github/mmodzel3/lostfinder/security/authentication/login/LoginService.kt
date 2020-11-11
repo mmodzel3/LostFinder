@@ -5,6 +5,7 @@ import android.accounts.AccountManager
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface
@@ -38,12 +39,10 @@ class LoginService : LoginEndpointServiceAbstract() {
         val encryptedPassword: String? = password?.let { encryptPassword(it) }
 
         if (accounts.isEmpty()){
-            addAccount(emailAddress, encryptedPassword)
+            addAccount(emailAddress, encryptedPassword, loginInfo.token)
         } else {
-            changeAccountCredentials(emailAddress, encryptedPassword)
+            changeAccountCredentials(emailAddress, encryptedPassword, loginInfo.token)
         }
-
-        updateToken(loginInfo.token)
     }
 
     private fun encryptPassword(password: String) : String {
@@ -51,9 +50,10 @@ class LoginService : LoginEndpointServiceAbstract() {
         return encryptor.encrypt(password, applicationContext)
     }
 
-    private fun addAccount(emailAddress: String, encryptedPassword: String?) {
+    private fun addAccount(emailAddress: String, encryptedPassword: String?, token: String) {
         val account = Account(emailAddress, accountType)
         accountManager.addAccountExplicitly(account, encryptedPassword, null)
+        accountManager.setAuthToken(account, tokenType, token)
     }
 
     private fun removeAccount() {
@@ -66,20 +66,16 @@ class LoginService : LoginEndpointServiceAbstract() {
         }
     }
 
-    private fun changeAccountCredentials(emailAddress: String, encryptedPassword: String?) {
+    private fun changeAccountCredentials(emailAddress: String, encryptedPassword: String?, token: String) {
         val account: Account = accountManager.getAccountsByType(accountType).first()
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            accountManager.setAuthToken(account, tokenType, token)
             accountManager.setPassword(account, encryptedPassword)
             accountManager.renameAccount(account, emailAddress, null, null)
         } else {
             removeAccount()
-            addAccount(emailAddress, encryptedPassword)
+            addAccount(emailAddress, encryptedPassword, token)
         }
-    }
-
-    private fun updateToken(token: String) {
-        val account: Account = accountManager.getAccountsByType(accountType).first()
-        accountManager.setAuthToken(account, tokenType, token)
     }
 }

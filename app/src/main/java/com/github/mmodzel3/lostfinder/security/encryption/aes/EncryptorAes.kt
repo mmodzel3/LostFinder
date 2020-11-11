@@ -3,6 +3,7 @@ package com.github.mmodzel3.lostfinder.security.encryption.aes
 import android.content.Context
 import android.os.Build
 import android.util.Base64
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface
 import javax.crypto.Cipher

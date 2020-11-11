@@ -6,7 +6,8 @@ import android.util.Base64
 import androidx.annotation.RequiresApi
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
 import javax.crypto.Cipher
-import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.GCMParameterSpec
+
 
 class DecryptorAes : CryptorAesAbstract(), DecryptorInterface {
     companion object {
@@ -21,8 +22,9 @@ class DecryptorAes : CryptorAesAbstract(), DecryptorInterface {
         val dataParts: List<String> = data.split(",")
         val encryptedData: ByteArray = Base64.decode(dataParts[0].toByteArray(), Base64.DEFAULT)
         val iv: ByteArray = Base64.decode(dataParts[1].toByteArray(), Base64.DEFAULT)
+        val parameterSpec = GCMParameterSpec(KEY_SIZE, iv)
 
-        cipher.init(Cipher.DECRYPT_MODE, aesKey, IvParameterSpec(iv))
+        cipher.init(Cipher.DECRYPT_MODE, aesKey, parameterSpec)
         val decryptedData: ByteArray = cipher.doFinal(encryptedData)
 
         return String(decryptedData)
