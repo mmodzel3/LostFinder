@@ -61,11 +61,14 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
             tokenType = it.tokenType
             it.loginIdlingResource = loginIdlingResource
         }
+
+        removeAccounts()
     }
 
     @After
     fun tearDown() {
         IdlingRegistry.getInstance().unregister(loginIdlingResource.idlingResource)
+        removeAccounts()
     }
 
     @Test
@@ -209,5 +212,9 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
 
     private fun performLogin() {
         onView(withId(R.id.activity_login_bt_login)).perform(click())
+    }
+
+    private fun removeAccounts() {
+        accountManager.getAccountsByType(accountType).forEach { accountManager.removeAccountExplicitly(it) }
     }
 }
