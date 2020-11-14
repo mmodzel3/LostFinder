@@ -143,9 +143,9 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
     }
 
     private fun removeUserPasswordIfNeeded(account: Account) {
-        val savePassword: Boolean = accountManager.getUserData(account, USER_DATA_SAVE_PASSWORD).toBoolean()
+        val savePassword: Boolean? = accountManager.getUserData(account, USER_DATA_SAVE_PASSWORD)?.toBoolean()
 
-        if (!savePassword) {
+        if (savePassword == null || !savePassword) {
             accountManager.clearPassword(account)
         }
     }
