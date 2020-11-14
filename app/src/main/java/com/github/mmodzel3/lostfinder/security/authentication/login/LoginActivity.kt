@@ -1,4 +1,4 @@
-package com.github.mmodzel3.lostfinder.security.authentication.login.activity
+package com.github.mmodzel3.lostfinder.security.authentication.login
 
 import android.accounts.AccountManager
 import android.accounts.AccountManagerCallback
@@ -12,10 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccountManagerActivityAbstract
 import kotlinx.coroutines.launch
 
 class LoginActivity : LoginAccountManagerActivityAbstract() {
+    var loginIdlingResource: LoginIdlingResourceInterface = LoginIdlingResource()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,6 +25,15 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
         initLoginButton()
         setAccountEmailAddressEditTextFromAccount()
         enableLogin()
+    }
+
+    internal fun login(emailAddress: String, password: String, savePassword: Boolean) {
+        disableLogin()
+
+        lifecycleScope.launch {
+            loginUsingAccountManager(emailAddress, password, savePassword,
+                createLoginAccountManagerCallback())
+        }
     }
 
     private fun initLoginButton() {
@@ -36,6 +46,7 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
         val password: EditText = findViewById(R.id.activity_login_et_password)
         val savePassword: SwitchCompat = findViewById(R.id.activity_login_sw_save_password)
 
+        loginIdlingResource.increment()
         login(emailAddress.text.toString(), password.text.toString(), savePassword.isChecked)
     }
 
@@ -49,26 +60,17 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
         loginButton.isEnabled = false
     }
 
-    private fun login(emailAddress: String, password: String, savePassword: Boolean) {
-        disableLogin()
-
-        lifecycleScope.launch {
-            loginUsingAccountManager(emailAddress, password,
-                        createLoginAccountManagerCallback(!savePassword))
-        }
-    }
-
-    private fun createLoginAccountManagerCallback(removePassword: Boolean) : AccountManagerCallback<Bundle> {
+    private fun createLoginAccountManagerCallback() : AccountManagerCallback<Bundle> {
         return AccountManagerCallback {
-            removePasswordIfNeeded(removePassword)
-
             if (it.result.getString(AccountManager.KEY_AUTHTOKEN) != null) {
+                loginIdlingResource.decrement()
                 onLoginSuccess()
             } else {
                 val intent: Intent? = it.result.getParcelable<Intent>(AccountManager.KEY_INTENT)
                 val error: String? = intent?.getStringExtra(Authenticator.AUTHENTICATOR_INFO)
 
                 onLoginFailure(error)
+                loginIdlingResource.decrement()
             }
         }
     }

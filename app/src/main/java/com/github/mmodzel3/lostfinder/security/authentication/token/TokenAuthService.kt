@@ -6,10 +6,7 @@ import android.accounts.AuthenticatorException
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.security.authentication.login.activity.LoginActivity
-import java.lang.Exception
 
 class TokenAuthService : Service() {
     private val binder = TokenAuthServiceBinder(this)

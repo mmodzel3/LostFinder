@@ -105,8 +105,10 @@ class CurrentLocationService : Service() {
                     locationCallback,
                     Looper.getMainLooper())
 
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                onLocationChange(location)
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    onLocationChange(location)
+                }
             }
         }
     }

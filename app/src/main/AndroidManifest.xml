@@ -32,7 +32,7 @@
         </activity>
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".security.authentication.login.activity.LoginActivity" />
+        <activity android:name=".security.authentication.login.LoginActivity" />
 
         <service
             android:name=".security.authentication.authenticator.AuthenticatorService"
@@ -44,6 +44,7 @@
 
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
+                android:customTokens="true"
                 android:resource="@xml/authenticator" />
         </service>
 

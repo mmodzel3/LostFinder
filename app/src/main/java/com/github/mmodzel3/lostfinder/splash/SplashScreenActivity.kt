@@ -1,18 +1,16 @@
 package com.github.mmodzel3.lostfinder.splash
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.security.authentication.login.activity.LoginActivity
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenAuthService
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenAuthServiceBinder

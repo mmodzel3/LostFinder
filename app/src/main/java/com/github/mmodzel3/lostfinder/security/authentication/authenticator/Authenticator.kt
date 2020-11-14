@@ -7,12 +7,12 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.github.mmodzel3.lostfinder.security.authentication.login.*
-import com.github.mmodzel3.lostfinder.security.authentication.login.activity.LoginActivity
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
 import kotlinx.coroutines.runBlocking
+import java.lang.Exception
 import java.lang.UnsupportedOperationException
 
 
@@ -21,6 +21,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         const val AUTHENTICATOR_INFO = "AUTH_INFO"
         const val INVALID_CREDENTIALS = "Invalid credentials"
         const val LOGIN_ENDPOINT_ACCESS_ERROR = "Login endpoint access error"
+        const val USER_DATA_SAVE_PASSWORD = "SAVE_PASSWORD"
     }
 
     private val accountManager: AccountManager = AccountManager.get(context)
@@ -83,11 +84,12 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         return bundle
     }
 
-    private suspend fun retrieveAccountAuthBundle(response: AccountAuthenticatorResponse,
+    internal suspend fun retrieveAccountAuthBundle(response: AccountAuthenticatorResponse,
                                                   account: Account,
                                                   authTokenType: String) : Bundle {
         return try {
             val token: String = retrieveAccountAuthToken(account, authTokenType)
+            removeUserPasswordIfNeeded(account)
             accountManager.setAuthToken(account, authTokenType, token)
             createTokenBundle(account, token)
         } catch (e: LoginInvalidCredentialsException) {
@@ -97,7 +99,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         }
     }
 
-    private suspend fun retrieveAccountAuthToken(account: Account, authTokenType: String) : String {
+    internal suspend fun retrieveAccountAuthToken(account: Account, authTokenType: String) : String {
         val authToken: String? = accountManager.peekAuthToken(account, authTokenType)
 
         return if (!authToken.isNullOrEmpty()) {
@@ -138,5 +140,13 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
 
     private fun createAuthErrorBundle(response: AccountAuthenticatorResponse, error: String) : Bundle {
         return createLoginActivityIntentBundle(response, error)
+    }
+
+    private fun removeUserPasswordIfNeeded(account: Account) {
+        val savePassword: Boolean = accountManager.getUserData(account, USER_DATA_SAVE_PASSWORD).toBoolean()
+
+        if (!savePassword) {
+            accountManager.clearPassword(account)
+        }
     }
 }

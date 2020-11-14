@@ -4,7 +4,7 @@ import com.github.mmodzel3.lostfinder.security.encryption.aes.DecryptorAes
 import com.github.mmodzel3.lostfinder.security.encryption.plain.DecryptorPlain
 import com.github.mmodzel3.lostfinder.security.encryption.rsa.DecryptorRsa
 
-class Decryptor : CryptorAbstract() {
+open class Decryptor : CryptorAbstract() {
     companion object {
         fun getInstance() : DecryptorInterface {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
