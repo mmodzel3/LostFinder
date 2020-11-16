@@ -1,6 +1,6 @@
 package com.github.mmodzel3.lostfinder.server
 
-import com.github.mmodzel3.lostfinder.security.authentication.token.TokenAuthServiceBinder
+import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -9,44 +9,29 @@ object ServerEndpointFactory {
     var SERVER_URL = "http://localhost:8080/"
 
     inline fun <reified T: ServerEndpointInterface>
-            createServerEndpoint(errorInterceptor: ServerEndpointErrorInterceptor): T {
-        return createRetrofit(errorInterceptor).create(T::class.java)
+            createServerEndpoint(errorInterceptor: ServerEndpointErrorInterceptor,
+                                 tokenManager: TokenManager? = null): T {
+        return createRetrofit(errorInterceptor, tokenManager).create(T::class.java)
     }
 
-    inline fun <reified T: ServerEndpointInterface>
-            createServerEndpoint(authTokenAuthServiceBinder: TokenAuthServiceBinder,
-                                 errorInterceptor: ServerEndpointErrorInterceptor): T {
-        return createRetrofit(authTokenAuthServiceBinder, errorInterceptor).create(T::class.java)
-    }
-
-    private fun createClient(errorInterceptor: ServerEndpointErrorInterceptor) : OkHttpClient {
-        return OkHttpClient.Builder()
-                .addInterceptor(errorInterceptor)
-                .build()
-    }
-
-    private fun createClient(authTokenAuthServiceBinder: TokenAuthServiceBinder,
-                             errorInterceptor: ServerEndpointErrorInterceptor) : OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(ServerEndpointTokenInterceptor(authTokenAuthServiceBinder))
+    private fun createClient(errorInterceptor: ServerEndpointErrorInterceptor,
+                             tokenManager: TokenManager? = null) : OkHttpClient {
+        val clientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
             .addInterceptor(errorInterceptor)
-            .build()
+
+        if (tokenManager != null) {
+            clientBuilder.addInterceptor(ServerEndpointTokenInterceptor(tokenManager))
+        }
+
+        return clientBuilder.build()
     }
 
-    fun createRetrofit(errorInterceptor: ServerEndpointErrorInterceptor) : Retrofit {
+    fun createRetrofit(errorInterceptor: ServerEndpointErrorInterceptor,
+                       tokenManager: TokenManager? = null) : Retrofit {
         return Retrofit.Builder()
                 .baseUrl(SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(createClient(errorInterceptor))
+                .client(createClient(errorInterceptor, tokenManager))
                 .build()
-    }
-
-    fun createRetrofit(authTokenAuthServiceBinder: TokenAuthServiceBinder,
-                       errorInterceptor: ServerEndpointErrorInterceptor) : Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(SERVER_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(createClient(authTokenAuthServiceBinder, errorInterceptor))
-            .build()
     }
 }

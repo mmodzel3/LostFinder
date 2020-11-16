@@ -4,16 +4,22 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AuthenticatorException
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import com.github.mmodzel3.lostfinder.R
 
-class TokenAuthService : Service() {
-    private val binder = TokenAuthServiceBinder(this)
-    private val accountManager by lazy { AccountManager.get(applicationContext) }
+class TokenManager private constructor(private val context: Context) {
+    companion object {
+        fun getInstance(context: Context): TokenManager {
+            return TokenManager(context)
+        }
+    }
+
+    private val accountManager by lazy { AccountManager.get(context) }
 
     private val accountType
-        get() = applicationContext.resources.getString(R.string.account_type)
+        get() = context.resources.getString(R.string.account_type)
 
     private val account: Account?
         get() {
@@ -25,10 +31,6 @@ class TokenAuthService : Service() {
                 null
             }
         }
-
-    override fun onBind(intent: Intent) : IBinder {
-        return binder
-    }
 
     suspend fun getToken(): String {
         if (account != null) {

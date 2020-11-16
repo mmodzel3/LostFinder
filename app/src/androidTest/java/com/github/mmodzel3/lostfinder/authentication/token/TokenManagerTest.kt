@@ -3,33 +3,26 @@ package com.github.mmodzel3.lostfinder.authentication.token
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
-import android.content.Intent
-import android.os.IBinder
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.rule.ServiceTestRule
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.authentication.login.LoginEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
-import com.github.mmodzel3.lostfinder.security.authentication.token.TokenAuthService
-import com.github.mmodzel3.lostfinder.security.authentication.token.TokenAuthServiceBinder
+import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
-class TokenAuthServiceTest : LoginEndpointTestAbstract() {
+class TokenManagerTest : LoginEndpointTestAbstract() {
     companion object {
         const val EMAIL_ADDRESS = "example@example.com"
         const val PASSWORD = "password"
         const val WRONG_PASSWORD = "wrong_password"
     }
 
-    @get:Rule val serviceRule = ServiceTestRule()
-
-    private lateinit var tokenAuthServiceBinder: TokenAuthServiceBinder
+    private var tokenManager = TokenManager.getInstance(ApplicationProvider.getApplicationContext())
     private lateinit var accountManager: AccountManager
     private lateinit var accountType: String
     private lateinit var tokenType: String
@@ -45,7 +38,6 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
                 .resources.getString(R.string.token_type)
 
         removeAccounts()
-        tokenAuthServiceBinder = bindToService()
     }
 
     @After
@@ -56,7 +48,7 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
     @Test
     fun whenNoAccountAndGetTokenThenInvalidTokenExceptionIsThrown() {
         runBlocking {
-            assertThrows<InvalidTokenException> { tokenAuthServiceBinder.getToken() }
+            assertThrows<InvalidTokenException> { tokenManager.getToken() }
         }
     }
 
@@ -67,7 +59,7 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
 
             mockServerInvalidCredentialsResponse()
             accountManager.addAccountExplicitly(createTestAccount(), encryptedPassword, null)
-            assertThrows<InvalidTokenException> { tokenAuthServiceBinder.getToken() }
+            assertThrows<InvalidTokenException> { tokenManager.getToken() }
         }
     }
 
@@ -76,7 +68,7 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
         runBlocking {
             mockServerInvalidCredentialsResponse()
             accountManager.addAccountExplicitly(createTestAccount(), null, null)
-            assertThrows<InvalidTokenException> { tokenAuthServiceBinder.getToken() }
+            assertThrows<InvalidTokenException> { tokenManager.getToken() }
         }
     }
 
@@ -87,7 +79,7 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
 
             mockServerFailureResponse()
             accountManager.addAccountExplicitly(createTestAccount(), encryptedPassword, null)
-            assertThrows<InvalidTokenException> { tokenAuthServiceBinder.getToken() }
+            assertThrows<InvalidTokenException> { tokenManager.getToken() }
         }
     }
 
@@ -98,7 +90,7 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
 
             mockServerTokenResponse()
             accountManager.addAccountExplicitly(createTestAccount(), encryptedPassword, null)
-            val token: String = tokenAuthServiceBinder.getToken()
+            val token: String = tokenManager.getToken()
             assertThat(token).matches(TOKEN)
         }
     }
@@ -111,10 +103,10 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
 
             mockServerTokenResponse()
             accountManager.addAccountExplicitly(account, encryptedPassword, null)
-            tokenAuthServiceBinder.getToken()
+            tokenManager.getToken()
 
             mockServerFailureResponse()
-            val token: String = tokenAuthServiceBinder.getToken()
+            val token: String = tokenManager.getToken()
             assertThat(token).matches(TOKEN)
         }
     }
@@ -129,22 +121,13 @@ class TokenAuthServiceTest : LoginEndpointTestAbstract() {
             accountManager.addAccountExplicitly(account, encryptedPassword, null)
             accountManager.setAuthToken(account, tokenType, TOKEN)
 
-            val token: String = tokenAuthServiceBinder.getToken()
+            val token: String = tokenManager.getToken()
             assertThat(token).matches(TOKEN)
         }
     }
 
     private fun removeAccounts() {
         accountManager.getAccountsByType(accountType).forEach { accountManager.removeAccountExplicitly(it) }
-    }
-
-    private fun bindToService() : TokenAuthServiceBinder {
-        val serviceIntent = Intent(ApplicationProvider.getApplicationContext<Context>(),
-                TokenAuthService::class.java)
-
-        val binder: IBinder = serviceRule.bindService(serviceIntent)
-
-        return binder as TokenAuthServiceBinder
     }
 
     private fun createTestAccount() : Account {
