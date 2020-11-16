@@ -8,11 +8,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import com.github.mmodzel3.lostfinder.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class TokenManager private constructor(private val context: Context) {
     companion object {
+        var tokenManager: TokenManager? = null
+
         fun getInstance(context: Context): TokenManager {
-            return TokenManager(context)
+            tokenManager = tokenManager ?: TokenManager(context)
+            return tokenManager!!
         }
     }
 
@@ -32,9 +37,9 @@ class TokenManager private constructor(private val context: Context) {
             }
         }
 
-    suspend fun getToken(): String {
+    suspend fun getToken(): String = withContext(Dispatchers.IO) {
         if (account != null) {
-            return getAndCheckTokenForAccount(account!!)
+            return@withContext getAndCheckTokenForAccount(account!!)
         } else {
             throw InvalidTokenException()
         }

@@ -1,7 +1,7 @@
 package com.github.mmodzel3.lostfinder.user
 
 import com.github.mmodzel3.lostfinder.server.ServerEndpointData
-import java.time.LocalDateTime
+import java.util.*
 
 data class User(override val id: String,
                 val emailAddress: String,
@@ -10,6 +10,6 @@ data class User(override val id: String,
                 val role: String,
                 val longitude: Double?,
                 val latitude: Double?,
-                override val lastUpdateDate: LocalDateTime) : ServerEndpointData {
+                override val lastUpdateDate: Date) : ServerEndpointData {
 
 }

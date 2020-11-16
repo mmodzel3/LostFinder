@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.map.overlays
 
+import android.util.Log
 import com.github.mmodzel3.lostfinder.user.User
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
