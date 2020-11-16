@@ -1,8 +1,8 @@
 package com.github.mmodzel3.lostfinder.server
 
-import java.util.*
+import java.time.LocalDateTime
 
 interface ServerEndpointData {
     val id: String
-    val updateDate: Date
+    val lastUpdateDate: LocalDateTime
 }

@@ -34,7 +34,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
     }
 
     private fun updateElementIfNecessary(cachedElement: T, elementToUpdate: T): Boolean {
-        return if (cachedElement.updateDate <= elementToUpdate.updateDate) {
+        return if (cachedElement.lastUpdateDate <= elementToUpdate.lastUpdateDate) {
             dataCache.remove(elementToUpdate.id)
             dataCache[elementToUpdate.id] = elementToUpdate
             true
