@@ -7,34 +7,63 @@ import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
 
 class UsersLocationsOverlay(private val map: MapView): FolderOverlay() {
-    private var usersMarkers: MutableMap<String, Marker> = mutableMapOf()
+    private val usersMarkers: MutableMap<String, Marker> = mutableMapOf()
 
     private val lock: Any = Any()
 
-    fun updateUsersLocations(users: Collection<User>) = synchronized(lock) {
+    fun updateUsersLocations(users: MutableMap<String, User>) = synchronized(lock) {
         users.forEach {
-            var marker: Marker? = usersMarkers[it.id]
+            updateUserLocation(it.value)
+        }
 
-            if (marker == null) {
-                marker = addMarker(it)
-            } else {
-                updateMarker(marker, it)
-            }
-
-            usersMarkers[it.id] = marker
+        if (usersMarkers.size != users.size) {
+            removeOldData(users)
         }
     }
 
-    private fun addMarker(user: User): Marker {
-        val marker = Marker(map)
-        marker.position = GeoPoint(user.latitude, user.longitude)
-        add(marker)
-
-        return marker
+    private fun updateUserLocation(user: User) {
+        if (usersMarkers[user.id] == null) {
+            addMarker(user)
+        } else {
+            updateMarker(user)
+        }
     }
 
-    private fun updateMarker(marker: Marker, user: User): Marker {
-        marker.position = GeoPoint(user.latitude, user.longitude)
-        return marker
+    private fun addMarker(user: User) {
+        if (user.latitude != null && user.longitude != null) {
+            val marker = Marker(map)
+            marker.position = GeoPoint(user.latitude, user.longitude)
+
+            usersMarkers[user.id] = marker
+            add(marker)
+        }
+    }
+
+    private fun updateMarker(user: User) {
+        if (user.latitude != null && user.longitude != null) {
+            val marker: Marker = usersMarkers[user.id]!!
+            marker.position = GeoPoint(user.latitude, user.longitude)
+            usersMarkers[user.id] = marker
+        } else {
+            removeMarker(user)
+        }
+    }
+
+    private fun removeMarker(user: User) {
+        removeMarker(user.id)
+    }
+
+    private fun removeMarker(userId: String) {
+        val marker: Marker = usersMarkers[userId]!!
+        usersMarkers.remove(userId)
+        remove(marker)
+    }
+
+    private fun removeOldData(users: MutableMap<String, User>) {
+        usersMarkers.forEach {
+            if(it.key !in users.keys) {
+                removeMarker(it.key)
+            }
+        }
     }
 }

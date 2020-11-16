@@ -5,7 +5,7 @@ import androidx.lifecycle.liveData
 import com.github.mmodzel3.lostfinder.server.ServerEndpointViewModelAbstract
 
 class UserEndpointViewModel(private val userEndpoint: UserEndpoint) : ServerEndpointViewModelAbstract<User>() {
-    val users: MutableLiveData<Collection<User>>
+    val users: MutableLiveData<MutableMap<String, User>>
         get() = data
 
     fun forceUpdate() {

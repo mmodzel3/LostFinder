@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewModel() {
-    protected val data: MutableLiveData<Collection<T>> = MutableLiveData()
+    protected val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
     private val dataCache: MutableMap<String, T> = mutableMapOf()
     private val lock = Any()
 
@@ -21,7 +21,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
             val cachedElement: T? = dataCache[it.id]
 
             if (cachedElement != null) {
-                dataChanged = updateElementIfNecessary(cachedElement, it)
+                dataChanged = dataChanged || updateElementIfNecessary(cachedElement, it)
             } else {
                 dataChanged = true
                 addElement(it)
@@ -29,7 +29,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         }
 
         if (dataChanged) {
-            data.postValue(dataCache.values)
+            data.postValue(dataCache)
         }
     }
 

@@ -8,8 +8,8 @@ data class User(override val id: String,
                 val password: String?,
                 val username: String,
                 val role: String,
-                val longitude: Double,
-                val latitude: Double,
+                val longitude: Double?,
+                val latitude: Double?,
                 override val updateDate: Date) : ServerEndpointData {
 
 }
