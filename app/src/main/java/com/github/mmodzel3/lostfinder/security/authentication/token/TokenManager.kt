@@ -37,6 +37,14 @@ class TokenManager private constructor(private val context: Context) {
             }
         }
 
+    fun getTokenEmailAddress() : String {
+        if (account != null) {
+            return account!!.name
+        } else {
+            throw InvalidTokenException()
+        }
+    }
+
     suspend fun getToken(): String = withContext(Dispatchers.IO) {
         if (account != null) {
             return@withContext getAndCheckTokenForAccount(account!!)

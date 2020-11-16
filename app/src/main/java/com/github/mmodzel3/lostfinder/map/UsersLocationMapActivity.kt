@@ -11,6 +11,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivit
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.user.*
+import kotlinx.coroutines.test.withTestContext
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
@@ -26,12 +27,20 @@ open class UsersLocationMapActivity : CurrentLocationMapWithCenteringActivity() 
         UserEndpointViewModelFactory(userEndpoint)
     }
 
+    private val tokenManager: TokenManager by lazy {
+        TokenManager.getInstance(applicationContext)
+    }
+
     override fun initMap() {
         super.initMap()
 
         usersLocationsOverlay = UsersLocationsOverlay(map)
         userEndpointViewModel.users.observe(this, Observer {
-            usersLocationsOverlay.updateUsersLocations(it)
+            val users: Map<String, User> = it.filter {
+                it.value.emailAddress != tokenManager.getTokenEmailAddress()
+            }
+
+            usersLocationsOverlay.updateUsersLocations(users)
             map.invalidate()
         })
 

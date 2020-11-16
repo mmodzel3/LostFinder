@@ -12,7 +12,7 @@ class UsersLocationsOverlay(private val map: MapView): FolderOverlay() {
 
     private val lock: Any = Any()
 
-    fun updateUsersLocations(users: MutableMap<String, User>) = synchronized(lock) {
+    fun updateUsersLocations(users: Map<String, User>) = synchronized(lock) {
         users.forEach {
             updateUserLocation(it.value)
         }
@@ -60,7 +60,7 @@ class UsersLocationsOverlay(private val map: MapView): FolderOverlay() {
         remove(marker)
     }
 
-    private fun removeOldData(users: MutableMap<String, User>) {
+    private fun removeOldData(users: Map<String, User>) {
         usersMarkers.forEach {
             if(it.key !in users.keys) {
                 removeMarker(it.key)
