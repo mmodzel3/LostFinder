@@ -16,7 +16,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
 
-open class UsersLocationMapActivity : CurrentLocationMapWithCenteringActivity() {
+open class UsersLocationsMapActivity : CurrentLocationMapWithCenteringActivity() {
 
     private lateinit var usersLocationsOverlay: UsersLocationsOverlay
     private val userEndpoint: UserEndpoint by lazy {
