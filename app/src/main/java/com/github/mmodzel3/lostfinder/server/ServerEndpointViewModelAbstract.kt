@@ -15,23 +15,31 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
     }
 
     private fun updateCache(dataToUpdate: List<T>) {
+        var dataChanged = false
+
         dataToUpdate.forEach {
             val cachedElement: T? = dataCache[it.id]
 
             if (cachedElement != null) {
-                updateElementIfNecessary(cachedElement, it)
+                dataChanged = updateElementIfNecessary(cachedElement, it)
             } else {
+                dataChanged = true
                 addElement(it)
             }
         }
 
-        data.postValue(dataCache.values)
+        if (dataChanged) {
+            data.postValue(dataCache.values)
+        }
     }
 
-    private fun updateElementIfNecessary(cachedElement: T, elementToUpdate: T) {
-        if (cachedElement.updateDate <= elementToUpdate.updateDate) {
+    private fun updateElementIfNecessary(cachedElement: T, elementToUpdate: T): Boolean {
+        return if (cachedElement.updateDate <= elementToUpdate.updateDate) {
             dataCache.remove(elementToUpdate.id)
             dataCache[elementToUpdate.id] = elementToUpdate
+            true
+        } else {
+            false
         }
     }
 
