@@ -34,7 +34,7 @@ open class UsersLocationsMapActivity : CurrentLocationMapWithCenteringActivity()
     override fun initMap() {
         super.initMap()
 
-        usersLocationsOverlay = UsersLocationsOverlay(map)
+        usersLocationsOverlay = UsersLocationsOverlay(map, applicationContext)
         userEndpointViewModel.users.observe(this, Observer {
             val users: Map<String, User> = it.filter {
                 it.value.emailAddress != tokenManager.getTokenEmailAddress()

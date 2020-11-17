@@ -1,15 +1,19 @@
 package com.github.mmodzel3.lostfinder.map.overlays
 
-import android.util.Log
+import android.content.Context
+import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.user.User
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
 
-class UsersLocationsOverlay(private val map: MapView): FolderOverlay() {
-    private val usersMarkers: MutableMap<String, Marker> = mutableMapOf()
 
+class UsersLocationsOverlay(private val map: MapView, private val context: Context): FolderOverlay() {
+    private val usersMarkers: MutableMap<String, Marker> = mutableMapOf()
+    private val role_user = context.getString(R.string.role_user)
+    private val role_admin = context.getString(R.string.role_admin)
+    private val role_owner = context.getString(R.string.role_owner)
     private val lock: Any = Any()
 
     fun updateUsersLocations(users: Map<String, User>) = synchronized(lock) {
@@ -32,12 +36,35 @@ class UsersLocationsOverlay(private val map: MapView): FolderOverlay() {
 
     private fun addMarker(user: User) {
         if (user.latitude != null && user.longitude != null) {
-            val marker = Marker(map)
+            val marker: Marker = createMarker(user)
             marker.position = GeoPoint(user.latitude, user.longitude)
 
             usersMarkers[user.id] = marker
             add(marker)
         }
+    }
+
+    private fun createMarker(user: User): Marker {
+        val marker = Marker(map)
+        setMarkerTitle(marker, user)
+
+        return marker
+    }
+
+    private fun setMarkerTitle(marker: Marker, user: User) {
+        var role: String = when {
+            user.isUser() -> {
+                role_user
+            }
+            user.isAdmin() -> {
+                role_admin
+            }
+            else -> {
+                role_owner
+            }
+        }
+
+        marker.title = user.username + "\n[" + role + "]"
     }
 
     private fun updateMarker(user: User) {

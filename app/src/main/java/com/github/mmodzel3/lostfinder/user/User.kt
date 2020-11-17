@@ -12,4 +12,15 @@ data class User(override val id: String,
                 val latitude: Double?,
                 override val lastUpdateDate: Date) : ServerEndpointData {
 
+    fun isUser() : Boolean {
+        return role == "USER"
+    }
+
+    fun isAdmin() : Boolean {
+        return role == "ADMIN"
+    }
+
+    fun isOwner() : Boolean {
+        return role == "OWNER"
+    }
 }

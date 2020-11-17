@@ -33,4 +33,8 @@
     <string name="err_fetching">Problem with fetching data. Try checking your connection.</string>
     <string name="err_invalid_token">Token expired. Log in to the server once again.</string>
     <string name="msg_fetching">Data is downloaded from the server.</string>
+
+    <string name="role_user">USER</string>
+    <string name="role_admin">ADMIN</string>
+    <string name="role_owner">OWNER</string>
 </resources>
