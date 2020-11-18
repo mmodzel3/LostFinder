@@ -21,7 +21,11 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
 
     fun forceUpdate() {
         viewModelScope.launch {
-            status.postValue(ServerEndpointStatus.FETCHING)
+            if (status.value != ServerEndpointStatus.OK &&
+                    status.value != ServerEndpointStatus.FETCHING) {
+                status.postValue(ServerEndpointStatus.FETCHING)
+            }
+
             fetchAllData()
         }
     }
@@ -37,6 +41,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
             handler.postDelayed(updateRunnable, UPDATE_INTERVALS)
         }
 
+        status.postValue(ServerEndpointStatus.FETCHING)
         handler.post(updateRunnable)
     }
 
