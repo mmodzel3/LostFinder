@@ -11,7 +11,7 @@ class UserEndpointErrorInterceptor : ServerEndpointErrorInterceptor() {
         try {
             return super.intercept(chain)
         } catch (e: ServerEndpointAccessErrorException) {
-            throw e; //UserEndpointAccessErrorException()
+            throw UserEndpointAccessErrorException()
         }
     }
 }

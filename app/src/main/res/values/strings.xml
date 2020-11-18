@@ -37,4 +37,8 @@
     <string name="role_user">USER</string>
     <string name="role_admin">ADMIN</string>
     <string name="role_owner">OWNER</string>
+
+    <string name="location_err_endpoint_access">
+        Problem with sending location to server. Check your internet connection.
+    </string>
 </resources>
