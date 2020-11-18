@@ -35,9 +35,9 @@ class UsersLocationsOverlay(private val map: MapView, private val context: Conte
     }
 
     private fun addMarker(user: User) {
-        if (user.latitude != null && user.longitude != null) {
+        if (user.location != null) {
             val marker: Marker = createMarker(user)
-            marker.position = GeoPoint(user.latitude, user.longitude)
+            marker.position = GeoPoint(user.location.latitude, user.location.longitude)
 
             usersMarkers[user.id] = marker
             add(marker)
@@ -68,9 +68,9 @@ class UsersLocationsOverlay(private val map: MapView, private val context: Conte
     }
 
     private fun updateMarker(user: User) {
-        if (user.latitude != null && user.longitude != null) {
+        if (user.location != null) {
             val marker: Marker = usersMarkers[user.id]!!
-            marker.position = GeoPoint(user.latitude, user.longitude)
+            marker.position = GeoPoint(user.location.latitude, user.location.longitude)
             usersMarkers[user.id] = marker
         } else {
             removeMarker(user)

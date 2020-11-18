@@ -16,17 +16,27 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.user.UserEndpoint
+import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.android.gms.location.*
-import org.osmdroid.util.GeoPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.suspendCoroutine
 
 class CurrentLocationService : Service() {
-    private val NOTIFICATION_CHANNEL_ID = "Localisation"
-    private val NOTIFICATION_ID = 1;
+    companion object {
+        private const val NOTIFICATION_CHANNEL_ID = "Localisation"
+        private const val NOTIFICATION_ID = 1;
 
-    private val LOCATION_ASK_INTERVAL = 10000
-    private val LOCATION_ASK_FASTEST_INTERVAL = 5000
-    private val LOCATION_ASK_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY
+        private const val LOCATION_ASK_INTERVAL = 10000
+        private const val LOCATION_ASK_FASTEST_INTERVAL = 5000
+        private const val LOCATION_ASK_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -38,11 +48,17 @@ class CurrentLocationService : Service() {
 
     private var lastLocation : Location? = null
 
+    private lateinit var userEndpoint: UserEndpoint
+    private val ioScope = CoroutineScope(Dispatchers.IO + Job())
+
     override fun onCreate() {
         super.onCreate()
 
         val notification = createServiceNotification()
         startForeground(NOTIFICATION_ID, notification)
+
+        userEndpoint =
+                UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         startLocationListeningIfPossible()
@@ -116,6 +132,13 @@ class CurrentLocationService : Service() {
     private fun onLocationChange(location: Location) {
         lastLocation = location
         sendLocationChangeToAll(location)
+        sendLocationChangeToServer(location)
+    }
+
+    private fun sendLocationChangeToServer(location: Location) {
+        ioScope.launch {
+            userEndpoint.updateUserLocation(Location(location.longitude, location.latitude))
+        }
     }
 
     private fun createLocationRequest() : LocationRequest? {
