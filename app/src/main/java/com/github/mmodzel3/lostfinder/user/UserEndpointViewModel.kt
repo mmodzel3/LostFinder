@@ -14,7 +14,12 @@ class UserEndpointViewModel(private val userEndpoint: UserEndpoint) : ServerEndp
         get() = data
 
     init {
-        forceUpdate()
+        runPeriodicUpdates()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopPeriodicUpdates()
     }
 
     override suspend fun fetchAllData() {

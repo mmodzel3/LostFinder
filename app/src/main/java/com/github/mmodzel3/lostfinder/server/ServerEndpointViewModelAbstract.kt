@@ -1,14 +1,22 @@
 package com.github.mmodzel3.lostfinder.server
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewModel() {
+    companion object {
+        const val UPDATE_INTERVALS = 60 * 1000L
+    }
+
     val status: MutableLiveData<ServerEndpointStatus> = MutableLiveData()
     protected val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
+    private lateinit var handler: Handler
     private val dataCache: MutableMap<String, T> = mutableMapOf()
+    private lateinit var updateRunnable: Runnable
     private val lock = Any()
 
     fun forceUpdate() {
@@ -20,6 +28,20 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
 
     protected open suspend fun fetchAllData() {
 
+    }
+
+    protected fun runPeriodicUpdates() {
+        handler = Handler(Looper.getMainLooper())
+        updateRunnable = Runnable {
+            forceUpdate()
+            handler.postDelayed(updateRunnable, UPDATE_INTERVALS)
+        }
+
+        handler.post(updateRunnable)
+    }
+
+    protected fun stopPeriodicUpdates() {
+        handler.removeCallbacks(updateRunnable)
     }
 
     protected fun update(dataToUpdate: List<T>) {
