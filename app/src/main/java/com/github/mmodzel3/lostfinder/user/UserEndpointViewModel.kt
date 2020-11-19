@@ -24,7 +24,7 @@ class UserEndpointViewModel(private val userEndpoint: UserEndpoint) : ServerEndp
 
     override suspend fun fetchAllData() {
         try {
-            val userData: List<User> = userEndpoint.getUsers()
+            val userData: List<User> = userEndpoint.getAllUsers()
             update(userData)
         } catch (e: InvalidTokenException) {
             status.postValue(ServerEndpointStatus.INVALID_TOKEN)

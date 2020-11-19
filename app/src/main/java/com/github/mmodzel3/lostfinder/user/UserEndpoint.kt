@@ -9,7 +9,7 @@ import retrofit2.http.POST
 
 interface UserEndpoint : ServerEndpointInterface {
     @GET("/api/users")
-    suspend fun getUsers(): List<User>
+    suspend fun getAllUsers(): List<User>
 
     @POST("/api/user/location")
     suspend fun updateUserLocation(@Body location: Location): ServerResponse

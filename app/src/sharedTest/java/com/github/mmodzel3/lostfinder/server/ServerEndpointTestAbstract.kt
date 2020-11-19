@@ -9,7 +9,6 @@ import org.junit.Before
 abstract class ServerEndpointTestAbstract : ThrownExceptionTestAbstract() {
     protected lateinit var server: MockWebServer
 
-    @Before
     open fun setUp() {
         server = MockWebServer()
         server.start()

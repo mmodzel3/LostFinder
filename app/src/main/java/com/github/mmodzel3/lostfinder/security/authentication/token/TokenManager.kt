@@ -3,15 +3,12 @@ package com.github.mmodzel3.lostfinder.security.authentication.token
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AuthenticatorException
-import android.app.Service
 import android.content.Context
-import android.content.Intent
-import android.os.IBinder
 import com.github.mmodzel3.lostfinder.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class TokenManager private constructor(private val context: Context) {
+open class TokenManager protected constructor(private val context: Context?) {
     companion object {
         var tokenManager: TokenManager? = null
 
@@ -24,7 +21,7 @@ class TokenManager private constructor(private val context: Context) {
     private val accountManager by lazy { AccountManager.get(context) }
 
     private val accountType
-        get() = context.resources.getString(R.string.account_type)
+        get() = context?.resources?.getString(R.string.account_type)
 
     private val account: Account?
         get() {
@@ -37,7 +34,7 @@ class TokenManager private constructor(private val context: Context) {
             }
         }
 
-    fun getTokenEmailAddress() : String {
+    open fun getTokenEmailAddress() : String {
         if (account != null) {
             return account!!.name
         } else {
@@ -45,7 +42,7 @@ class TokenManager private constructor(private val context: Context) {
         }
     }
 
-    suspend fun getToken(): String = withContext(Dispatchers.IO) {
+    open suspend fun getToken(): String = withContext(Dispatchers.IO) {
         if (account != null) {
             return@withContext getAndCheckTokenForAccount(account!!)
         } else {
