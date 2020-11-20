@@ -14,8 +14,8 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
 
     val status: MutableLiveData<ServerEndpointStatus> = MutableLiveData()
     protected val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
+    internal val dataCache: MutableMap<String, T> = mutableMapOf()
     private lateinit var handler: Handler
-    private val dataCache: MutableMap<String, T> = mutableMapOf()
     private lateinit var updateRunnable: Runnable
     private val lock = Any()
 
@@ -30,7 +30,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         }
     }
 
-    protected open suspend fun fetchAllData() {
+    internal open suspend fun fetchAllData() {
 
     }
 

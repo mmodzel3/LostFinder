@@ -8,7 +8,7 @@ import com.github.mmodzel3.lostfinder.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-open class TokenManager protected constructor(private val context: Context?) {
+class TokenManager private constructor(private val context: Context?) {
     companion object {
         var tokenManager: TokenManager? = null
 

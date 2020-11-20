@@ -1,10 +1,7 @@
 package com.github.mmodzel3.lostfinder.user
 
-import android.content.Context
-import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.server.ServerResponse
-import org.junit.Before
 import java.util.*
 
 abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
@@ -17,20 +14,26 @@ abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     protected lateinit var userEndpoint: UserEndpoint
+    protected var users: List<User> = emptyList()
 
-    fun setUp(tokenManager: TokenManager) {
+    override fun setUp() {
         super.setUp()
-        userEndpoint = UserEndpointFactory.createUserEndpoint(tokenManager)
+        createTestUsers()
+
+        userEndpoint = UserEndpointFactory.createUserEndpoint(null)
     }
 
     fun mockGetAllUsersResponse() {
-        val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS)
-        val user = User(USER_ID, USER_EMAIL, null, USER_NAME, USER_ROLE, null, yesterday)
-        val users: List<User> = listOf(user)
         mockServerJsonResponse(users)
     }
 
     fun mockUpdateUserLocationResponse() {
         mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    protected fun createTestUsers() {
+        val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS)
+        val user = User(USER_ID, USER_EMAIL, null, USER_NAME, USER_ROLE, null, yesterday)
+        users = listOf(user)
     }
 }
