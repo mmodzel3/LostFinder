@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewModel() {
     companion object {
@@ -49,7 +50,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         handler.removeCallbacks(updateRunnable)
     }
 
-    protected fun update(dataToUpdate: List<T>) {
+    internal fun update(dataToUpdate: List<T>) {
         synchronized(lock) {
             updateCache(dataToUpdate)
 
@@ -66,7 +67,8 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
             val cachedElement: T? = dataCache[it.id]
 
             if (cachedElement != null) {
-                dataChanged = dataChanged || updateElementIfNecessary(cachedElement, it)
+                val updateMade: Boolean = updateElementIfNecessary(cachedElement, it)
+                dataChanged = updateMade || dataChanged
             } else {
                 dataChanged = true
                 addElement(it)
@@ -79,8 +81,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
     }
 
     private fun updateElementIfNecessary(cachedElement: T, elementToUpdate: T): Boolean {
-        return if (cachedElement.lastUpdateDate <= elementToUpdate.lastUpdateDate) {
-            dataCache.remove(elementToUpdate.id)
+        return if (cachedElement.lastUpdateDate.before(elementToUpdate.lastUpdateDate)) {
             dataCache[elementToUpdate.id] = elementToUpdate
             true
         } else {
