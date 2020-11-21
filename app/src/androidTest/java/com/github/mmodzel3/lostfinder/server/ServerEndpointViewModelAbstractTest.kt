@@ -60,7 +60,7 @@ class ServerEndpointViewModelAbstractTest {
 
         updateTestData()
         addTestDataToCache()
-        
+
         serverEndpointViewModelAbstract.update(oldTestData)
         assertThat(serverEndpointViewModelAbstract.dataCache).hasSize(testData.size)
 

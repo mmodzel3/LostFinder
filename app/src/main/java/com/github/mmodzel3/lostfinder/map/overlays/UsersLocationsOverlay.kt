@@ -10,7 +10,7 @@ import org.osmdroid.views.overlay.Marker
 
 
 class UsersLocationsOverlay(private val map: MapView, private val context: Context): FolderOverlay() {
-    private val usersMarkers: MutableMap<String, Marker> = mutableMapOf()
+    internal val usersMarkers: MutableMap<String, Marker> = mutableMapOf()
     private val role_user = context.getString(R.string.role_user)
     private val role_admin = context.getString(R.string.role_admin)
     private val role_owner = context.getString(R.string.role_owner)
@@ -88,10 +88,16 @@ class UsersLocationsOverlay(private val map: MapView, private val context: Conte
     }
 
     private fun removeOldData(users: Map<String, User>) {
+        val keysToRemove: MutableList<String> = ArrayList()
+
         usersMarkers.forEach {
             if(it.key !in users.keys) {
-                removeMarker(it.key)
+                keysToRemove.add(it.key)
             }
+        }
+
+        keysToRemove.forEach {
+            usersMarkers.remove(it)
         }
     }
 }
