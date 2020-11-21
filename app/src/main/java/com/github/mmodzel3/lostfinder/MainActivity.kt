@@ -1,9 +1,9 @@
 package com.github.mmodzel3.lostfinder
 
 import android.os.Bundle
-import com.github.mmodzel3.lostfinder.map.CurrentLocationMapWithCenteringActivity
+import com.github.mmodzel3.lostfinder.map.UsersLocationsMapActivity
 
-class MainActivity: CurrentLocationMapWithCenteringActivity() {
+class MainActivity: UsersLocationsMapActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

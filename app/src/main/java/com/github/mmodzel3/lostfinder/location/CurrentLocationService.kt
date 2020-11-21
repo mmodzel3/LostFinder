@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.IBinder
@@ -16,17 +17,30 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
+import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.user.UserEndpoint
+import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
+import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.android.gms.location.*
-import org.osmdroid.util.GeoPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class CurrentLocationService : Service() {
-    private val NOTIFICATION_CHANNEL_ID = "Localisation"
-    private val NOTIFICATION_ID = 1;
+    companion object {
+        private const val NOTIFICATION_CHANNEL_ID = "Localisation"
+        private const val NOTIFICATION_ID = 1;
 
-    private val LOCATION_ASK_INTERVAL = 10000
-    private val LOCATION_ASK_FASTEST_INTERVAL = 5000
-    private val LOCATION_ASK_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY
+        private const val LOCATION_ASK_INTERVAL = 10000
+        private const val LOCATION_ASK_FASTEST_INTERVAL = 5000
+        private const val LOCATION_ASK_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        private const val NOTIFICATION_ENDPOINT_ACCESS_ERROR_ID = 2002
+    }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -38,11 +52,24 @@ class CurrentLocationService : Service() {
 
     private var lastLocation : Location? = null
 
+    private lateinit var userEndpoint: UserEndpoint
+    private lateinit var endpointAccessErrorNotification: Notification
+    private var endpointAccessErrorNotificationVisible = false
+    private val ioScope = CoroutineScope(Dispatchers.IO + Job())
+
     override fun onCreate() {
         super.onCreate()
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel()
+        }
+
         val notification = createServiceNotification()
         startForeground(NOTIFICATION_ID, notification)
+
+        userEndpoint =
+                UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
+        endpointAccessErrorNotification = createEndpointAccessErrorNotification()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         startLocationListeningIfPossible()
@@ -52,6 +79,7 @@ class CurrentLocationService : Service() {
         super.onDestroy()
 
         locationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
+        hideEndpointAccessErrorNotificationIfVisible()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -69,14 +97,27 @@ class CurrentLocationService : Service() {
     }
 
     private fun createServiceNotification() : Notification {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel()
-        }
-
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(getText(R.string.location_notification_title))
                 .setContentText(getText(R.string.location_notification_message))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build()
+    }
+
+    private fun createEndpointAccessErrorNotification() : Notification {
+        val title: CharSequence = getText(R.string.location_notification_title)
+        val text: CharSequence = getText(R.string.location_err_endpoint_access)
+
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.ic_user_location_center)
+                .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+                .setColor(Color.RED)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(text).setBigContentTitle(title))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build()
     }
 
@@ -92,6 +133,26 @@ class CurrentLocationService : Service() {
         val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun showEndpointAccessErrorNotificationIfNotVisible() {
+        if (!endpointAccessErrorNotificationVisible) {
+            with(NotificationManagerCompat.from(this)) {
+                notify(NOTIFICATION_ENDPOINT_ACCESS_ERROR_ID, endpointAccessErrorNotification)
+            }
+
+            endpointAccessErrorNotificationVisible = true
+        }
+    }
+
+    private fun hideEndpointAccessErrorNotificationIfVisible() {
+        if (endpointAccessErrorNotificationVisible) {
+            with(NotificationManagerCompat.from(this)) {
+                cancel(NOTIFICATION_ENDPOINT_ACCESS_ERROR_ID)
+            }
+
+            endpointAccessErrorNotificationVisible = false
+        }
     }
 
     private fun startLocationListeningIfPossible() {
@@ -116,6 +177,20 @@ class CurrentLocationService : Service() {
     private fun onLocationChange(location: Location) {
         lastLocation = location
         sendLocationChangeToAll(location)
+        sendLocationChangeToServer(location)
+    }
+
+    private fun sendLocationChangeToServer(location: Location) {
+        ioScope.launch {
+            try {
+                userEndpoint.updateUserLocation(Location(location.longitude, location.latitude))
+                hideEndpointAccessErrorNotificationIfVisible()
+            } catch (e: UserEndpointAccessErrorException) {
+                showEndpointAccessErrorNotificationIfNotVisible()
+            } catch (e: InvalidTokenException) {
+                showEndpointAccessErrorNotificationIfNotVisible()
+            }
+        }
     }
 
     private fun createLocationRequest() : LocationRequest? {
