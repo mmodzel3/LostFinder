@@ -1,12 +1,10 @@
-package com.github.mmodzel3.lostfinder.authentication.login
+package com.github.mmodzel3.lostfinder.security.authentication.login
 
 import android.accounts.Account
-import android.accounts.AccountAuthenticatorResponse
 import android.accounts.AccountManager
 import android.content.Context
-import android.os.Parcel
-import com.github.mmodzel3.lostfinder.authentication.encryption.DecryptorStub
-import com.github.mmodzel3.lostfinder.authentication.encryption.EncryptorStub
+import com.github.mmodzel3.lostfinder.security.authentication.encryption.DecryptorStub
+import com.github.mmodzel3.lostfinder.security.authentication.encryption.EncryptorStub
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface

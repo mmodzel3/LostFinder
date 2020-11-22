@@ -14,7 +14,6 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.MapViewRepository
 import org.osmdroid.views.overlay.Marker
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class UsersLocationsOverlayTest {

@@ -1,4 +1,4 @@
-package com.github.mmodzel3.lostfinder.authentication.encryption
+package com.github.mmodzel3.lostfinder.security.authentication.encryption
 
 import android.content.Context
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface

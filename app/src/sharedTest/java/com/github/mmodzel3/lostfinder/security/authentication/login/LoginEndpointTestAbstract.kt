@@ -1,4 +1,4 @@
-package com.github.mmodzel3.lostfinder.authentication.login
+package com.github.mmodzel3.lostfinder.security.authentication.login
 
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpoint
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointFactory

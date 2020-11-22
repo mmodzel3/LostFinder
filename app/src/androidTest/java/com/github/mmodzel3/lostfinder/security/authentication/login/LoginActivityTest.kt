@@ -1,4 +1,4 @@
-package com.github.mmodzel3.lostfinder.authentication.login
+package com.github.mmodzel3.lostfinder.security.authentication.login
 
 import android.accounts.Account
 import android.accounts.AccountManager
@@ -17,7 +17,6 @@ import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.google.common.truth.Truth.assertThat
 import org.hamcrest.BaseMatcher
 import org.hamcrest.CoreMatchers.isA

@@ -1,9 +1,8 @@
-package com.github.mmodzel3.lostfinder.authentication.authenticator
+package com.github.mmodzel3.lostfinder.security.authentication.authenticator
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import com.github.mmodzel3.lostfinder.authentication.login.LoginAccountManagerTestAbstract
-import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccountManagerTestAbstract
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
