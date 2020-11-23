@@ -10,8 +10,8 @@ import retrofit2.http.Query
 
 interface ChatEndpoint : ServerEndpointInterface {
     @GET("/api/chat")
-    suspend fun getMessages(@Query("start") startMessageNumber: Int,
-                            @Query("end") endMessageNumber: Int): ServerResponse
+    suspend fun getMessages(@Query("page") page: Int,
+                            @Query("pageSize") pageSize: Int): List<ChatMessage>
 
     @POST("/api/chat")
     suspend fun sendMessage(@Body chatMessage: ChatMessage): ServerResponse

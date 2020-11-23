@@ -5,7 +5,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.authentication.login.LoginEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
