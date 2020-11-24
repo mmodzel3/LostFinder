@@ -1,9 +1,14 @@
 package com.github.mmodzel3.lostfinder
 
 import android.os.Bundle
+import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.map.UsersLocationsMapActivity
 
-class MainActivity: UsersLocationsMapActivity() {
+class MainActivity : ChatActivity() {
+
+}
+
+/* class MainActivity: UsersLocationsMapActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -15,4 +20,4 @@ class MainActivity: UsersLocationsMapActivity() {
         super.onDestroy()
         deInitMap()
     }
-}
+}*/

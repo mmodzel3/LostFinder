@@ -114,7 +114,7 @@ class UsersLocationsOverlayTest {
 
         users.forEach {
             val user = it.value
-            val newUser = User(user.id, user.emailAddress, user.password, user.username, user.role,
+            val newUser = User(user.id, user.email, user.password, user.username, user.role,
                                 Location(TEST_LONGITUDE, TEST_LATITUDE), Date())
 
             newUsers[it.key] = newUser

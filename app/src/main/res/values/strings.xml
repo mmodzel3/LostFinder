@@ -51,7 +51,7 @@
     </string>
 
     <string name="activity_chat_msg_example_name">
-        Me
+        Bob
     </string>
 
     <string name="activity_chat_msg_example_text">
@@ -60,5 +60,9 @@
 
     <string name="activity_chat_msg_example_time">
         17:45
+    </string>
+
+    <string name="activity_chat_msg_me">
+        Me
     </string>
 </resources>

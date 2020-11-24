@@ -5,7 +5,7 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointData
 import java.util.*
 
 data class User(override val id: String,
-                val emailAddress: String,
+                val email: String,
                 val password: String?,
                 val username: String,
                 val role: String,

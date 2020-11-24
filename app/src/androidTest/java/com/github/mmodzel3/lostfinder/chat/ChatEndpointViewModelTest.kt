@@ -77,7 +77,7 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
     fun whenFetchAllDataAndHasDataCachedThenGotDataUpdated() {
         chatEndpointViewModel.dataCache.putAll(changeTestMessagesToMap())
         updateTestMessages()
-        
+
         mockGetMessagesResponse()
 
         runBlocking {

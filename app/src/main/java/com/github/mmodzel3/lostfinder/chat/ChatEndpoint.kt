@@ -1,7 +1,6 @@
 package com.github.mmodzel3.lostfinder.chat
 
 import com.github.mmodzel3.lostfinder.server.ServerEndpointInterface
-import com.github.mmodzel3.lostfinder.server.ServerResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -14,5 +13,5 @@ interface ChatEndpoint : ServerEndpointInterface {
                             @Query("pageSize") pageSize: Int): List<ChatMessage>
 
     @POST("/api/chat")
-    suspend fun sendMessage(@Body chatMessage: ChatMessage): ServerResponse
+    suspend fun sendMessage(@Body chatUserMessage: ChatUserMessage): ChatMessage
 }
