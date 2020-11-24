@@ -70,10 +70,8 @@ open class ChatActivity : AppCompatActivity() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!chatEndpointViewModel.status.equals(ServerEndpointStatus.FETCHING) &&
-                    !recyclerView.canScrollVertically(-1)
-                ) {
-                    chatEndpointViewModel.forceFetchAdditionalMessages()
+                if (!recyclerView.canScrollVertically(-1)) {
+                    onChatScrollToEnd()
                 }
             }
         })
@@ -105,12 +103,20 @@ open class ChatActivity : AppCompatActivity() {
         val text: String = messageEditText.text.toString()
         val message: ChatUserMessage = ChatUserMessage(text, Date())
 
-        disableSendButton()
+        if (text.trim() != "") {
+            disableSendButton()
 
-        lifecycleScope.launch {
-            chatEndpoint.sendMessage(message)
-            messageEditText.text.clear()
-            enableSendButton()
+            lifecycleScope.launch {
+                chatEndpoint.sendMessage(message)
+                messageEditText.text.clear()
+                enableSendButton()
+            }
+        }
+    }
+
+    private fun onChatScrollToEnd() {
+        if (!chatEndpointViewModel.status.equals(ServerEndpointStatus.FETCHING)) {
+            chatEndpointViewModel.forceFetchAdditionalMessages()
         }
     }
 
