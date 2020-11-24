@@ -13,7 +13,11 @@ class ChatAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapter
         const val MSG_SEND_TYPE = 2
     }
 
-    var messages: List<ChatMessage> = ArrayList()
+    var messages: MutableList<ChatMessage> = ArrayList()
+        set(value: MutableList<ChatMessage>) {
+            value.sortBy { it.sendDate }
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         return if (viewType == MSG_RECV_TYPE) {

@@ -3,7 +3,7 @@ package com.github.mmodzel3.lostfinder.chat
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import kotlinx.coroutines.launch
 import java.util.*
+
 
 open class ChatActivity : AppCompatActivity() {
     private val chatEndpoint: ChatEndpoint by lazy {
@@ -32,6 +34,8 @@ open class ChatActivity : AppCompatActivity() {
     private lateinit var tokenManager: TokenManager
     private lateinit var chatEndpointViewModelObserver: Observer<in MutableMap<String, ChatMessage>>
 
+    private var firstFetchMessages = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,9 +49,7 @@ open class ChatActivity : AppCompatActivity() {
 
         chatAdapter = ChatAdapter(tokenManager)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = chatAdapter
-
+        initRecyclerView()
         observeChatEndpointViewModel()
         initSendButton()
     }
@@ -58,10 +60,30 @@ open class ChatActivity : AppCompatActivity() {
         chatEndpointViewModel.messages.removeObserver(chatEndpointViewModelObserver)
     }
 
+    private fun initRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = chatAdapter
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!chatEndpointViewModel.status.equals(ServerEndpointStatus.FETCHING) &&
+                    !recyclerView.canScrollVertically(-1)) {
+                    chatEndpointViewModel.forceFetchAdditionalMessages()
+                }
+            }
+        })
+    }
+
     private fun observeChatEndpointViewModel() {
         chatEndpointViewModelObserver = Observer {
-            chatAdapter.messages = it.values.toList()
+            chatAdapter.messages = it.values.toMutableList()
             chatAdapter.notifyDataSetChanged()
+
+            if (firstFetchMessages) {
+                recyclerView.scrollToPosition(it.values.size-1)
+                firstFetchMessages = false
+            }
         }
 
         chatEndpointViewModel.messages.observe(this, chatEndpointViewModelObserver)
