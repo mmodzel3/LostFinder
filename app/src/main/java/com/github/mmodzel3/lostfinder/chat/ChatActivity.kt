@@ -3,7 +3,6 @@ package com.github.mmodzel3.lostfinder.chat
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -61,14 +60,19 @@ open class ChatActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.reverseLayout = true
+        linearLayoutManager.stackFromEnd = true
+
+        recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = chatAdapter
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!chatEndpointViewModel.status.equals(ServerEndpointStatus.FETCHING) &&
-                    !recyclerView.canScrollVertically(-1)) {
+                    !recyclerView.canScrollVertically(-1)
+                ) {
                     chatEndpointViewModel.forceFetchAdditionalMessages()
                 }
             }
@@ -81,7 +85,7 @@ open class ChatActivity : AppCompatActivity() {
             chatAdapter.notifyDataSetChanged()
 
             if (firstFetchMessages) {
-                recyclerView.scrollToPosition(it.values.size-1)
+                recyclerView.scrollToPosition(0)
                 firstFetchMessages = false
             }
         }

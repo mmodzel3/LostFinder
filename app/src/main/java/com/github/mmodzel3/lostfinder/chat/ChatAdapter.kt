@@ -15,7 +15,7 @@ class ChatAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapter
 
     var messages: MutableList<ChatMessage> = ArrayList()
         set(value: MutableList<ChatMessage>) {
-            value.sortBy { it.sendDate }
+            value.sortByDescending { it.sendDate }
             field = value
         }
 
