@@ -1,12 +1,12 @@
 package com.github.mmodzel3.lostfinder.notification
 
-import android.app.Notification
+import androidx.lifecycle.MutableLiveData
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.user.UserEndpoint
 import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,13 +14,15 @@ import kotlinx.coroutines.launch
 
 class PushNotificationService : FirebaseMessagingService() {
     companion object {
+        val last_notification = MutableLiveData<PushNotification>()
+
         const val NOTIFICATION_DATA_TYPE_FIELD = "type"
         const val NOTIFICATION_DATA_FIELD = "data"
     }
 
-    internal val notificationListeners: ArrayList<PushNotificationListener> = ArrayList()
     private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
+    private lateinit var localBroadcastManager: LocalBroadcastManager
     private lateinit var tokenManager: TokenManager
     private lateinit var userEndpoint: UserEndpoint
 
@@ -40,17 +42,7 @@ class PushNotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         val notification: PushNotification = convertRemoteMessageToPushNotification(message)
 
-        notificationListeners.forEach {
-            it.onNotificationReceive(notification)
-        }
-    }
-
-    fun registerListener(listener: PushNotificationListener) {
-        notificationListeners.add(listener)
-    }
-
-    fun unregisterListener(listener: PushNotificationListener) {
-        notificationListeners.remove(listener)
+        last_notification.postValue(notification)
     }
 
     private fun convertRemoteMessageToPushNotification(message: RemoteMessage): PushNotification {
