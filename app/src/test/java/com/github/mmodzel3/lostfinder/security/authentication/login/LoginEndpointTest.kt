@@ -7,6 +7,7 @@ class LoginEndpointTest : LoginEndpointTestAbstract() {
     companion object {
         private const val EMAIL_ADDRESS = "example@example.com"
         private const val PASSWORD = "password"
+        private const val NOTIFICATION_DEST_TOKEN = "notification_token"
     }
 
     @Test
@@ -15,7 +16,7 @@ class LoginEndpointTest : LoginEndpointTestAbstract() {
 
         assertThrows<LoginEndpointAccessErrorException> {
             runBlocking {
-                loginEndpoint.login(EMAIL_ADDRESS, PASSWORD)
+                loginEndpoint.login(EMAIL_ADDRESS, PASSWORD, NOTIFICATION_DEST_TOKEN)
             }
         }
     }

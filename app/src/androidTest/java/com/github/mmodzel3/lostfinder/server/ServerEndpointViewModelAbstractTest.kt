@@ -3,7 +3,6 @@ package com.github.mmodzel3.lostfinder.server
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap

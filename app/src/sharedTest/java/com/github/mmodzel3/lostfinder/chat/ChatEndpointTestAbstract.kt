@@ -50,6 +50,6 @@ abstract class ChatEndpointTestAbstract : ServerEndpointTestAbstract() {
 
     protected fun createTestUser() {
         user = User(MSG_USER_ID, MSG_USER_EMAIL, null,
-            MSG_USER_NAME, MSG_USER_ROLE, null, Date())
+            MSG_USER_NAME, MSG_USER_ROLE, null, Date(), null)
     }
 }

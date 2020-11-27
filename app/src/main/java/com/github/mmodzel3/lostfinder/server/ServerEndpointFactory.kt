@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ServerEndpointFactory {
-    var SERVER_URL = "http://192.168.0.101:8080/"
+    var SERVER_URL = "http://localhost:8080/"
 
     inline fun <reified T: ServerEndpointInterface>
             createServerEndpoint(errorInterceptor: ServerEndpointErrorInterceptor,
@@ -31,7 +31,7 @@ object ServerEndpointFactory {
     fun createRetrofit(errorInterceptor: ServerEndpointErrorInterceptor,
                        tokenManager: TokenManager? = null) : Retrofit {
         val gson: Gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
             .create()
 
         return Retrofit.Builder()
