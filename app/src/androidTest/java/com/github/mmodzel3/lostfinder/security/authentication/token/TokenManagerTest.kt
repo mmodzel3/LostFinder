@@ -41,7 +41,9 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
     }
 
     @After
-    fun tearDown() {
+    override fun tearDown() {
+        super.tearDown()
+
         removeAccounts()
     }
 

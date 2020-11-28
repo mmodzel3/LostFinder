@@ -4,6 +4,7 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
+import org.junit.Before
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -21,6 +22,7 @@ abstract class ChatEndpointTestAbstract : ServerEndpointTestAbstract() {
     protected lateinit var messages: MutableList<ChatMessage>
     protected lateinit var user: User
 
+    @Before
     override fun setUp() {
         super.setUp()
         createTestUser()
@@ -34,7 +36,7 @@ abstract class ChatEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     fun mockSendMessageResponse() {
-        mockServerJsonResponse(ServerResponse.OK)
+        mockServerJsonResponse(messages[0])
     }
 
     protected fun createTestMessages() {

@@ -65,7 +65,9 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
     }
 
     @After
-    fun tearDown() {
+    override fun tearDown() {
+        super.tearDown()
+
         IdlingRegistry.getInstance().unregister(loginIdlingResource.idlingResource)
         removeAccounts()
     }
