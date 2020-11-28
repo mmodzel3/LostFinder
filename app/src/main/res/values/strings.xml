@@ -65,4 +65,12 @@
     <string name="activity_chat_msg_me">
         Me
     </string>
+
+    <string name="activity_map_message">
+        Message
+    </string>
+
+    <string name="activity_chat_map">
+        Map
+    </string>
 </resources>

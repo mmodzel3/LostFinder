@@ -1,6 +1,9 @@
 package com.github.mmodzel3.lostfinder.chat
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.viewModels
@@ -9,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
@@ -59,10 +63,25 @@ open class ChatActivity : AppCompatActivity() {
         chatEndpointViewModel.messages.removeObserver(chatEndpointViewModelObserver)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_chat, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.itemId
+        return if (id == R.id.activity_chat_it_map) {
+            goToMapActivity()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun initRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.reverseLayout = true
-        linearLayoutManager.stackFromEnd = true
+        linearLayoutManager.stackFromEnd = false
 
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = chatAdapter
@@ -126,5 +145,12 @@ open class ChatActivity : AppCompatActivity() {
 
     private fun disableSendButton() {
         sendButton.isEnabled = false
+    }
+
+    private fun goToMapActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
     }
 }

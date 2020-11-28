@@ -12,7 +12,7 @@ open class CurrentLocationMapWithCenteringActivity : CurrentLocationMapActivity(
     }
 
     private fun initMapCentering() {
-        val centerMapToUserButton : ImageButton = findViewById(R.id.center_map_current_location)
+        val centerMapToUserButton : ImageButton = findViewById(R.id.activity_map_center_map_current_location)
         centerMapToUserButton.setOnClickListener {
             mapController.animateTo(currentLocationMarker.position)
         }

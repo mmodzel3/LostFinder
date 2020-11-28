@@ -12,10 +12,7 @@ import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 open class PushNotificationService : FirebaseMessagingService() {
     companion object {
@@ -76,7 +73,7 @@ open class PushNotificationService : FirebaseMessagingService() {
     }
 
     private fun sendNotificationDestTokenToServer(token: String) {
-        ioScope.launch {
+        runBlocking{
             try {
                 userEndpoint.updateUserNotificationDestToken(token)
             } catch (e: UserEndpointAccessErrorException) {
