@@ -1,22 +1,24 @@
 package com.github.mmodzel3.lostfinder.chat
 
+import android.view.View
 import androidx.core.view.size
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManagerStub
 import com.google.common.truth.Truth.assertThat
 import okhttp3.mockwebserver.RecordedRequest
+import org.hamcrest.Matchers.isEmptyString
+import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Test
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class ChatActivityTest : ChatEndpointTestAbstract() {
@@ -26,16 +28,13 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
     }
 
     private lateinit var chatScenario: ActivityScenario<ChatActivity>
+    private lateinit var decorView: View
 
     @Before
     override fun setUp() {
         super.setUp()
 
         TokenManager.tokenManager = TokenManagerStub.getInstance()
-        mockGetMessagesResponse()
-
-        chatScenario = ActivityScenario.launch(ChatActivity::class.java)
-        server.takeRequest()
     }
 
     @After
@@ -47,6 +46,8 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
 
     @Test
     fun whenOpenActivityThenMessagesFromServerAreShown() {
+        startActivityNormally()
+
         chatScenario.onActivity {
             val recyclerView: RecyclerView = it.findViewById(R.id.activity_chat_rv_message_list)
 
@@ -55,7 +56,32 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
     }
 
     @Test
+    fun whenOpenActivityAndApiAccessErrorThenErrorToastIsShown() {
+        startActivityWithApiAccessError()
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_chat_err_fetching_msg_api_access_problem))
+                .inRoot(withDecorView(not(decorView)))
+                .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun whenOpenActivityWithInvalidCredentialsThenErrorToastIsShown() {
+        startActivityWithInvalidCredentials()
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_chat_err_fetching_msg_invalid_token))
+                .inRoot(withDecorView(not(decorView)))
+                .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
     fun whenSendMessageWithTextThenItIsSend() {
+        startActivityNormally()
         mockSendMessageResponse()
 
         onView(withId(R.id.activity_chat_et_message))
@@ -73,7 +99,25 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
     }
 
     @Test
+    fun whenSendMessageWithTextThenMessageEditTextIsCleared() {
+        startActivityNormally()
+        mockSendMessageResponse()
+
+        onView(withId(R.id.activity_chat_et_message))
+            .perform(replaceText(TEST_MESSAGE))
+
+        onView(withId(R.id.activity_chat_bt_send))
+            .perform(click())
+
+        server.takeRequest(1000, TimeUnit.MILLISECONDS)
+
+        onView(withId(R.id.activity_chat_et_message))
+            .check(matches(withText(isEmptyString())))
+    }
+
+    @Test
     fun whenSendMessageWithOnlySpacesThenItIsNotSend() {
+        startActivityNormally()
         mockSendMessageResponse()
 
         onView(withId(R.id.activity_chat_et_message))
@@ -84,5 +128,75 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
 
         val request: RecordedRequest? = server.takeRequest(1, TimeUnit.MILLISECONDS)
         assertThat(request).isNull()
+    }
+
+    @Test
+    fun whenSendMessageAndHasProblemWithChatApiAccessThenErrorToastIsShown() {
+        startActivityNormally()
+        mockServerFailureResponse()
+
+        onView(withId(R.id.activity_chat_et_message))
+            .perform(replaceText(TEST_MESSAGE))
+
+        onView(withId(R.id.activity_chat_bt_send))
+            .perform(click())
+
+        onView(withText(R.string.activity_chat_err_sending_msg_api_access_problem))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun whenSendMessageAndHasInvalidCredentialsThenErrorToastIsShown() {
+        startActivityNormally()
+        mockInvalidCredentialsResponse()
+
+        onView(withId(R.id.activity_chat_et_message))
+            .perform(replaceText(TEST_MESSAGE))
+
+        onView(withId(R.id.activity_chat_bt_send))
+            .perform(click())
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_chat_err_sending_msg_invalid_token))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    private fun startActivityNormally() {
+        mockGetMessagesResponse()
+
+        chatScenario = ActivityScenario.launch(ChatActivity::class.java)
+        server.takeRequest()
+
+        chatScenario.onActivity {
+            decorView = it.window.decorView
+        }
+    }
+
+    private fun startActivityWithApiAccessError() {
+        mockServerFailureResponse()
+
+        chatScenario = ActivityScenario.launch(ChatActivity::class.java)
+        server.takeRequest()
+
+        chatScenario.onActivity {
+            decorView = it.window.decorView
+        }
+    }
+
+    private fun startActivityWithInvalidCredentials() {
+        mockInvalidCredentialsResponse()
+
+        chatScenario = ActivityScenario.launch(ChatActivity::class.java)
+        server.takeRequest()
+
+        chatScenario.onActivity {
+            decorView = it.window.decorView
+        }
     }
 }

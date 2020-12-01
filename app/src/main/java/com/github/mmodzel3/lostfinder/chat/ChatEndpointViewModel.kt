@@ -26,7 +26,6 @@ class ChatEndpointViewModel (private val chatEndpoint: ChatEndpoint) : ServerPus
 
         viewModelScope.launch {
             fetchAdditionalMessages()
-            status.postValue(ServerEndpointStatus.OK)
         }
     }
 

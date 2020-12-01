@@ -1,11 +1,13 @@
 package com.github.mmodzel3.lostfinder.chat
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
+import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import kotlinx.coroutines.launch
@@ -35,7 +39,8 @@ open class ChatActivity : AppCompatActivity() {
 
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var tokenManager: TokenManager
-    private lateinit var chatEndpointViewModelObserver: Observer<in MutableMap<String, ChatMessage>>
+    private lateinit var chatEndpointViewModelDataObserver: Observer<in MutableMap<String, ChatMessage>>
+    private lateinit var chatEndpointViewModelStatusObserver: Observer<ServerEndpointStatus>
 
     private var firstFetchMessages = true
 
@@ -60,7 +65,8 @@ open class ChatActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        chatEndpointViewModel.messages.removeObserver(chatEndpointViewModelObserver)
+        chatEndpointViewModel.messages.removeObserver(chatEndpointViewModelDataObserver)
+        chatEndpointViewModel.status.removeObserver(chatEndpointViewModelStatusObserver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -97,7 +103,12 @@ open class ChatActivity : AppCompatActivity() {
     }
 
     private fun observeChatEndpointViewModel() {
-        chatEndpointViewModelObserver = Observer {
+        observeChatEndpointViewModelData()
+        observeChatEndpointViewModelStatus()
+    }
+
+    private fun observeChatEndpointViewModelData() {
+        chatEndpointViewModelDataObserver = Observer {
             chatAdapter.messages = it.values.toMutableList()
             chatAdapter.notifyDataSetChanged()
 
@@ -107,7 +118,24 @@ open class ChatActivity : AppCompatActivity() {
             }
         }
 
-        chatEndpointViewModel.messages.observe(this, chatEndpointViewModelObserver)
+        chatEndpointViewModel.messages.observe(this, chatEndpointViewModelDataObserver)
+    }
+
+    private fun observeChatEndpointViewModelStatus() {
+        val activity: Activity = this
+
+        chatEndpointViewModelStatusObserver = Observer {
+            if (it == ServerEndpointStatus.ERROR) {
+                Toast.makeText(activity, R.string.activity_chat_err_fetching_msg_api_access_problem,
+                    Toast.LENGTH_LONG).show()
+            } else if (it == ServerEndpointStatus.INVALID_TOKEN) {
+                Toast.makeText(activity, R.string.activity_chat_err_fetching_msg_invalid_token,
+                    Toast.LENGTH_LONG).show()
+                goToLoginActivity()
+            }
+        }
+
+        chatEndpointViewModel.status.observe(this, chatEndpointViewModelStatusObserver)
     }
 
     private fun initSendButton() {
@@ -124,12 +152,28 @@ open class ChatActivity : AppCompatActivity() {
 
         if (text.trim() != "") {
             disableSendButton()
+            sendMessage(message)
+        }
+    }
 
-            lifecycleScope.launch {
+    private fun sendMessage(message: ChatUserMessage) {
+        val activity: Activity = this
+
+        lifecycleScope.launch {
+            try {
                 chatEndpoint.sendMessage(message)
-                messageEditText.text.clear()
-                enableSendButton()
+                messageEditText.setText("")
+            } catch (e: ChatEndpointAccessErrorException) {
+                Toast.makeText(activity, R.string.activity_chat_err_sending_msg_api_access_problem,
+                    Toast.LENGTH_SHORT).show()
+            } catch (e: InvalidTokenException) {
+                Toast.makeText(activity, R.string.activity_chat_err_sending_msg_invalid_token,
+                    Toast.LENGTH_LONG).show()
+
+                goToLoginActivity()
             }
+
+            enableSendButton()
         }
     }
 
@@ -152,5 +196,13 @@ open class ChatActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)
+    }
+
+    private fun goToLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+        finish()
     }
 }

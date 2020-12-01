@@ -66,6 +66,22 @@
         Me
     </string>
 
+    <string name="activity_chat_err_sending_msg_api_access_problem">
+        Problem with sending message. Check your internet connection.
+    </string>
+
+    <string name="activity_chat_err_sending_msg_invalid_token">
+        Problem with sending message. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_chat_err_fetching_msg_api_access_problem">
+        Problem with fetching messages. Check your internet connection.
+    </string>
+
+    <string name="activity_chat_err_fetching_msg_invalid_token">
+        Problem with fetching messages. Your session is expired. Log in to account once again.
+    </string>
+
     <string name="activity_map_message">
         Message
     </string>

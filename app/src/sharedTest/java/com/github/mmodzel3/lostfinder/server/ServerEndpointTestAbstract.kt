@@ -46,4 +46,10 @@ abstract class ServerEndpointTestAbstract : ThrownExceptionTestAbstract() {
             MockResponse()
                 .setResponseCode(500))
     }
+
+    fun mockInvalidCredentialsResponse() {
+        server.enqueue(
+            MockResponse()
+                .setResponseCode(401))
+    }
 }

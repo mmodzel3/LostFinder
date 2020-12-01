@@ -128,7 +128,7 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
 
         onView(withText(R.string.err_login_invalid_credentials))
                 .inRoot(withDecorView(not(decorView)))
-                .check(matches(isDisplayed()));
+                .check(matches(isDisplayed()))
     }
 
     @Test
