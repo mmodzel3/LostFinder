@@ -31,7 +31,7 @@ object ServerEndpointFactory {
     fun createRetrofit(errorInterceptor: ServerEndpointErrorInterceptor,
                        tokenManager: TokenManager? = null) : Retrofit {
         val gson: Gson = GsonBuilder()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
             .create()
 
         return Retrofit.Builder()

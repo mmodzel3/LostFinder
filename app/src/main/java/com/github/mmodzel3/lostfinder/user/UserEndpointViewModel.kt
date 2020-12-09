@@ -1,9 +1,6 @@
 package com.github.mmodzel3.lostfinder.user
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.server.ServerEndpointViewModelAbstract

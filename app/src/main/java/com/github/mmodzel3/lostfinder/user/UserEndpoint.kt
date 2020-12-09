@@ -6,6 +6,7 @@ import com.github.mmodzel3.lostfinder.server.ServerResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface UserEndpoint : ServerEndpointInterface {
     @GET("/api/users")
@@ -13,4 +14,7 @@ interface UserEndpoint : ServerEndpointInterface {
 
     @POST("/api/user/location")
     suspend fun updateUserLocation(@Body location: Location): ServerResponse
+
+    @POST("/api/user/notification/token")
+    suspend fun updateUserNotificationDestToken(@Query("token") token: String): ServerResponse
 }

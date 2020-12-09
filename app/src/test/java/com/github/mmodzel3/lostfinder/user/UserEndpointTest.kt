@@ -1,7 +1,5 @@
-package com.github.mmodzel3.lostfinder.authentication.login
+package com.github.mmodzel3.lostfinder.user
 
-import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
-import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

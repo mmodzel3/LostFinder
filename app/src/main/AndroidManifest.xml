@@ -22,18 +22,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LostFinder">
 
-
         <activity
             android:name=".splash.SplashScreenActivity"
             android:theme="@style/Theme.LostFinder.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".MainActivity" />
         <activity android:name=".security.authentication.login.LoginActivity" />
+        <activity android:name=".chat.ChatActivity" />
 
         <service
             android:name=".security.authentication.authenticator.AuthenticatorService"
@@ -48,11 +48,19 @@
                 android:customTokens="true"
                 android:resource="@xml/authenticator" />
         </service>
-
         <service
             android:name=".location.CurrentLocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
+
+        <service
+            android:name=".notification.PushNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

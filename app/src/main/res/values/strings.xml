@@ -41,4 +41,52 @@
     <string name="location_err_endpoint_access">
         Problem with sending location to server. Check your internet connection.
     </string>
+
+    <string name="activity_chat_enter_message">
+        Enter message
+    </string>
+
+    <string name="activity_chat_send">
+        Send
+    </string>
+
+    <string name="activity_chat_msg_example_name">
+        Bob
+    </string>
+
+    <string name="activity_chat_msg_example_text">
+        Hello, how are you?
+    </string>
+
+    <string name="activity_chat_msg_example_time">
+        17:45
+    </string>
+
+    <string name="activity_chat_msg_me">
+        Me
+    </string>
+
+    <string name="activity_chat_err_sending_msg_api_access_problem">
+        Problem with sending message. Check your internet connection.
+    </string>
+
+    <string name="activity_chat_err_sending_msg_invalid_token">
+        Problem with sending message. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_chat_err_fetching_msg_api_access_problem">
+        Problem with fetching messages. Check your internet connection.
+    </string>
+
+    <string name="activity_chat_err_fetching_msg_invalid_token">
+        Problem with fetching messages. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_map_message">
+        Message
+    </string>
+
+    <string name="activity_chat_map">
+        Map
+    </string>
 </resources>

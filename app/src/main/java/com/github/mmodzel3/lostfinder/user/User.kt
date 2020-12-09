@@ -5,12 +5,13 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointData
 import java.util.*
 
 data class User(override val id: String,
-                val emailAddress: String,
+                val email: String,
                 val password: String?,
                 val username: String,
                 val role: String,
                 val location: Location?,
-                override val lastUpdateDate: Date) : ServerEndpointData {
+                override val lastUpdateDate: Date,
+                val notificationDestToken: String?) : ServerEndpointData {
 
     fun isUser() : Boolean {
         return role == "USER"

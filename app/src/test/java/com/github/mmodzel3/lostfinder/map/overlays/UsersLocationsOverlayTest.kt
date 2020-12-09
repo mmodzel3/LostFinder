@@ -14,7 +14,6 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.MapViewRepository
 import org.osmdroid.views.overlay.Marker
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class UsersLocationsOverlayTest {
@@ -92,7 +91,7 @@ class UsersLocationsOverlayTest {
         users = HashMap()
         for (i in 1..10) {
             val user = User(i.toString(), USER_EMAIL + i.toString(), null,
-                    USER_NAME, USER_ROLE, Location(TEST_LONGITUDE, TEST_LATITUDE), yesterday)
+                    USER_NAME, USER_ROLE, Location(TEST_LONGITUDE, TEST_LATITUDE), yesterday, null)
 
             users[i.toString()] = user
         }
@@ -115,8 +114,8 @@ class UsersLocationsOverlayTest {
 
         users.forEach {
             val user = it.value
-            val newUser = User(user.id, user.emailAddress, user.password, user.username, user.role,
-                                Location(TEST_LONGITUDE, TEST_LATITUDE), Date())
+            val newUser = User(user.id, user.email, user.password, user.username, user.role,
+                                Location(TEST_LONGITUDE, TEST_LATITUDE), Date(), null)
 
             newUsers[it.key] = newUser
         }

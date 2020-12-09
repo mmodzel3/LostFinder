@@ -7,6 +7,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.github.mmodzel3.lostfinder.notification.PushNotificationService
 import com.github.mmodzel3.lostfinder.security.authentication.login.*
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
@@ -121,7 +122,8 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
     private suspend fun retrieveAccountAuthTokenFromServer(account: Account,
                                                            password: String) : String {
 
-        val loginInfo: LoginInfo = loginEndpoint.login(account.name, password)
+        val pushNotificationDestToken: String? = PushNotificationService.getNotificationDestToken(context)
+        val loginInfo: LoginInfo = loginEndpoint.login(account.name, password, pushNotificationDestToken)
 
         if (loginInfo.token.isNotEmpty()) {
             return loginInfo.token

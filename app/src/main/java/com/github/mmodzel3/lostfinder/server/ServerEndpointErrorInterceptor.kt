@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.server
 
+import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -14,6 +15,8 @@ open class ServerEndpointErrorInterceptor : Interceptor {
 
         return if (response.code < 400) {
             response
+        } else if (response.code == 401) {
+            throw InvalidTokenException()
         } else {
             throw ServerEndpointAccessErrorException()
         }

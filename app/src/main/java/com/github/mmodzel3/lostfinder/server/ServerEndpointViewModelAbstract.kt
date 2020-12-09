@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewModel() {
     companion object {
@@ -14,7 +13,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
     }
 
     val status: MutableLiveData<ServerEndpointStatus> = MutableLiveData()
-    protected val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
+    protected open val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
     internal val dataCache: MutableMap<String, T> = mutableMapOf()
     private lateinit var handler: Handler
     private lateinit var updateRunnable: Runnable

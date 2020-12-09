@@ -1,8 +1,12 @@
 package com.github.mmodzel3.lostfinder.map
 
 import android.Manifest
+import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
 import androidx.preference.PreferenceManager
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.permissions.AppCompactActivityWithPermissionsRequest
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
@@ -13,8 +17,10 @@ import java.io.File
 
 
 open class BaseMapActivity :
-        AppCompactActivityWithPermissionsRequest(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                                                    R.string.denied_location_permission_msg) {
+        AppCompactActivityWithPermissionsRequest(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            R.string.denied_location_permission_msg
+        ) {
     private val OSMDROID_BASE_CACHE_DIR = "osmdroid"
     private val OSMDROID_TILE_CACHE_DIR = "tile"
 
@@ -33,10 +39,25 @@ open class BaseMapActivity :
         map.onPause()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_map, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.itemId
+        return if (id == R.id.activity_map_it_message) {
+            goToChatActivity()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     protected open fun initMap() {
         configMap()
 
-        map = findViewById(R.id.map)
+        map = findViewById(R.id.activity_map_map)
         map.setTileSource(TileSourceFactory.MAPNIK)
 
         map.setMultiTouchControls(true);
@@ -65,13 +86,22 @@ open class BaseMapActivity :
     }
 
     private fun loadMapConfig() {
-        Configuration.getInstance().load(applicationContext,
-                PreferenceManager.getDefaultSharedPreferences(applicationContext))
+        Configuration.getInstance().load(
+            applicationContext,
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        )
     }
 
     private fun addRotationGestureToMap() {
         val rotationGestureOverlay = RotationGestureOverlay(map)
         rotationGestureOverlay.isEnabled = true
         map.overlays.add(rotationGestureOverlay)
+    }
+
+    private fun goToChatActivity() {
+        val intent = Intent(this, ChatActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
     }
 }

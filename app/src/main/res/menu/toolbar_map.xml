@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/activity_map_it_message"
+        android:icon="@drawable/ic_message"
+        app:showAsAction="ifRoom"
+        android:title="@string/activity_map_message" />
+</menu>
