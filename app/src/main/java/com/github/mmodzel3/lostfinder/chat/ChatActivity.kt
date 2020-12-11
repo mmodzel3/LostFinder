@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.alert.AlertActivity
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
@@ -78,6 +79,9 @@ open class ChatActivity : AppCompatActivity() {
         val id: Int = item.itemId
         return if (id == R.id.activity_chat_it_map) {
             goToMapActivity()
+            true
+        } else if (id == R.id.activity_chat_it_alert) {
+            goToAlertActivity()
             true
         } else {
             super.onOptionsItemSelected(item)
@@ -193,6 +197,13 @@ open class ChatActivity : AppCompatActivity() {
 
     private fun goToMapActivity() {
         val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+    }
+
+    private fun goToAlertActivity() {
+        val intent = Intent(this, AlertActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)

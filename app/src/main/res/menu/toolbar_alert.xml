@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/activity_chat_it_map"
+        android:id="@+id/activity_alert_it_map"
         android:icon="@drawable/ic_user_location_center"
         app:showAsAction="ifRoom"
-        android:title="@string/activity_chat_map" />
+        android:title="@string/activity_alert_map" />
 
     <item
-        android:id="@+id/activity_chat_it_alert"
-        android:icon="@drawable/ic_white_alert"
+        android:id="@+id/activity_alert_it_chat"
+        android:icon="@drawable/ic_message"
         app:showAsAction="ifRoom"
-        android:title="@string/activity_chat_alert" />
+        android:title="@string/activity_alert_chat" />
 </menu>
