@@ -100,7 +100,7 @@
                 android:layout_height="1dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="#ffffff" />
+                android:background="@color/white" />
 
             <TextView
                 android:id="@+id/activity_alert_tv_description"

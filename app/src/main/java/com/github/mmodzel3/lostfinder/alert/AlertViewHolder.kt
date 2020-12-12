@@ -73,19 +73,26 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             rangeTextView.text = range
         }
 
-    var location: Location
+    var location: Location?
         get() {
             val locationString: String = locationTextView.text.toString()
-            val locationSplit: List<String> = locationString.split(", ")
 
-            val longitude = locationSplit[0].removePrefix("(").toDouble()
-            val latitude = locationSplit[1].removeSuffix(")").toDouble()
+            if (locationString != "") {
+                val locationSplit: List<String> = locationString.split(", ")
 
-            return Location(longitude, latitude)
+                val longitude = locationSplit[0].removePrefix("(").toDouble()
+                val latitude = locationSplit[1].removeSuffix(")").toDouble()
+
+                return Location(longitude, latitude)
+            } else {
+                return null
+            }
         }
 
-        set(value: Location) {
-            val locationString = "(${value.longitude}, ${value.latitude})"
+        set(value: Location?) {
+            val locationString: String = if (location != null)
+                "(${value!!.longitude}, ${value.latitude})" else ""
+
             locationTextView.text = locationString
         }
 

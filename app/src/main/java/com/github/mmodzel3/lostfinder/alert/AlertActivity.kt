@@ -3,8 +3,11 @@ package com.github.mmodzel3.lostfinder.alert
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +52,7 @@ open class AlertActivity : AppCompatActivity() {
         alertAdapter = AlertAdapter(tokenManager)
 
         initRecyclerView()
+        initAddButton()
         observeAlertEndpointViewModel()
     }
 
@@ -116,6 +120,21 @@ open class AlertActivity : AppCompatActivity() {
         }
 
         alertEndpointViewModel.status.observe(this, alertEndpointViewModelStatusObserver)
+    }
+
+    private fun initAddButton() {
+        val addButton: ImageButton = findViewById(R.id.activity_alert_btn_add)
+
+        addButton.setOnClickListener {
+            onAddButtonClick()
+        }
+    }
+
+    private fun onAddButtonClick() {
+        val intent = Intent(this, AlertAddActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
     }
 
     private fun goToMapActivity() {

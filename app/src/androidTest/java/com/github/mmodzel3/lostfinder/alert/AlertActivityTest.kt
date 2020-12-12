@@ -40,8 +40,6 @@ class AlertActivityTest : AlertEndpointTestAbstract() {
     fun whenOpenActivityThenAlertsFromServerAreShown() {
         startActivityNormally()
 
-        Thread.sleep(2000)
-        Thread.sleep(2000)
         alertScenario.onActivity {
             val recyclerView: RecyclerView = it.findViewById(R.id.activity_alert_rv_alert_list)
 

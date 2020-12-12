@@ -8,7 +8,7 @@ interface AlertEndpoint : ServerEndpointInterface {
     @GET("/api/alerts")
     suspend fun getAllActiveAlerts(): List<Alert>
 
-    @GET("/api/alerts/add")
+    @POST("/api/alerts/add")
     suspend fun addAlert(@Body userAlert: UserAlert): Alert
 
     @PUT("/api/alerts/end")

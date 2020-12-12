@@ -35,6 +35,7 @@
         <activity android:name=".security.authentication.login.LoginActivity" />
         <activity android:name=".chat.ChatActivity" />
         <activity android:name=".alert.AlertActivity" />
+        <activity android:name=".alert.AlertAddActivity" />
 
         <service
             android:name=".security.authentication.authenticator.AuthenticatorService"

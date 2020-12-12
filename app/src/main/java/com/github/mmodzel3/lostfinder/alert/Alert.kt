@@ -8,7 +8,7 @@ import java.util.*
 data class Alert(override val id: String,
                  val type: String,
                  val user: User,
-                 val location: Location,
+                 val location: Location?,
                  val range: Double,
                  val title: String,
                  val description: String,
