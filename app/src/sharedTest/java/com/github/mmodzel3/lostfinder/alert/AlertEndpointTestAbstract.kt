@@ -47,6 +47,10 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
         mockServerJsonResponse(alerts[0])
     }
 
+    fun mockEndAlertResponse() {
+        mockServerJsonResponse(alerts[0])
+    }
+
     protected fun createTestAlerts() {
         alerts = ArrayList()
 

@@ -1,6 +1,8 @@
 package com.github.mmodzel3.lostfinder.alert
 
 import android.view.View
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.R
@@ -10,13 +12,14 @@ import java.util.*
 import kotlin.math.round
 
 class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val userNameTextView: TextView = itemView.findViewById(R.id.activity_alert_tv_user_name)
-    private val titleTextView: TextView = itemView.findViewById(R.id.activity_alert_tv_title)
-    private val descriptionTextView: TextView = itemView.findViewById(R.id.activity_alert_tv_description)
-    private val timeTextView: TextView = itemView.findViewById(R.id.activity_alert_tv_time)
-    private val locationTextView: TextView = itemView.findViewById(R.id.activity_alert_tv_location)
-    private val rangeTextView: TextView = itemView.findViewById(R.id.activity_alert_tv_range)
-    private val distanceString: String = itemView.context.getString(R.string.activity_alert_distance_text)
+    private val userNameTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_user_name)
+    private val titleTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_title)
+    private val descriptionTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_description)
+    private val timeTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_time)
+    private val locationTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_location)
+    private val rangeTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_range)
+    private val distanceString: String = itemView.context.getString(R.string.activity_alert_info_distance_text)
+    private val endAlertButton: ImageButton = itemView.findViewById(R.id.activity_alert_info_bt_end_alert)
 
     var userName: CharSequence
         get() {
@@ -95,6 +98,14 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             locationTextView.text = locationString
         }
+
+    fun setOnEndAlertClickListener(listener: () -> Unit) {
+        endAlertButton.setOnClickListener {
+            it.isEnabled = false
+            listener()
+            it.isEnabled = true
+        }
+    }
 
     private fun sameDay(date1: Date, date2: Date): Boolean {
         val fmt = SimpleDateFormat("yyyyMMdd", Locale.getDefault())

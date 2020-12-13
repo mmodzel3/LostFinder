@@ -4,13 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 
 
-class AlertAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapter<AlertViewHolder>() {
+class AlertAdapter : RecyclerView.Adapter<AlertViewHolder>() {
     companion object {
         const val ALERT_TYPE = 1
     }
+
+    private var endAlertListener: EndAlertListener? = null
 
     var alerts: MutableList<Alert> = ArrayList()
         set(value: MutableList<Alert>) {
@@ -35,6 +36,10 @@ class AlertAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapte
         holder.title = alert.title
         holder.description = alert.description
         holder.range = alert.range
+
+        holder.setOnEndAlertClickListener {
+            onEndAlertClick(alert.id)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -43,5 +48,13 @@ class AlertAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapte
 
     override fun getItemViewType(position: Int): Int {
         return ALERT_TYPE
+    }
+
+    fun setOnEndAlertListener(listener: EndAlertListener) {
+        endAlertListener = listener
+    }
+
+    private fun onEndAlertClick(alertId: String) {
+        endAlertListener?.onEndAlert(alertId)
     }
 }
