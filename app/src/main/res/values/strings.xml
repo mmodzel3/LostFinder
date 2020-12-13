@@ -157,8 +157,9 @@
     <string-array name="activity_alert_add_predefined">
         <item>Help!</item>
         <item>Animal!</item>
-        <item>Found witness!</item>
         <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
         <item>Lost!</item>
     </string-array>
 

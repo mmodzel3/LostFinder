@@ -98,14 +98,14 @@ class AlertAddActivity : AppCompatActivity() {
         val descriptionEditText: EditText = findViewById(R.id.activity_alert_add_et_description)
         val rangeEditText: EditText = findViewById(R.id.activity_alert_add_et_range)
 
-        val title: String = titleSpinner.selectedItem.toString()
+        val titleId: Int = titleSpinner.selectedItemPosition
         val description: String = descriptionEditText.text.toString()
-        val type: String = title
+        val type: AlertType = AlertTypeTitleConverter.getAlertTypeFromTitleId(titleId)
         val range: Double = rangeEditText.text.toString().toDouble()
         val sendDate: Date = Date()
 
-        val userAlert = UserAlert(type, currentLocation, range, title,
-                description, true, false, sendDate)
+        val userAlert = UserAlert(type, currentLocation, range,
+                description, sendDate)
 
         disableAddButton()
         lifecycleScope.launch {

@@ -33,7 +33,7 @@ class AlertAdapter : RecyclerView.Adapter<AlertViewHolder>() {
         holder.userName = alert.user.username
         holder.time = alert.sendDate
         holder.location = alert.location
-        holder.title = alert.title
+        holder.title = AlertTypeTitleConverter.convertAlertTypeToTitle(holder.itemView.context, alert.type)
         holder.description = alert.description
         holder.range = alert.range
 

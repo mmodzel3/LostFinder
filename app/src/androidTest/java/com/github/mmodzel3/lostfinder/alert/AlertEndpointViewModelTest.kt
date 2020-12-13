@@ -110,9 +110,8 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
         val newAlerts: MutableList<Alert> = ArrayList()
 
         alerts.forEach {
-            newAlerts.add(Alert(it.id, it.type, it.user, it.location, it.range, it.title,
-                            it.description, it.showNotificationAtStart, it.showNotificationAtEnd,
-                            it.sendDate, it.receivedDate, it.endDate, Date()
+            newAlerts.add(Alert(it.id, it.type, it.user, it.location, it.range,
+                            it.description, it.sendDate, it.receivedDate, it.endDate, Date()
             ))
         }
 
