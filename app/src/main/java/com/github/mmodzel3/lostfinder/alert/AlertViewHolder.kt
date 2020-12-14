@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.location.Location
@@ -20,6 +21,15 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val rangeTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_range)
     private val distanceString: String = itemView.context.getString(R.string.activity_alert_info_distance_text)
     private val endAlertButton: ImageButton = itemView.findViewById(R.id.activity_alert_info_bt_end_alert)
+
+    var isEndAlertButtonEnabled: Boolean
+        get() {
+            return endAlertButton.isVisible
+        }
+
+        set(enable: Boolean) {
+            endAlertButton.isVisible = enable
+        }
 
     var userName: CharSequence
         get() {

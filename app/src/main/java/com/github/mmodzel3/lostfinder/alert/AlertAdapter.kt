@@ -4,9 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 
 
-class AlertAdapter : RecyclerView.Adapter<AlertViewHolder>() {
+class AlertAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapter<AlertViewHolder>() {
     companion object {
         const val ALERT_TYPE = 1
     }
@@ -36,6 +37,11 @@ class AlertAdapter : RecyclerView.Adapter<AlertViewHolder>() {
         holder.title = AlertTypeTitleConverter.convertAlertTypeToTitle(holder.itemView.context, alert.type)
         holder.description = alert.description
         holder.range = alert.range
+
+        if (alert.user.email == tokenManager.getTokenEmailAddress()
+                || tokenManager.getTokenRole().isManager()) {
+            holder.isEndAlertButtonEnabled = true
+        }
 
         holder.setOnEndAlertClickListener {
             onEndAlertClick(alert.id)

@@ -8,10 +8,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.MainActivity
@@ -24,6 +21,7 @@ import com.github.mmodzel3.lostfinder.location.Location
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.user.UserRole
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -43,6 +41,7 @@ class AlertAddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_alert_add)
 
         bindToCurrentLocationService()
+        bindAlertTitles()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -150,6 +149,38 @@ class AlertAddActivity : AppCompatActivity() {
 
             goToLoginActivity()
         }
+    }
+
+    private fun bindAlertTitles() {
+        val tokenManager: TokenManager = TokenManager.getInstance(applicationContext)
+
+        when (tokenManager.getTokenRole()) {
+            UserRole.USER -> {
+                val userTitleStringArray = applicationContext.resources
+                        .getStringArray(R.array.activity_alert_add_predefined_user)
+                bindAlertTitles(userTitleStringArray)
+            }
+            UserRole.MANAGER -> {
+                val userTitleStringArray = applicationContext.resources
+                        .getStringArray(R.array.activity_alert_add_predefined_manager)
+                bindAlertTitles(userTitleStringArray)
+            }
+            else -> {
+                val userTitleStringArray = applicationContext.resources
+                        .getStringArray(R.array.activity_alert_add_predefined_owner)
+                bindAlertTitles(userTitleStringArray)
+            }
+        }
+    }
+
+    private fun bindAlertTitles(titlesStringArray: Array<String>) {
+        val titleSpinner: Spinner = findViewById(R.id.activity_alert_add_sp_title)
+        val spinnerArrayAdapter = ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,
+                titlesStringArray)
+
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        titleSpinner.adapter = spinnerArrayAdapter
     }
 
     private fun goToMapActivity() {

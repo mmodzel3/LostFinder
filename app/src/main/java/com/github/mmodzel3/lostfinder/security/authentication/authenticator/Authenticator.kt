@@ -9,12 +9,9 @@ import android.content.Intent
 import android.os.Bundle
 import com.github.mmodzel3.lostfinder.notification.PushNotificationService
 import com.github.mmodzel3.lostfinder.security.authentication.login.*
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
 import kotlinx.coroutines.runBlocking
-import java.lang.Exception
-import java.lang.UnsupportedOperationException
 
 
 class Authenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
@@ -23,6 +20,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         const val INVALID_CREDENTIALS = "Invalid credentials"
         const val LOGIN_ENDPOINT_ACCESS_ERROR = "Login endpoint access error"
         const val USER_DATA_SAVE_PASSWORD = "SAVE_PASSWORD"
+        const val USER_DATA_ROLE = "USER_ROLE"
     }
 
     private val accountManager: AccountManager = AccountManager.get(context)
@@ -107,7 +105,10 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
             authToken
         } else {
             val password: String = getAccountEncodedPassword(account)
-            retrieveAccountAuthTokenFromServer(account, password)
+            val loginInfo: LoginInfo = retrieveAccountLoginInfoFromServer(account, password)
+
+            accountManager.setUserData(account, USER_DATA_ROLE, loginInfo.role.toString())
+            return loginInfo.token
         }
     }
 
@@ -119,14 +120,14 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         return decoder.decrypt(encryptedPassword, context)
     }
 
-    private suspend fun retrieveAccountAuthTokenFromServer(account: Account,
-                                                           password: String) : String {
+    private suspend fun retrieveAccountLoginInfoFromServer(account: Account,
+                                                           password: String) : LoginInfo {
 
         val pushNotificationDestToken: String? = PushNotificationService.getNotificationDestToken(context)
         val loginInfo: LoginInfo = loginEndpoint.login(account.name, password, pushNotificationDestToken)
 
         if (loginInfo.token.isNotEmpty()) {
-            return loginInfo.token
+            return loginInfo
         } else {
             throw LoginInvalidCredentialsException()
         }

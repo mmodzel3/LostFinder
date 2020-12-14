@@ -1,6 +1,7 @@
 package com.github.mmodzel3.lostfinder.alert
 
 import android.view.View
+import android.widget.Spinner
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
@@ -13,6 +14,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManagerStub
+import com.github.mmodzel3.lostfinder.user.UserRole
 import com.google.common.truth.Truth.assertThat
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matchers.*
@@ -29,14 +31,6 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
     @Before
     override fun setUp() {
         super.setUp()
-
-        TokenManager.tokenManager = TokenManagerStub.getInstance()
-
-        alertAddScenario = ActivityScenario.launch(AlertAddActivity::class.java)
-
-        alertAddScenario.onActivity {
-            decorView = it.window.decorView
-        }
     }
 
     @After
@@ -49,6 +43,7 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
 
     @Test
     fun whenAddAlertThenUserAlertIsSend() {
+        startActivity()
         mockAddAlertResponse()
 
         fillFields()
@@ -63,6 +58,7 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
 
     @Test
     fun whenAddAlertAndApiAccessErrorThenErrorToastIsShown() {
+        startActivity()
         mockServerFailureResponse()
 
         fillFields()
@@ -80,6 +76,7 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
 
     @Test
     fun whenAddAlertWithInvalidCredentialsThenErrorToastIsShown() {
+        startActivity()
         mockInvalidCredentialsResponse()
 
         fillFields()
@@ -95,12 +92,54 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
         Thread.sleep(2000)
     }
 
+    @Test
+    fun whenAddAlertIsShownForUserRoleThenCorrectSpinnerTitleListIsShown() {
+        startActivity(UserRole.USER)
+
+        alertAddScenario.onActivity {
+            val titleSpinner: Spinner = it.findViewById(R.id.activity_alert_add_sp_title)
+            val titleStringArrayCount: Int = titleSpinner.adapter.count
+            val expectedTitleStringArrayCount = it.resources
+                    .getStringArray(R.array.activity_alert_add_predefined_user).size
+
+            assertThat(titleStringArrayCount).isEqualTo(expectedTitleStringArrayCount)
+        }
+    }
+
+    @Test
+    fun whenAddAlertIsShownForManagerRoleThenCorrectSpinnerTitleListIsShown() {
+        startActivity(UserRole.MANAGER)
+
+        alertAddScenario.onActivity {
+            val titleSpinner: Spinner = it.findViewById(R.id.activity_alert_add_sp_title)
+            val titleStringArrayCount: Int = titleSpinner.adapter.count
+            val expectedTitleStringArrayCount = it.resources
+                    .getStringArray(R.array.activity_alert_add_predefined_manager).size
+
+            assertThat(titleStringArrayCount).isEqualTo(expectedTitleStringArrayCount)
+        }
+    }
+
+    @Test
+    fun whenAddAlertIsShownForOwnerRoleThenCorrectSpinnerTitleListIsShown() {
+        startActivity(UserRole.MANAGER)
+
+        alertAddScenario.onActivity {
+            val titleSpinner: Spinner = it.findViewById(R.id.activity_alert_add_sp_title)
+            val titleStringArrayCount: Int = titleSpinner.adapter.count
+            val expectedTitleStringArrayCount = it.resources
+                    .getStringArray(R.array.activity_alert_add_predefined_owner).size
+
+            assertThat(titleStringArrayCount).isEqualTo(expectedTitleStringArrayCount)
+        }
+    }
+
     private fun fillFields() {
         var titleStringArray: Array<String> = arrayOf()
 
         alertAddScenario.onActivity {
             titleStringArray = it.applicationContext
-                    .resources.getStringArray(R.array.activity_alert_add_predefined)
+                    .resources.getStringArray(R.array.activity_alert_add_predefined_user)
         }
 
         onView(withId(R.id.activity_alert_add_et_description))
@@ -116,5 +155,14 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
                 `is`(titleStringArray[1]))).inRoot(isPlatformPopup()).perform(click())
 
         Thread.sleep(1000)
+    }
+
+    private fun startActivity(userRole: UserRole = UserRole.OWNER) {
+        TokenManager.tokenManager = TokenManagerStub.getInstance(userRole = userRole)
+        alertAddScenario = ActivityScenario.launch(AlertAddActivity::class.java)
+
+        alertAddScenario.onActivity {
+            decorView = it.window.decorView
+        }
     }
 }

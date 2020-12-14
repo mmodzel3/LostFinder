@@ -154,13 +154,35 @@
         Message
     </string>
 
-    <string-array name="activity_alert_add_predefined">
+    <string-array name="activity_alert_add_predefined_user">
         <item>Help!</item>
         <item>Animal!</item>
         <item>Found something!</item>
         <item>Found lost!</item>
         <item>Found witness!</item>
         <item>Lost!</item>
+    </string-array>
+
+    <string-array name="activity_alert_add_predefined_manager">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+        <item>Search!</item>
+        <item>Gather!</item>
+    </string-array>
+
+    <string-array name="activity_alert_add_predefined_owner">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+        <item>Search!</item>
+        <item>Gather!</item>
     </string-array>
 
     <string name="activity_alert_add_title">

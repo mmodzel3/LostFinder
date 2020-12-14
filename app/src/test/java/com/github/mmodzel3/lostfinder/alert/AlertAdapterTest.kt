@@ -41,8 +41,8 @@ class AlertAdapterTest : AlertEndpointTestAbstract() {
         assertThat(holder.title).isEqualTo(ALERT_TITLE)
         assertThat(holder.description).isEqualTo(ALERT_DESCRIPTION)
         assertThat(holder.range).isEqualTo(ALERT_RANGE)
-        assertThat(holder.location.longitude).isEqualTo(ALERT_LONGITUDE)
-        assertThat(holder.location.latitude).isEqualTo(ALERT_LATITUDE)
+        assertThat(holder.location?.longitude).isEqualTo(ALERT_LONGITUDE)
+        assertThat(holder.location?.latitude).isEqualTo(ALERT_LATITUDE)
         assertThat(holder.time).isAtLeast(yesterday)
     }
 

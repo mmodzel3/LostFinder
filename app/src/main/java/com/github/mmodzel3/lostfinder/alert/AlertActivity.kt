@@ -52,7 +52,7 @@ open class AlertActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.activity_alert_rv_alert_list)
 
-        alertAdapter = AlertAdapter()
+        alertAdapter = AlertAdapter(tokenManager)
 
         initRecyclerView()
         initAddButton()
