@@ -1,9 +1,9 @@
 package com.github.mmodzel3.lostfinder
 
 import android.os.Bundle
-import com.github.mmodzel3.lostfinder.map.UsersLocationsMapActivity
+import com.github.mmodzel3.lostfinder.map.DataLocationsMapActivity
 
-class MainActivity: UsersLocationsMapActivity() {
+class MainActivity: DataLocationsMapActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

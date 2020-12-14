@@ -1,7 +1,7 @@
 package com.github.mmodzel3.lostfinder.user
 
 import com.github.mmodzel3.lostfinder.location.Location
-import com.github.mmodzel3.lostfinder.server.ServerEndpointData
+import com.github.mmodzel3.lostfinder.server.ServerEndpointLocationData
 import java.util.*
 
 data class User(override val id: String,
@@ -9,9 +9,9 @@ data class User(override val id: String,
                 val password: String?,
                 val username: String,
                 val role: String,
-                val location: Location?,
+                override val location: Location?,
                 override val lastUpdateDate: Date,
-                val notificationDestToken: String?) : ServerEndpointData {
+                val notificationDestToken: String?) : ServerEndpointLocationData {
 
     fun isUser() : Boolean {
         return role == "USER"
