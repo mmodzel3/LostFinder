@@ -8,6 +8,7 @@ import org.osmdroid.views.overlay.Marker
 
 
 class AlertsLocationsOverlay(private val map: MapView, private val context: Context): DataLocationsOverlay<Alert>(map) {
+
     override fun createMarker(data: Alert): Marker {
         val marker = Marker(map)
         setMarkerTitle(marker, data)

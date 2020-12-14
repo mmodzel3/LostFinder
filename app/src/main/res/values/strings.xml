@@ -115,11 +115,11 @@
     </string>
 
     <string name="activity_alert_info_range_example_text">
-        18 km
+        180 m
     </string>
 
     <string name="activity_alert_info_distance_text">
-        km
+        m
     </string>
 
     <string name="activity_alert_info_description_example_text">
@@ -206,11 +206,11 @@
     </string>
 
     <string name="activity_alert_add_range_hint">
-        18
+        180
     </string>
 
     <string name="activity_alert_add_distance">
-        km
+        m
     </string>
 
     <string name="activity_alert_add_add_button">
@@ -226,7 +226,7 @@
     </string>
 
     <string name="activity_alert_add_msg_add_alert_success">
-        Problem with sending alert. Your session is expired. Log in to account once again.
+        Alert was sent to server.
     </string>
 
     <string name="activity_alert_add_map">
@@ -239,5 +239,9 @@
 
     <string name="activity_alert_add_alert">
         Alert
+    </string>
+
+    <string name="activity_map_add_alert_desc">
+        Add alert
     </string>
 </resources>

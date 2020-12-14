@@ -16,8 +16,8 @@ class AlertAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapte
 
     var alerts: MutableList<Alert> = ArrayList()
         set(value: MutableList<Alert>) {
-            value.filter { it.endDate == null }
             value.sortBy { it.sendDate }
+
             field = value
         }
 

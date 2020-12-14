@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/activity_alert_add_it_alert"
-        android:icon="@drawable/ic_message"
+        android:icon="@drawable/ic_white_alert"
         app:showAsAction="ifRoom"
         android:title="@string/activity_alert_add_alert" />
 </menu>

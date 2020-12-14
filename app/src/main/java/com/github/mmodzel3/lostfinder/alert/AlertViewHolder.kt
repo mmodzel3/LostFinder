@@ -20,7 +20,7 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val locationTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_location)
     private val rangeTextView: TextView = itemView.findViewById(R.id.activity_alert_info_tv_range)
     private val distanceString: String = itemView.context.getString(R.string.activity_alert_info_distance_text)
-    private val endAlertButton: ImageButton = itemView.findViewById(R.id.activity_alert_info_bt_end_alert)
+    private val endAlertButton: ImageButton = itemView.findViewById<ImageButton>(R.id.activity_alert_info_bt_end_alert)
 
     var isEndAlertButtonEnabled: Boolean
         get() {
@@ -76,7 +76,7 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var range: Double
         get() {
-            val rangeSplit = rangeTextView.text.split("")
+            val rangeSplit = rangeTextView.text.split(" ")
             return rangeSplit[0].toDouble()
         }
 
@@ -103,8 +103,9 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         set(value: Location?) {
-            val locationString: String = if (location != null)
-                "(${value!!.longitude}, ${value.latitude})" else ""
+            val locationString: String = if (value != null)
+                "(${round(value.longitude * 10000) / 10000}, " +
+                        "${round(value.latitude * 10000) / 10000})" else ""
 
             locationTextView.text = locationString
         }

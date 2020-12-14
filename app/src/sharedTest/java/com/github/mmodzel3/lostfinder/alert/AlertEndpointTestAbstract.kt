@@ -20,7 +20,7 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
         const val ALERT_DESCRIPTION = "description"
         const val ALERT_LONGITUDE = 22.1
         const val ALERT_LATITUDE = 19.2
-        const val ALERT_RANGE = 20
+        const val ALERT_RANGE = 20.0
         const val DAY_BEFORE_IN_MILLISECONDS = 24*60*60*1000
     }
 

@@ -51,7 +51,9 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
 
     internal fun update(dataToUpdate: List<T>) {
         synchronized(lock) {
-            updateCache(dataToUpdate)
+            if (updateCache(dataToUpdate)) {
+                data.postValue(dataCache)
+            }
 
             if (status.value != ServerEndpointStatus.OK) {
                 status.postValue(ServerEndpointStatus.OK)
@@ -59,7 +61,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         }
     }
 
-    private fun updateCache(dataToUpdate: List<T>) {
+    internal open fun updateCache(dataToUpdate: List<T>): Boolean {
         var dataChanged = false
 
         dataToUpdate.forEach {
@@ -74,9 +76,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
             }
         }
 
-        if (dataChanged) {
-            data.postValue(dataCache)
-        }
+        return dataChanged
     }
 
     private fun updateElementIfNecessary(cachedElement: T, elementToUpdate: T): Boolean {

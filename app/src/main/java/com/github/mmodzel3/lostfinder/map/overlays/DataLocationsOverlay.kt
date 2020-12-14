@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.map.overlays
 
+import android.util.Log
 import com.github.mmodzel3.lostfinder.server.ServerEndpointLocationData
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -73,7 +74,7 @@ open class DataLocationsOverlay<T: ServerEndpointLocationData>(private val map: 
         }
 
         keysToRemove.forEach {
-            markers.remove(it)
+            removeMarker(it)
         }
     }
 }

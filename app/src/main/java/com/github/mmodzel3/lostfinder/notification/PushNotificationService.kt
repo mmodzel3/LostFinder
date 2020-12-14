@@ -58,7 +58,7 @@ open class PushNotificationService : FirebaseMessagingService() {
     private fun convertRemoteMessageToPushNotification(message: RemoteMessage): PushNotification {
         val remoteNotification: RemoteMessage.Notification = message.notification!!
         val title: String = remoteNotification.title!!
-        val body: String = remoteNotification.body!!
+        val body: String = remoteNotification.body ?: ""
         val type: String = message.data[NOTIFICATION_DATA_TYPE_FIELD]!!
         val jsonData: String = message.data[NOTIFICATION_DATA_FIELD]!!
 

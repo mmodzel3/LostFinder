@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
 import android.view.Menu
@@ -17,19 +18,24 @@ import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
-import com.github.mmodzel3.lostfinder.location.Location
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.user.UserRole
 import kotlinx.coroutines.launch
+import java.lang.Math.round
 import java.util.*
 
 class AlertAddActivity : AppCompatActivity() {
+    companion object {
+        const val DEFAULT_RANGE = 180.0
+    }
+
     private lateinit var currentLocationBinder : CurrentLocationBinder
     private lateinit var currentLocationConnection : ServiceConnection
 
     private var currentLocation: Location? = null
+    private var currentLocationRange: Double = DEFAULT_RANGE
 
     private val alertEndpoint: AlertEndpoint by lazy {
         AlertEndpointFactory.createAlertEndpoint(TokenManager.getInstance(applicationContext))
@@ -100,11 +106,21 @@ class AlertAddActivity : AppCompatActivity() {
         val titleId: Int = titleSpinner.selectedItemPosition
         val description: String = descriptionEditText.text.toString()
         val type: AlertType = AlertTypeTitleConverter.getAlertTypeFromTitleId(titleId)
-        val range: Double = rangeEditText.text.toString().toDouble()
-        val sendDate: Date = Date()
+        val range: Double
 
-        val userAlert = UserAlert(type, currentLocation, range,
-                description, sendDate)
+        if (rangeEditText.text.toString().trim().isNotEmpty()) {
+            range = rangeEditText.text.toString().toDouble()
+        } else {
+            range = currentLocationRange
+        }
+
+        val sendDate: Date = Date()
+        val location = if (currentLocation != null)
+                            com.github.mmodzel3.lostfinder.location.Location(currentLocation!!.longitude,
+                            currentLocation!!.latitude)
+                        else null
+
+        val userAlert = UserAlert(type, location, range, description, sendDate)
 
         disableAddButton()
         lifecycleScope.launch {
@@ -124,8 +140,13 @@ class AlertAddActivity : AppCompatActivity() {
 
     private fun listenToCurrentLocation() {
         currentLocationBinder.registerListener(object : CurrentLocationListener {
-            override fun onLocalisationChange(location: android.location.Location) {
-                currentLocation = Location(location.longitude, location.latitude)
+            override fun onLocalisationChange(location: Location) {
+                currentLocation = location
+                currentLocationRange = if (location.hasAccuracy()) location.accuracy.toDouble()
+                                        else currentLocationRange
+
+                val rangeEditText: EditText = findViewById(R.id.activity_alert_add_et_range)
+                rangeEditText.hint = (round(currentLocationRange * 100) / 100).toString()
             }
         })
     }

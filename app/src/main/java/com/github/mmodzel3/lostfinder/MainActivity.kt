@@ -1,9 +1,9 @@
 package com.github.mmodzel3.lostfinder
 
 import android.os.Bundle
-import com.github.mmodzel3.lostfinder.map.DataLocationsMapActivity
+import com.github.mmodzel3.lostfinder.map.DataLocationsWithAlertAddMapActivity
 
-class MainActivity: DataLocationsMapActivity() {
+class MainActivity: DataLocationsWithAlertAddMapActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
