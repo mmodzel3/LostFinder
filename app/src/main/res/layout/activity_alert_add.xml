@@ -15,8 +15,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/activity_alert_add_tv_title"
+        <LinearLayout
+            android:id="@+id/activity_alert_add_ll_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -24,83 +24,201 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="4dp"
-            android:text="@string/activity_alert_add_title"
-            android:textColor="@color/purple_700"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/activity_alert_add_sp_title"
+            <TextView
+                android:id="@+id/activity_alert_add_tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="@string/activity_alert_add_title"
+                android:textColor="@color/purple_700"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/activity_alert_add_sp_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/ic_border"
+                android:entries="@array/activity_alert_add_predefined_user"
+                android:padding="4dp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/purple_200" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/activity_alert_add_ll_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/ic_border"
-            android:entries="@array/activity_alert_add_predefined_user"
-            android:padding="4dp" />
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/purple_200" />
-
-        <TextView
-            android:id="@+id/activity_alert_add_tv_description"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp"
-            android:autofillHints="true"
-            android:text="@string/activity_alert_add_description"
-            android:textColor="@color/purple_700"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/activity_alert_add_et_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="4dp"
-            android:autofillHints="true"
-            android:background="@drawable/ic_border"
-            android:gravity="top"
-            android:hint="@string/activity_alert_add_description_hint"
-            android:inputType="textMultiLine"
-            android:lines="8"
-            android:padding="4dp"
-            android:tag="@string/activity_alert_add_description" />
+            android:orientation="vertical">
 
-        <View
+            <TextView
+                android:id="@+id/activity_alert_add_tv_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:autofillHints="true"
+                android:text="@string/activity_alert_add_description"
+                android:textColor="@color/purple_700"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/activity_alert_add_et_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:autofillHints="true"
+                android:background="@drawable/ic_border"
+                android:gravity="top"
+                android:hint="@string/activity_alert_add_description_hint"
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:padding="4dp"
+                android:tag="@string/activity_alert_add_description" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/purple_200" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/activity_alert_add_ll_location"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/purple_200" />
-
-        <TextView
-            android:id="@+id/activity_alert_add_tv_range"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:autofillHints="true"
-            android:text="@string/activity_alert_add_range"
-            android:textColor="@color/purple_700"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/activity_alert_add_tv_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="true"
+                    android:text="@string/activity_alert_add_location"
+                    android:textColor="@color/purple_700"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:autofillHints="true"
+                    android:text="@string/activity_choose_location_map_default_accuracy_desc"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/activity_alert_add_ll_location_coordinates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/activity_alert_add_tv_longitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
+                    android:autofillHints="true"
+                    android:layout_gravity="center"
+                    android:text="@string/activity_alert_add_longitude"
+                    android:textColor="@color/purple_700"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/activity_alert_add_et_longitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:autofillHints="true"
+                    android:background="@drawable/ic_border"
+                    android:hint="@string/activity_alert_add_longitude_hint"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:minWidth="48dp"
+                    android:maxWidth="64dp"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:id="@+id/activity_alert_add_tv_latitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_gravity="center"
+                    android:autofillHints="true"
+                    android:text="@string/activity_alert_add_latitude"
+                    android:textColor="@color/purple_700"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/activity_alert_add_et_latitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:autofillHints="true"
+                    android:background="@drawable/ic_border"
+                    android:hint="@string/activity_alert_add_latitude_hint"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:minWidth="48dp"
+                    android:maxWidth="64dp"
+                    android:padding="4dp" />
+
+                <ImageButton
+                    android:id="@+id/activity_alert_add_bt_choose_location"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp"
+                    android:background="@drawable/ic_circular_button"
+                    android:src="@drawable/ic_white_location"
+                    android:contentDescription="@string/activity_alert_add_choose_location_button_desc" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/purple_200" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/activity_alert_add_ll_range"
@@ -108,36 +226,75 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="4dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/activity_alert_add_et_range"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="true"
-                android:background="@drawable/ic_border"
-                android:hint="@string/activity_alert_add_range_hint"
-                android:inputType="number"
-                android:padding="4dp" />
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/activity_alert_add_tv_distance"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/activity_alert_add_tv_range"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="true"
+                    android:text="@string/activity_alert_add_range"
+                    android:textColor="@color/purple_700"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:autofillHints="true"
+                    android:text="@string/activity_choose_location_map_default_location_accuracy_desc"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/activity_alert_add_ll_range_set"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="@string/activity_alert_add_distance" />
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/activity_alert_add_et_range"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="40dp"
+                    android:maxWidth="80dp"
+                    android:autofillHints="true"
+                    android:background="@drawable/ic_border"
+                    android:hint="@string/activity_alert_add_range_hint"
+                    android:inputType="numberDecimal"
+                    android:padding="4dp" />
+
+                <TextView
+                    android:id="@+id/activity_alert_add_tv_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="@string/activity_alert_add_distance" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@color/purple_200" />
 
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@color/purple_200" />
 
         <Space
             android:layout_width="match_parent"
@@ -153,6 +310,10 @@
             android:background="@color/purple_500"
             android:enabled="false"
             android:text="@string/activity_alert_add_add_button" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
 
     </LinearLayout>
 

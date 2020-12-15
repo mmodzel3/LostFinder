@@ -213,6 +213,30 @@
         m
     </string>
 
+    <string name="activity_alert_add_location">
+        Location
+    </string>
+
+    <string name="activity_alert_add_longitude">
+        Longitude
+    </string>
+
+    <string name="activity_alert_add_latitude">
+        Latitude
+    </string>
+
+    <string name="activity_alert_add_longitude_hint">
+        52.12
+    </string>
+
+    <string name="activity_alert_add_latitude_hint">
+        21.55
+    </string>
+
+    <string name="activity_alert_add_choose_location_button_desc">
+        Choose location on map
+    </string>
+
     <string name="activity_alert_add_add_button">
         Send
     </string>
@@ -243,5 +267,25 @@
 
     <string name="activity_map_add_alert_desc">
         Add alert
+    </string>
+
+    <string name="activity_choose_location_map_confirm_desc">
+        Confirm location
+    </string>
+
+    <string name="activity_choose_location_map_cancel_desc">
+        Cancel
+    </string>
+
+    <string name="activity_choose_location_map_info_set">
+        Tap on the map to choose location and click confirm button.
+    </string>
+
+    <string name="activity_choose_location_map_default_location_accuracy_desc">
+        (default current location\'s accuracy)
+    </string>
+
+    <string name="activity_choose_location_map_default_accuracy_desc">
+        (default current location)
     </string>
 </resources>

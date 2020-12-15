@@ -91,7 +91,7 @@
                     android:layout_weight="0"
                     android:background="@drawable/ic_rounded_corners"
                     android:contentDescription="@string/activity_alert_info_bt_end_alert_description"
-                    android:src="@drawable/ic_cancel" />
+                    android:src="@drawable/ic_white_cancel" />
 
             </LinearLayout>
 

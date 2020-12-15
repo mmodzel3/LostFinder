@@ -7,10 +7,13 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
@@ -18,17 +21,21 @@ import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
+import com.github.mmodzel3.lostfinder.map.ChooseLocationMapActivity
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserRole
 import kotlinx.coroutines.launch
 import java.lang.Math.round
 import java.util.*
+import kotlin.math.roundToInt
 
 class AlertAddActivity : AppCompatActivity() {
     companion object {
         const val DEFAULT_RANGE = 180.0
+        const val CHOOSE_LOCATION_CODE = 1
     }
 
     private lateinit var currentLocationBinder : CurrentLocationBinder
@@ -46,6 +53,7 @@ class AlertAddActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_alert_add)
 
+        initChooseLocationButton()
         bindToCurrentLocationService()
         bindAlertTitles()
     }
@@ -56,18 +64,33 @@ class AlertAddActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id: Int = item.itemId
-        return if (id == R.id.activity_alert_add_it_map) {
-            goToMapActivity()
-            true
-        } else if (id == R.id.activity_alert_add_it_chat) {
-            goToChatActivity()
-            true
-        } else if (id == R.id.activity_alert_add_it_alert) {
-            goToAlertActivity()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.activity_alert_add_it_map -> {
+                goToMapActivity()
+                true
+            }
+            R.id.activity_alert_add_it_chat -> {
+                goToChatActivity()
+                true
+            }
+            R.id.activity_alert_add_it_alert -> {
+                goToAlertActivity()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CHOOSE_LOCATION_CODE && resultCode == RESULT_OK && data != null) {
+            val chosenLocationLongitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LONGITUDE_INTENT, 0.0)
+            val chosenLocationLatitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LATITUDE_INTENT, 0.0)
+
+            setAlertLocationText(chosenLocationLongitude, chosenLocationLatitude)
         }
     }
 
@@ -76,7 +99,7 @@ class AlertAddActivity : AppCompatActivity() {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 currentLocationBinder = service as CurrentLocationBinder
                 listenToCurrentLocation()
-                initSendButton()
+                initAddButton()
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -89,37 +112,49 @@ class AlertAddActivity : AppCompatActivity() {
         }
     }
 
-    private fun initSendButton() {
-        val sendButton: Button = findViewById(R.id.activity_alert_add_bt_add)
-        sendButton.setOnClickListener {
+    private fun initAddButton() {
+        val addButton: Button = findViewById(R.id.activity_alert_add_bt_add)
+        addButton.setOnClickListener {
             onAddClick()
         }
 
         enableAddButton()
     }
 
+    private fun initChooseLocationButton() {
+        val chooseLocationButton: ImageButton = findViewById(R.id.activity_alert_add_bt_choose_location)
+        chooseLocationButton.setOnClickListener {
+            goToChooseLocationActivity()
+        }
+    }
+
     private fun onAddClick() {
         val titleSpinner: Spinner = findViewById(R.id.activity_alert_add_sp_title)
         val descriptionEditText: EditText = findViewById(R.id.activity_alert_add_et_description)
+        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
+        val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
         val rangeEditText: EditText = findViewById(R.id.activity_alert_add_et_range)
 
         val titleId: Int = titleSpinner.selectedItemPosition
-        val description: String = descriptionEditText.text.toString()
         val type: AlertType = AlertTypeTitleConverter.getAlertTypeFromTitleId(titleId)
-        val range: Double
+        val description: String = descriptionEditText.text.toString()
 
-        if (rangeEditText.text.toString().trim().isNotEmpty()) {
-            range = rangeEditText.text.toString().toDouble()
-        } else {
-            range = currentLocationRange
-        }
+        val rangeText: String = rangeEditText.text.toString().trim()
+        val range: Double = if (rangeText.isNotEmpty()) rangeText.toDouble() else currentLocationRange
 
-        val sendDate: Date = Date()
-        val location = if (currentLocation != null)
-                            com.github.mmodzel3.lostfinder.location.Location(currentLocation!!.longitude,
-                            currentLocation!!.latitude)
+        val longitudeText: String = longitudeEditText.text.toString().trim()
+        val longitude: Double? = if (longitudeText.isNotEmpty()) longitudeText.toDouble()
+                                    else currentLocation?.longitude
+
+        val latitudeText: String = latitudeEditText.text.toString().trim()
+        val latitude: Double? = if (latitudeText.isNotEmpty()) latitudeText.toDouble()
+                                    else currentLocation?.latitude
+
+        val location = if (longitude != null && latitude != null)
+                            com.github.mmodzel3.lostfinder.location.Location(longitude, latitude)
                         else null
 
+        val sendDate = Date()
         val userAlert = UserAlert(type, location, range, description, sendDate)
 
         disableAddButton()
@@ -128,25 +163,15 @@ class AlertAddActivity : AppCompatActivity() {
         }
     }
 
-    private fun enableAddButton() {
-        val addButton: Button = findViewById(R.id.activity_alert_add_bt_add)
-        addButton.isEnabled = true
-    }
-
-    private fun disableAddButton() {
-        val addButton: Button = findViewById(R.id.activity_alert_add_bt_add)
-        addButton.isEnabled = false
-    }
-
     private fun listenToCurrentLocation() {
         currentLocationBinder.registerListener(object : CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
                 currentLocation = location
                 currentLocationRange = if (location.hasAccuracy()) location.accuracy.toDouble()
-                                        else currentLocationRange
+                else currentLocationRange
 
-                val rangeEditText: EditText = findViewById(R.id.activity_alert_add_et_range)
-                rangeEditText.hint = (round(currentLocationRange * 100) / 100).toString()
+                setAlertLocationHint(currentLocation!!.longitude, currentLocation!!.latitude)
+                setAlertRangeHint(currentLocationRange)
             }
         })
     }
@@ -204,6 +229,37 @@ class AlertAddActivity : AppCompatActivity() {
         titleSpinner.adapter = spinnerArrayAdapter
     }
 
+    private fun setAlertLocationText(longitude: Double, latitude: Double) {
+        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
+        val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
+
+        longitudeEditText.setText(longitude.toString(), TextView.BufferType.EDITABLE)
+        latitudeEditText.setText(latitude.toString(), TextView.BufferType.EDITABLE)
+    }
+
+    private fun setAlertLocationHint(longitude: Double, latitude: Double) {
+        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
+        val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
+
+        longitudeEditText.hint = longitude.toString()
+        latitudeEditText.hint = latitude.toString()
+    }
+
+    private fun setAlertRangeHint(range: Double) {
+        val rangeEditText: EditText = findViewById(R.id.activity_alert_add_et_range)
+        rangeEditText.hint = ((range * 100).roundToInt() / 100).toString()
+    }
+
+    private fun enableAddButton() {
+        val addButton: Button = findViewById(R.id.activity_alert_add_bt_add)
+        addButton.isEnabled = true
+    }
+
+    private fun disableAddButton() {
+        val addButton: Button = findViewById(R.id.activity_alert_add_bt_add)
+        addButton.isEnabled = false
+    }
+
     private fun goToMapActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
@@ -231,5 +287,12 @@ class AlertAddActivity : AppCompatActivity() {
 
         startActivity(intent)
         finish()
+    }
+
+    private fun goToChooseLocationActivity() {
+        val intent = Intent(this, ChooseLocationMapActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivityForResult(intent, CHOOSE_LOCATION_CODE)
     }
 }
