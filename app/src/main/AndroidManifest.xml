@@ -34,6 +34,9 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".security.authentication.login.LoginActivity" />
         <activity android:name=".chat.ChatActivity" />
+        <activity android:name=".alert.AlertActivity" />
+        <activity android:name=".alert.AlertAddActivity" />
+        <activity android:name=".map.ChooseLocationMapActivity" />
 
         <service
             android:name=".security.authentication.authenticator.AuthenticatorService"

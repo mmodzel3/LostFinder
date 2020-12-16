@@ -5,6 +5,8 @@ import android.accounts.AccountManager
 import android.accounts.AuthenticatorException
 import android.content.Context
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
+import com.github.mmodzel3.lostfinder.user.UserRole
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -37,6 +39,15 @@ open class TokenManager protected constructor(private val context: Context?) {
     open fun getTokenEmailAddress() : String {
         if (account != null) {
             return account!!.name
+        } else {
+            throw InvalidTokenException()
+        }
+    }
+
+    open fun getTokenRole() : UserRole {
+        if (account != null) {
+            val userRole: String = accountManager.getUserData(account!!, Authenticator.USER_DATA_ROLE)!!
+            return UserRole.valueOf(userRole)
         } else {
             throw InvalidTokenException()
         }

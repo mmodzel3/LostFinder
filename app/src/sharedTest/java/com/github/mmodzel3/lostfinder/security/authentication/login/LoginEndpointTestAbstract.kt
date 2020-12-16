@@ -4,6 +4,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpoin
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointFactory
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInfo
 import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.user.UserRole
 import org.junit.Before
 
 abstract class LoginEndpointTestAbstract : ServerEndpointTestAbstract() {
@@ -27,8 +28,8 @@ abstract class LoginEndpointTestAbstract : ServerEndpointTestAbstract() {
         mockServerLoginInfoResponse("")
     }
 
-    private fun mockServerLoginInfoResponse(token: String) {
-        val loginInfo = LoginInfo(token)
+    private fun mockServerLoginInfoResponse(token: String, role: UserRole = UserRole.OWNER) {
+        val loginInfo = LoginInfo(token, role)
         mockServerJsonResponse(loginInfo)
     }
 }

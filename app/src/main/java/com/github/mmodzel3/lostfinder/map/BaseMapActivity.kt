@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.preference.PreferenceManager
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.alert.AlertActivity
 import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.permissions.AppCompactActivityWithPermissionsRequest
 import org.osmdroid.api.IMapController
@@ -49,7 +50,10 @@ open class BaseMapActivity :
         return if (id == R.id.activity_map_it_message) {
             goToChatActivity()
             true
-        } else {
+        } else if (id == R.id.activity_map_it_alert) {
+            goToAlertActivity()
+            true
+        }  else {
             super.onOptionsItemSelected(item)
         }
     }
@@ -100,6 +104,13 @@ open class BaseMapActivity :
 
     private fun goToChatActivity() {
         val intent = Intent(this, ChatActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+    }
+
+    private fun goToAlertActivity() {
+        val intent = Intent(this, AlertActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)

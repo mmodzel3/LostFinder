@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_user_location_center"
         app:showAsAction="ifRoom"
         android:title="@string/activity_chat_map" />
+
+    <item
+        android:id="@+id/activity_chat_it_alert"
+        android:icon="@drawable/ic_white_alert"
+        app:showAsAction="ifRoom"
+        android:title="@string/activity_chat_alert" />
 </menu>

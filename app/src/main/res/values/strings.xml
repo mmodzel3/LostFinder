@@ -82,11 +82,242 @@
         Problem with fetching messages. Your session is expired. Log in to account once again.
     </string>
 
-    <string name="activity_map_message">
-        Message
+    <string name="activity_map_chat">
+        Messages
+    </string>
+
+    <string name="activity_map_alert">
+        Alerts
     </string>
 
     <string name="activity_chat_map">
         Map
+    </string>
+
+    <string name="activity_chat_alert">
+        Alerts
+    </string>
+
+    <string name="activity_alert_info_user_name_example_text">
+        Bob
+    </string>
+
+    <string name="activity_alert_info_title_example_text">
+        Help
+    </string>
+
+    <string name="activity_alert_info_example_time_text">
+        17:45
+    </string>
+
+    <string name="activity_alert_info_location_example_text">
+        (51.0, 52.3)
+    </string>
+
+    <string name="activity_alert_info_range_example_text">
+        180 m
+    </string>
+
+    <string name="activity_alert_info_distance_text">
+        m
+    </string>
+
+    <string name="activity_alert_info_description_example_text">
+        Long text description that contains example information. It is for show purpose.
+    </string>
+
+    <string name="activity_alert_info_bt_end_alert_description">
+        End alert
+    </string>
+
+    <string name="activity_alert_err_fetching_alerts_api_access_problem">
+        Problem with fetching alerts. Check your internet connection.
+    </string>
+
+    <string name="activity_alert_err_fetching_alerts_invalid_token">
+        Problem with fetching alerts. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_alert_err_end_alert_invalid_token">
+        Problem with ending alert. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_alert_err_end_alert_api_access_problem">
+        Problem with ending alert. Check your internet connection.
+    </string>
+
+    <string name="activity_alert_map">
+        Map
+    </string>
+
+    <string name="activity_alert_chat">
+        Message
+    </string>
+
+    <string-array name="activity_alert_add_predefined_user">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+    </string-array>
+
+    <string-array name="activity_alert_add_predefined_manager">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+        <item>Search!</item>
+        <item>Gather!</item>
+    </string-array>
+
+    <string-array name="activity_alert_add_predefined_owner">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+        <item>Search!</item>
+        <item>Gather!</item>
+    </string-array>
+
+    <string name="activity_alert_add_title">
+        Title
+    </string>
+
+    <string name="activity_alert_add_title_hint">
+        Enter title of alert.
+    </string>
+
+    <string name="activity_alert_add_description">
+        Description
+    </string>
+
+    <string name="activity_alert_add_description_hint">
+        Enter description of alert or leave blank.
+    </string>
+
+    <string name="activity_alert_add_range">
+        Range
+    </string>
+
+    <string name="activity_alert_add_range_hint">
+        180
+    </string>
+
+    <string name="activity_alert_add_distance">
+        m
+    </string>
+
+    <string name="activity_alert_add_location">
+        Location
+    </string>
+
+    <string name="activity_alert_add_longitude">
+        Longitude
+    </string>
+
+    <string name="activity_alert_add_latitude">
+        Latitude
+    </string>
+
+    <string name="activity_alert_add_longitude_hint">
+        52.12
+    </string>
+
+    <string name="activity_alert_add_latitude_hint">
+        21.55
+    </string>
+
+    <string name="activity_alert_add_choose_location_button_desc">
+        Choose location on map
+    </string>
+
+    <string name="activity_alert_add_add_button">
+        Send
+    </string>
+
+    <string name="activity_alert_add_err_add_alert_api_access_problem">
+        Problem with sending alert. Check your internet connection.
+    </string>
+
+    <string name="activity_alert_add_err_add_alert_invalid_token">
+        Problem with sending alert. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_alert_add_msg_add_alert_success">
+        Alert was sent to server.
+    </string>
+
+    <string name="activity_alert_add_map">
+        Map
+    </string>
+
+    <string name="activity_alert_add_chat">
+        Message
+    </string>
+
+    <string name="activity_alert_add_alert">
+        Alert
+    </string>
+
+    <string name="activity_map_add_alert_desc">
+        Add alert
+    </string>
+
+    <string name="activity_choose_location_map_confirm_desc">
+        Confirm location
+    </string>
+
+    <string name="activity_choose_location_map_cancel_desc">
+        Cancel
+    </string>
+
+    <string name="activity_choose_location_map_info_set">
+        Tap on the map to choose location and click confirm button.
+    </string>
+
+    <string name="activity_choose_location_map_default_location_accuracy_desc">
+        (default current location\'s accuracy)
+    </string>
+
+    <string name="activity_choose_location_map_default_accuracy_desc">
+        (default current location)
+    </string>
+
+    <string name="chat_message_notification_channel_name">
+        Chat messages
+    </string>
+
+    <string name="chat_message_notification_channel_description">
+        Chat messages notification description
+    </string>
+
+    <string name="alert_notification_channel_name">
+        Alerts
+    </string>
+
+    <string name="alert_notification_channel_description">
+        Alerts notification description
+    </string>
+
+    <string name="alert_notification_start_alert_title_prefix">
+        Start:
+    </string>
+
+    <string name="alert_notification_end_alert_title_prefix">
+        End:
+    </string>
+
+    <string name="alert_notification_title_from">
+        from
+    </string>
+
+    <string name="chat_message_notification_title_prefix">
+        Message from
     </string>
 </resources>
