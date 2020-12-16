@@ -288,4 +288,36 @@
     <string name="activity_choose_location_map_default_accuracy_desc">
         (default current location)
     </string>
+
+    <string name="chat_message_notification_channel_name">
+        Chat messages
+    </string>
+
+    <string name="chat_message_notification_channel_description">
+        Chat messages notification description
+    </string>
+
+    <string name="alert_notification_channel_name">
+        Alerts
+    </string>
+
+    <string name="alert_notification_channel_description">
+        Alerts notification description
+    </string>
+
+    <string name="alert_notification_start_alert_title_prefix">
+        Start:
+    </string>
+
+    <string name="alert_notification_end_alert_title_prefix">
+        End:
+    </string>
+
+    <string name="alert_notification_title_from">
+        from
+    </string>
+
+    <string name="chat_message_notification_title_prefix">
+        Message from
+    </string>
 </resources>

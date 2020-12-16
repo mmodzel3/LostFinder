@@ -3,8 +3,6 @@ package com.github.mmodzel3.lostfinder.notification
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.user.UserEndpoint
@@ -12,11 +10,13 @@ import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 open class PushNotificationService : FirebaseMessagingService() {
     companion object {
-        val last_notification = MutableLiveData<PushNotification>()
         const val NOTIFICATION_DEST_TOKEN_PREFERENCE_NAME = "notification_dest_token"
         const val NOTIFICATION_DEST_TOKEN_PREFERENCE_FIELD_NAME = "notification_dest_token"
 
@@ -32,6 +32,8 @@ open class PushNotificationService : FirebaseMessagingService() {
     }
 
     private val ioScope = CoroutineScope(Dispatchers.IO + Job())
+    private val pushNotificationConverter: PushNotificationConverter =
+            PushNotificationConverter.getInstance()
 
     private lateinit var tokenManager: TokenManager
     private lateinit var userEndpoint: UserEndpoint
@@ -52,17 +54,14 @@ open class PushNotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         val notification: PushNotification = convertRemoteMessageToPushNotification(message)
-        last_notification.postValue(notification)
+        pushNotificationConverter.convertAndNotify(this, notification)
     }
 
     private fun convertRemoteMessageToPushNotification(message: RemoteMessage): PushNotification {
-        val remoteNotification: RemoteMessage.Notification = message.notification!!
-        val title: String = remoteNotification.title!!
-        val body: String = remoteNotification.body ?: ""
         val type: String = message.data[NOTIFICATION_DATA_TYPE_FIELD]!!
         val jsonData: String = message.data[NOTIFICATION_DATA_FIELD]!!
 
-        return PushNotification(title, body, type, jsonData)
+        return PushNotification(type, jsonData)
     }
 
     private fun saveNotificationDestToken(token: String) {
@@ -73,7 +72,7 @@ open class PushNotificationService : FirebaseMessagingService() {
     }
 
     private fun sendNotificationDestTokenToServer(token: String) {
-        runBlocking{
+        ioScope.launch {
             try {
                 userEndpoint.updateUserNotificationDestToken(token)
             } catch (e: UserEndpointAccessErrorException) {

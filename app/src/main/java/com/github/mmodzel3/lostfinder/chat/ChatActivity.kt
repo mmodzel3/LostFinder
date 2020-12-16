@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.alert.AlertActivity
+import com.github.mmodzel3.lostfinder.notification.PushNotificationChatMessageConverter
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
@@ -63,11 +64,25 @@ open class ChatActivity : AppCompatActivity() {
         initSendButton()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        PushNotificationChatMessageConverter.getInstance().showNotifications = false
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        PushNotificationChatMessageConverter.getInstance().showNotifications = true
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         chatEndpointViewModel.messages.removeObserver(chatEndpointViewModelDataObserver)
         chatEndpointViewModel.status.removeObserver(chatEndpointViewModelStatusObserver)
+
+        PushNotificationChatMessageConverter.getInstance().showNotifications = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
