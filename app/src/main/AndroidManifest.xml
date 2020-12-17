@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".security.authentication.login.LoginActivity" />
+        <activity android:name=".security.authentication.register.RegisterActivity"
+            android:parentActivityName=".security.authentication.login.LoginActivity" />
         <activity android:name=".chat.ChatActivity" />
         <activity android:name=".alert.AlertActivity" />
         <activity android:name=".alert.AlertAddActivity" />

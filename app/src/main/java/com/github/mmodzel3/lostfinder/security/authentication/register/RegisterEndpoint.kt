@@ -1,0 +1,13 @@
+package com.github.mmodzel3.lostfinder.security.authentication.register
+
+import com.github.mmodzel3.lostfinder.server.ServerEndpointInterface
+import retrofit2.http.POST
+import retrofit2.http.Query
+
+
+interface RegisterEndpoint : ServerEndpointInterface {
+    @POST("/register")
+    suspend fun register(@Query("email") emailAddress: String,
+                      @Query("password") password : String,
+                      @Query("username") username: String)
+}

@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
+import com.github.mmodzel3.lostfinder.security.authentication.register.RegisterActivity
 import kotlinx.coroutines.launch
 
 class LoginActivity : LoginAccountManagerActivityAbstract() {
@@ -23,6 +24,7 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
         setContentView(R.layout.activity_login)
 
         initLoginButton()
+        initRegisterButton()
         setAccountEmailAddressEditTextFromAccount()
         enableLogin()
     }
@@ -60,6 +62,16 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
         loginButton.isEnabled = false
     }
 
+    private fun initRegisterButton() {
+        val registerButton: Button = findViewById(R.id.activity_login_bt_register)
+        registerButton.setOnClickListener { onRegisterClick() }
+        registerButton.isEnabled = true
+    }
+
+    private fun onRegisterClick() {
+        goToRegisterActivity()
+    }
+
     private fun createLoginAccountManagerCallback() : AccountManagerCallback<Bundle> {
         return AccountManagerCallback {
             if (it.result.getString(AccountManager.KEY_AUTHTOKEN) != null) {
@@ -85,6 +97,13 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
 
         startActivity(intent)
         finish()
+    }
+
+    private fun goToRegisterActivity() {
+        val intent = Intent(this, RegisterActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
     }
 
     private fun onLoginFailure(error: String?) {
