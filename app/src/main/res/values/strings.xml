@@ -22,8 +22,10 @@
 
     <string name="desc_center_map_user_location">Center map to user location</string>
     <string name="email">Email address</string>
+    <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="register">Register</string>
     <string name="save_password">Save password</string>
     <string name="account_type">com.github.mmodzel3.lostfinder</string>
     <string name="token_type">jwt</string>
@@ -319,5 +321,21 @@
 
     <string name="chat_message_notification_title_prefix">
         Message from
+    </string>
+
+    <string name="activity_register_err_api_access_problem">
+        Problem with sending register request. Check your internet connection.
+    </string>
+
+    <string name="activity_register_msg_success">
+        Account registered.
+    </string>
+
+    <string name="activity_register_err_blank_fields">
+        All fields should be filled.
+    </string>
+
+    <string name="activity_register_err_duplicated">
+        Email address or username is reserved. Account exists with specific credentials.
     </string>
 </resources>
