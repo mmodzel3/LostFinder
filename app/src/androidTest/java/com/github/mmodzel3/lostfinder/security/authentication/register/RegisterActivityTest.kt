@@ -62,6 +62,20 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     }
 
     @Test
+    fun whenRegisterWithDuplicatedDataThenErrorToastIsShown() {
+        mockServerDuplicatedResponse()
+
+        fillFields(EMAIL_ADDRESS, PASSWORD, USERNAME)
+        performRegister()
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_register_err_duplicated))
+                .inRoot(withDecorView(Matchers.not(decorView)))
+                .check(matches(isDisplayed()))
+        Thread.sleep(2000)
+    }
+
+    @Test
     fun whenRegisterWithNotFilledEmailThenErrorToastIsShown() {
         mockServerRegisterResponse()
 

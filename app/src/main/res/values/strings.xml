@@ -334,4 +334,8 @@
     <string name="activity_register_err_blank_fields">
         All fields should be filled.
     </string>
+
+    <string name="activity_register_err_duplicated">
+        Email address or username is reserved. Account exists with specific credentials.
+    </string>
 </resources>

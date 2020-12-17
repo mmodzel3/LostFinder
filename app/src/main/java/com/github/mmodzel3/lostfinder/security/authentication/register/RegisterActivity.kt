@@ -2,14 +2,13 @@ package com.github.mmodzel3.lostfinder.security.authentication.register
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
@@ -56,11 +55,18 @@ class RegisterActivity : AppCompatActivity() {
         val activity: Activity = this
         lifecycleScope.launch {
             try {
-                registerEndpoint.register(emailAddress, password, username)
-                Toast.makeText(activity, R.string.activity_register_msg_success, Toast.LENGTH_SHORT)
-                        .show()
+                val response: ServerResponse = registerEndpoint.register(emailAddress, password, username)
 
-                finish()
+                if (response == ServerResponse.OK) {
+                    Toast.makeText(activity, R.string.activity_register_msg_success, Toast.LENGTH_SHORT)
+                            .show()
+
+                    finish()
+                } else if (response == ServerResponse.DUPLICATED) {
+                    Toast.makeText(activity, R.string.activity_register_err_duplicated, Toast.LENGTH_SHORT)
+                            .show()
+                    enableRegisterButton()
+                }
             } catch (e: RegisterEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.activity_register_err_api_access_problem, Toast.LENGTH_LONG)
                         .show()

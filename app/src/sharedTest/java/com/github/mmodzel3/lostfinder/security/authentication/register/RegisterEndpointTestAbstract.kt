@@ -1,6 +1,7 @@
 package com.github.mmodzel3.lostfinder.security.authentication.register
 
 import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import org.junit.Before
 
 abstract class RegisterEndpointTestAbstract : ServerEndpointTestAbstract() {
@@ -13,6 +14,10 @@ abstract class RegisterEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     fun mockServerRegisterResponse() {
-        mockServerJsonResponse(Any())
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    fun mockServerDuplicatedResponse() {
+        mockServerJsonResponse(ServerResponse.DUPLICATED)
     }
 }
