@@ -2,6 +2,22 @@
     <string name="app_name">LostFinder</string>
     <string name="location_notification_title">LostFinder</string>
 
+    <string name="activity_toolbar_map">
+        Map
+    </string>
+
+    <string name="activity_toolbar_chat">
+        Messages
+    </string>
+
+    <string name="activity_toolbar_alert">
+        Alerts
+    </string>
+
+    <string name="activity_toolbar_weather">
+        Weather
+    </string>
+
     <string name="location_notification_message">
         Your location is used to track your movement.
     </string>
@@ -84,30 +100,6 @@
         Problem with fetching messages. Your session is expired. Log in to account once again.
     </string>
 
-    <string name="activity_map_chat">
-        Messages
-    </string>
-
-    <string name="activity_map_alert">
-        Alerts
-    </string>
-
-    <string name="activity_map_weather">
-        Weather
-    </string>
-
-    <string name="activity_chat_map">
-        Map
-    </string>
-
-    <string name="activity_chat_alert">
-        Alerts
-    </string>
-
-    <string name="activity_chat_weather">
-        Weather
-    </string>
-
     <string name="activity_alert_info_user_name_example_text">
         Bob
     </string>
@@ -154,18 +146,6 @@
 
     <string name="activity_alert_err_end_alert_api_access_problem">
         Problem with ending alert. Check your internet connection.
-    </string>
-
-    <string name="activity_alert_map">
-        Map
-    </string>
-
-    <string name="activity_alert_chat">
-        Message
-    </string>
-
-    <string name="activity_alert_weather">
-        Weather
     </string>
 
     <string-array name="activity_alert_add_predefined_user">
@@ -265,22 +245,6 @@
 
     <string name="activity_alert_add_msg_add_alert_success">
         Alert was sent to server.
-    </string>
-
-    <string name="activity_alert_add_map">
-        Map
-    </string>
-
-    <string name="activity_alert_add_chat">
-        Message
-    </string>
-
-    <string name="activity_alert_add_alert">
-        Alert
-    </string>
-
-    <string name="activity_alert_add_weather">
-        Weather
     </string>
 
     <string name="activity_map_add_alert_desc">
@@ -451,16 +415,4 @@
     <string name="fragment_weather_broken_clouds">Broken clouds</string>
     <string name="fragment_weather_overcast_clouds">Overcast clouds</string>
     <string name="fragment_weather_unknown">Unknown</string>
-
-    <string name="activity_weather_map">
-        Map
-    </string>
-
-    <string name="activity_weather_chat">
-        Messages
-    </string>
-
-    <string name="activity_weather_alert">
-        Alerts
-    </string>
 </resources>

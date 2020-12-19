@@ -1,33 +1,26 @@
 package com.github.mmodzel3.lostfinder.chat
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.alert.AlertActivity
+import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.notification.PushNotificationChatMessageConverter
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
-import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-open class ChatActivity : AppCompatActivity() {
+open class ChatActivity : LoggedUserActivityAbstract() {
     private val chatEndpoint: ChatEndpoint by lazy {
         ChatEndpointFactory.createChatEndpoint(TokenManager.getInstance(applicationContext))
     }
@@ -84,27 +77,6 @@ open class ChatActivity : AppCompatActivity() {
         chatEndpointViewModel.status.removeObserver(chatEndpointViewModelStatusObserver)
 
         PushNotificationChatMessageConverter.getInstance().showNotifications = true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_chat, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id: Int = item.itemId
-        return if (id == R.id.activity_chat_it_map) {
-            goToMapActivity()
-            true
-        } else if (id == R.id.activity_chat_it_alert) {
-            goToAlertActivity()
-            true
-        } else if (id == R.id.activity_chat_it_weather) {
-            goToWeatherActivity()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
     }
 
     private fun initRecyclerView() {
@@ -212,34 +184,5 @@ open class ChatActivity : AppCompatActivity() {
 
     private fun disableSendButton() {
         sendButton.isEnabled = false
-    }
-
-    private fun goToMapActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToAlertActivity() {
-        val intent = Intent(this, AlertActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToWeatherActivity() {
-        val intent = Intent(this, WeatherActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-        finish()
     }
 }
