@@ -365,6 +365,13 @@
 
     <string name="activity_weather_units">metric</string>
     <string name="fragment_weather_now">Teraz</string>
+    <string name="fragment_weather_next_hour">1H</string>
+    <string name="fragment_weather_today">Dzisiaj</string>
+    <string name="fragment_weather_tomorrow">Jutro</string>
+    <string name="fragment_weather_now_full">Teraz</string>
+    <string name="fragment_weather_next_hour_full">Następna godzina</string>
+    <string name="fragment_weather_today_full">Dzisiaj</string>
+    <string name="fragment_weather_tomorrow_full">Jutro</string>
     <string name="fragment_weather_temperature">Temperatura:</string>
     <string name="fragment_weather_temperature_example">20</string>
     <string name="fragment_weather_temperature_postfix">°C</string>
@@ -386,9 +393,6 @@
     <string name="fragment_weather_wind_direction">Kierunek wiatru:</string>
     <string name="fragment_weather_wind_direction_example">270</string>
     <string name="fragment_weather_wind_direction_postfix">°</string>
-    <string name="fragment_weather_next_hour">Następna 1h</string>
-    <string name="fragment_weather_today">Dzisiaj</string>
-    <string name="fragment_weather_tomorrow">Jutro</string>
     <string name="fragment_weather_blank">x</string>
     <string name="fragment_weather_no_data">Brak danych</string>
     <string name="fragment_weather_thunderstorm_with_light_rain">Burza z lekkim opadem deszczu</string>

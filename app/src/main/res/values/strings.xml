@@ -365,6 +365,13 @@
 
     <string name="activity_weather_units">metric</string>
     <string name="fragment_weather_now">Now</string>
+    <string name="fragment_weather_next_hour">Next hour</string>
+    <string name="fragment_weather_today">Today</string>
+    <string name="fragment_weather_tomorrow">Tomorrow</string>
+    <string name="fragment_weather_now_full">Now</string>
+    <string name="fragment_weather_next_hour_full">Next hour</string>
+    <string name="fragment_weather_today_full">Today</string>
+    <string name="fragment_weather_tomorrow_full">Tomorrow</string>
     <string name="fragment_weather_temperature">Temperature:</string>
     <string name="fragment_weather_temperature_example">20</string>
     <string name="fragment_weather_temperature_postfix">°C</string>
@@ -386,9 +393,6 @@
     <string name="fragment_weather_wind_direction">Wind direction:</string>
     <string name="fragment_weather_wind_direction_example">270</string>
     <string name="fragment_weather_wind_direction_postfix">°</string>
-    <string name="fragment_weather_next_hour">Next hour</string>
-    <string name="fragment_weather_today">Today</string>
-    <string name="fragment_weather_tomorrow">Tomorrow</string>
     <string name="fragment_weather_blank">x</string>
     <string name="fragment_weather_no_data">No data</string>
     <string name="fragment_weather_thunderstorm_with_light_rain">Thunderstorm with light rain</string>
