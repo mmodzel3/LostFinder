@@ -37,7 +37,7 @@ class WeatherFragmentTest : WeatherEndpointTestAbstract() {
 
         fragmentScenario.onFragment(object : FragmentScenario.FragmentAction<WeatherFragment> {
             override fun perform(fragment: WeatherFragment) {
-                typeName = fragment.getString(R.string.fragment_weather_now)
+                typeName = fragment.getString(R.string.fragment_weather_now_full)
             }
         })
 

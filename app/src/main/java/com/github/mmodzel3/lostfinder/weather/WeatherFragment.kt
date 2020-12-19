@@ -59,13 +59,13 @@ class WeatherFragment(private val type: Int,
 
     private fun showWeatherType() {
         if (type == WEATHER_NOW_TYPE) {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_now)
+            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_now_full)
         } else if (type == WEATHER_NEXT_HOUR_TYPE) {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_next_hour)
+            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_next_hour_full)
         } else if (type == WEATHER_TODAY_TYPE) {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_today)
+            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_today_full)
         } else {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_tomorrow)
+            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_tomorrow_full)
         }
     }
 
