@@ -27,6 +27,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidToken
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserRole
+import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import kotlinx.coroutines.launch
 import java.lang.Math.round
 import java.util.*
@@ -75,6 +76,10 @@ class AlertAddActivity : AppCompatActivity() {
             }
             R.id.activity_alert_add_it_alert -> {
                 goToAlertActivity()
+                true
+            }
+            R.id.activity_alert_add_it_weather -> {
+                goToWeatherActivity()
                 true
             }
             else -> {
@@ -276,6 +281,13 @@ class AlertAddActivity : AppCompatActivity() {
 
     private fun goToAlertActivity() {
         val intent = Intent(this, AlertActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+    }
+
+    private fun goToWeatherActivity() {
+        val intent = Intent(this, WeatherActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)

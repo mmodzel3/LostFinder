@@ -9,6 +9,7 @@ import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.alert.AlertActivity
 import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.permissions.AppCompactActivityWithPermissionsRequest
+import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -52,6 +53,9 @@ open class BaseMapActivity :
             true
         } else if (id == R.id.activity_map_it_alert) {
             goToAlertActivity()
+            true
+        }  else if (id == R.id.activity_map_it_weather) {
+            goToWeatherActivity()
             true
         }  else {
             super.onOptionsItemSelected(item)
@@ -111,6 +115,13 @@ open class BaseMapActivity :
 
     private fun goToAlertActivity() {
         val intent = Intent(this, AlertActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+    }
+
+    private fun goToWeatherActivity() {
+        val intent = Intent(this, WeatherActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)

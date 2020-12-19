@@ -1,6 +1,5 @@
 package com.github.mmodzel3.lostfinder.security.authentication.register
 
-import com.github.mmodzel3.lostfinder.security.authentication.login.RegisterEndpointTestAbstract
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 

@@ -13,4 +13,10 @@
         android:icon="@drawable/ic_white_alert"
         app:showAsAction="ifRoom"
         android:title="@string/activity_map_alert" />
+
+    <item
+        android:id="@+id/activity_map_it_weather"
+        android:icon="@drawable/ic_weather"
+        app:showAsAction="ifRoom"
+        android:title="@string/activity_map_weather" />
 </menu>

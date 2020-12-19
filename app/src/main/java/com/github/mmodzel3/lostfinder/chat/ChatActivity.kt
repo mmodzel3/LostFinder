@@ -22,6 +22,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivit
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
+import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -97,6 +98,9 @@ open class ChatActivity : AppCompatActivity() {
             true
         } else if (id == R.id.activity_chat_it_alert) {
             goToAlertActivity()
+            true
+        } else if (id == R.id.activity_chat_it_weather) {
+            goToWeatherActivity()
             true
         } else {
             super.onOptionsItemSelected(item)
@@ -219,6 +223,13 @@ open class ChatActivity : AppCompatActivity() {
 
     private fun goToAlertActivity() {
         val intent = Intent(this, AlertActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+    }
+
+    private fun goToWeatherActivity() {
+        val intent = Intent(this, WeatherActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)

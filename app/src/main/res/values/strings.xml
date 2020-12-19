@@ -92,12 +92,20 @@
         Alerts
     </string>
 
+    <string name="activity_map_weather">
+        Weather
+    </string>
+
     <string name="activity_chat_map">
         Map
     </string>
 
     <string name="activity_chat_alert">
         Alerts
+    </string>
+
+    <string name="activity_chat_weather">
+        Weather
     </string>
 
     <string name="activity_alert_info_user_name_example_text">
@@ -154,6 +162,10 @@
 
     <string name="activity_alert_chat">
         Message
+    </string>
+
+    <string name="activity_alert_weather">
+        Weather
     </string>
 
     <string-array name="activity_alert_add_predefined_user">
@@ -267,6 +279,10 @@
         Alert
     </string>
 
+    <string name="activity_alert_add_weather">
+        Weather
+    </string>
+
     <string name="activity_map_add_alert_desc">
         Add alert
     </string>
@@ -337,5 +353,110 @@
 
     <string name="activity_register_err_duplicated">
         Email address or username is reserved. Account exists with specific credentials.
+    </string>
+
+    <string name="activity_weather_err_api_access_error">
+        Problem with fetching weather data. Check your connection.
+    </string>
+
+    <string name="activity_weather_msg_fetching">
+        Fetching weather data.
+    </string>
+
+    <string name="activity_weather_units">metric</string>
+    <string name="fragment_weather_now">Now</string>
+    <string name="fragment_weather_temperature">Temperature:</string>
+    <string name="fragment_weather_temperature_example">20</string>
+    <string name="fragment_weather_temperature_postfix">°C</string>
+    <string name="fragment_weather_pressure">Pressure:</string>
+    <string name="fragment_weather_pressure_example">1024</string>
+    <string name="fragment_weather_pressure_postfix">hPa</string>
+    <string name="fragment_weather_humidity">Humidity:</string>
+    <string name="fragment_weather_humidity_example">30</string>
+    <string name="fragment_weather_humidity_postfix">%</string>
+    <string name="fragment_weather_clouds">Clouds:</string>
+    <string name="fragment_weather_clouds_example">0</string>
+    <string name="fragment_weather_clouds_postfix">%</string>
+    <string name="fragment_weather_visibility">Visibility:</string>
+    <string name="fragment_weather_visibility_example">10000</string>
+    <string name="fragment_weather_visibility_postfix">m</string>
+    <string name="fragment_weather_wind_speed">Wind speed:</string>
+    <string name="fragment_weather_wind_speed_example">1000</string>
+    <string name="fragment_weather_wind_speed_postfix">m/s</string>
+    <string name="fragment_weather_wind_direction">Wind direction:</string>
+    <string name="fragment_weather_wind_direction_example">270</string>
+    <string name="fragment_weather_wind_direction_postfix">°</string>
+    <string name="fragment_weather_next_hour">Next hour</string>
+    <string name="fragment_weather_today">Today</string>
+    <string name="fragment_weather_tomorrow">Tomorrow</string>
+    <string name="fragment_weather_blank">x</string>
+    <string name="fragment_weather_no_data">No data</string>
+    <string name="fragment_weather_thunderstorm_with_light_rain">Thunderstorm with light rain</string>
+    <string name="fragment_weather_thunderstorm_with_rain">Thunderstorm with rain</string>
+    <string name="fragment_weather_thunderstorm_with_heavy_rain">Thunderstorm with heavy rain</string>
+    <string name="fragment_weather_light_thunderstorm">Light thunderstorm</string>
+    <string name="fragment_weather_thunderstorm">Thunderstorm</string>
+    <string name="fragment_weather_heavy_thunderstorm">Heavy thunderstorm</string>
+    <string name="fragment_weather_ragged_thunderstorm">Ragged thunderstorm</string>
+    <string name="fragment_weather_thunderstorm_with_light_drizzle">Thunderstorm with light drizzle</string>
+    <string name="fragment_weather_thunderstorm_with_drizzle">Thunderstorm with drizzle</string>
+    <string name="fragment_weather_thunderstorm_with_heavy_drizzle">Thunderstorm with heavy drizzle</string>
+    <string name="fragment_weather_light_intensity_drizzle">light_intensity_drizzle</string>
+    <string name="fragment_weather_drizzle">light_intensity_drizzle</string>
+    <string name="fragment_weather_heavy_intensity_drizzle">heavy intensity drizzle</string>
+    <string name="fragment_weather_light_intensity_drizzle_rain">light intensity drizzle rain</string>
+    <string name="fragment_weather_drizzle_rain">drizzle rain</string>
+    <string name="fragment_weather_heavy_intensity_drizzle_rain">heavy intensity drizzle rain</string>
+    <string name="fragment_weather_shower_rain_and_drizzle">shower rain and drizzle</string>
+    <string name="fragment_weather_heavy_shower_rain_and_drizzle">heavy shower rain and drizzle</string>
+    <string name="fragment_weather_shower_drizzle">shower drizzle</string>
+    <string name="fragment_weather_light_rain">light rain</string>
+    <string name="fragment_weather_moderate_rain">moderate rain</string>
+    <string name="fragment_weather_heavy_intensity_rain">heavy intensity rain</string>
+    <string name="fragment_weather_very_heavy_rain">very heavy rain</string>
+    <string name="fragment_weather_extreme_rain">extreme rain</string>
+    <string name="fragment_weather_freezing_rain">freezing rain</string>
+    <string name="fragment_weather_light_intensity_shower_rain">light intensity shower rain</string>
+    <string name="fragment_weather_shower_rain">shower rain</string>
+    <string name="fragment_weather_heavy_intensity_shower_rain">heavy intensity shower rain</string>
+    <string name="fragment_weather_ragged_shower_rain">ragged shower rain</string>
+    <string name="fragment_weather_light_snow">Light snow</string>
+    <string name="fragment_weather_snow">Snow </string>
+    <string name="fragment_weather_heavy_snow">Heavy snow</string>
+    <string name="fragment_weather_sleet">Sleet</string>
+    <string name="fragment_weather_light_shower_sleet">Light shower sleet</string>
+    <string name="fragment_weather_shower_sleet">Shower sleet</string>
+    <string name="fragment_weather_light_rain_and_snow">Light rain and snow</string>
+    <string name="fragment_weather_rain_and_snow">Rain and snow</string>
+    <string name="fragment_weather_light_shower_snow">Light shower snow</string>
+    <string name="fragment_weather_shower_snow">Shower snow</string>
+    <string name="fragment_weather_heavy_shower_snow">Heavy shower snow</string>
+    <string name="fragment_weather_mist">Mist</string>
+    <string name="fragment_weather_smoke">Smoke</string>
+    <string name="fragment_weather_haze">Haze</string>
+    <string name="fragment_weather_sand_dust_whirls">Sand dust whirls</string>
+    <string name="fragment_weather_fog">Fog</string>
+    <string name="fragment_weather_sand">Sand</string>
+    <string name="fragment_weather_dust">Dust</string>
+    <string name="fragment_weather_volcanic_ash">Volcanic ash</string>
+    <string name="fragment_weather_squalls">Squalls</string>
+    <string name="fragment_weather_tornado">Tornado</string>
+    <string name="fragment_weather_clear_sky">Clear sky</string>
+    <string name="fragment_weather_few_clouds">Few clouds</string>
+    <string name="fragment_weather_scattered_clouds">Scattered clouds</string>
+    <string name="fragment_weather_broken_clouds">Broken clouds</string>
+    <string name="fragment_weather_overcast_clouds">Overcast clouds</string>
+    <string name="fragment_weather_unknown">Unknown</string>
+
+    <string name="activity_weather_map">
+        Map
+    </string>
+
+    <string name="activity_weather_chat">
+        Messages
+    </string>
+
+    <string name="activity_weather_alert">
+        Alerts
     </string>
 </resources>
