@@ -104,12 +104,4 @@ open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() 
 
         map.overlays.add(alertsLocationsOverlay)
     }
-
-    private fun goToLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-        finish()
-    }
 }

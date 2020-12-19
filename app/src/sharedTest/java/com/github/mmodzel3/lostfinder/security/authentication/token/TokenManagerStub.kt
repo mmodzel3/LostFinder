@@ -25,4 +25,8 @@ class TokenManagerStub(private val userEmail: String,
     override suspend fun getToken(): String {
         return TOKEN
     }
+
+    override fun logout() {
+
+    }
 }

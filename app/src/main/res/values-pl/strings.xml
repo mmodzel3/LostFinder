@@ -2,6 +2,22 @@
     <string name="app_name">Poszukiwanie</string>
     <string name="location_notification_title">Poszukiwanie</string>
 
+    <string name="activity_toolbar_map">
+        Mapa
+    </string>
+
+    <string name="activity_toolbar_chat">
+        Wiadomości
+    </string>
+
+    <string name="activity_toolbar_alert">
+        Alerty
+    </string>
+
+    <string name="activity_toolbar_weather">
+        Pogoda
+    </string>
+
     <string name="location_notification_message">
         Twoje bieżące położenie jest używane do śledzenia twojej lokalizacji.
     </string>
@@ -84,30 +100,6 @@
         Problem z pobraniem wiadomości. Sesja wygasła. Zaloguj się ponownie.
     </string>
 
-    <string name="activity_map_chat">
-        Wiadomości
-    </string>
-
-    <string name="activity_map_alert">
-        Alerty
-    </string>
-
-    <string name="activity_map_weather">
-        Pogoda
-    </string>
-
-    <string name="activity_chat_map">
-        Mapa
-    </string>
-
-    <string name="activity_chat_alert">
-        Alerty
-    </string>
-
-    <string name="activity_chat_weather">
-        Pogoda
-    </string>
-
     <string name="activity_alert_info_user_name_example_text">
         Bob
     </string>
@@ -154,18 +146,6 @@
 
     <string name="activity_alert_err_end_alert_api_access_problem">
         Problem z zakończeniem alertu. Sprawdź połączenie z siecią.
-    </string>
-
-    <string name="activity_alert_map">
-        Mapa
-    </string>
-
-    <string name="activity_alert_chat">
-        Wiadomości
-    </string>
-
-    <string name="activity_alert_weather">
-        Pogoda
     </string>
 
     <string-array name="activity_alert_add_predefined_user">
@@ -265,22 +245,6 @@
 
     <string name="activity_alert_add_msg_add_alert_success">
         Alert został wysłany.
-    </string>
-
-    <string name="activity_alert_add_map">
-        Mapa
-    </string>
-
-    <string name="activity_alert_add_chat">
-        Wiadomości
-    </string>
-
-    <string name="activity_alert_add_alert">
-        Alery
-    </string>
-
-    <string name="activity_alert_add_weather">
-        Pogoda
     </string>
 
     <string name="activity_map_add_alert_desc">
@@ -451,16 +415,5 @@
     <string name="fragment_weather_broken_clouds">Przejściowe zachmurzenie</string>
     <string name="fragment_weather_overcast_clouds">Pochmurnie</string>
     <string name="fragment_weather_unknown">Pogoda nieznana</string>
-
-    <string name="activity_weather_map">
-        Mapa
-    </string>
-
-    <string name="activity_weather_chat">
-        Wiadomości
-    </string>
-
-    <string name="activity_weather_alert">
-        Alerty
-    </string>
+    <string name="activity_toolbar_logout">Wyloguj</string>
 </resources>

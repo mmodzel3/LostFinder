@@ -7,33 +7,22 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.chat.ChatActivity
+import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
 import com.github.mmodzel3.lostfinder.map.ChooseLocationMapActivity
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
-import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserRole
-import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import kotlinx.coroutines.launch
-import java.lang.Math.round
 import java.util.*
 import kotlin.math.roundToInt
 
-class AlertAddActivity : AppCompatActivity() {
+class AlertAddActivity : LoggedUserActivityAbstract() {
     companion object {
         const val DEFAULT_RANGE = 180.0
         const val CHOOSE_LOCATION_CODE = 1
@@ -57,35 +46,6 @@ class AlertAddActivity : AppCompatActivity() {
         initChooseLocationButton()
         bindToCurrentLocationService()
         bindAlertTitles()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_alert_add, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.activity_alert_add_it_map -> {
-                goToMapActivity()
-                true
-            }
-            R.id.activity_alert_add_it_chat -> {
-                goToChatActivity()
-                true
-            }
-            R.id.activity_alert_add_it_alert -> {
-                goToAlertActivity()
-                true
-            }
-            R.id.activity_alert_add_it_weather -> {
-                goToWeatherActivity()
-                true
-            }
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -263,42 +223,6 @@ class AlertAddActivity : AppCompatActivity() {
     private fun disableAddButton() {
         val addButton: Button = findViewById(R.id.activity_alert_add_bt_add)
         addButton.isEnabled = false
-    }
-
-    private fun goToMapActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToChatActivity() {
-        val intent = Intent(this, ChatActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToAlertActivity() {
-        val intent = Intent(this, AlertActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToWeatherActivity() {
-        val intent = Intent(this, WeatherActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-        finish()
     }
 
     private fun goToChooseLocationActivity() {

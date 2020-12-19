@@ -15,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
+import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.alert.AlertActivity
@@ -25,7 +26,7 @@ import com.github.mmodzel3.lostfinder.location.CurrentLocationService
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class WeatherActivity: AppCompatActivity() {
+class WeatherActivity: LoggedUserActivityAbstract() {
     private lateinit var viewPager: ViewPager2
 
     private lateinit var currentLocationBinder : CurrentLocationBinder
@@ -59,27 +60,6 @@ class WeatherActivity: AppCompatActivity() {
         super.onDestroy()
 
         stopListeningToCurrentLocation()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_weather, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id: Int = item.itemId
-        return if (id == R.id.activity_weather_it_map) {
-            goToMapActivity()
-            true
-        } else if (id == R.id.activity_weather_it_chat) {
-            goToChatActivity()
-            true
-        } else if (id == R.id.activity_weather_it_alert) {
-            goToAlertActivity()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
-        }
     }
 
     internal fun onLocationChange(latitude: Double, longitude: Double) {
@@ -163,24 +143,5 @@ class WeatherActivity: AppCompatActivity() {
         })
     }
 
-    private fun goToMapActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
-        startActivity(intent)
-    }
-
-    private fun goToAlertActivity() {
-        val intent = Intent(this, AlertActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToChatActivity() {
-        val intent = Intent(this, ChatActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
 }

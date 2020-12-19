@@ -21,8 +21,7 @@ import java.io.File
 open class BaseMapActivity :
         AppCompactActivityWithPermissionsRequest(
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            R.string.denied_location_permission_msg
-        ) {
+            R.string.denied_location_permission_msg) {
     private val OSMDROID_BASE_CACHE_DIR = "osmdroid"
     private val OSMDROID_TILE_CACHE_DIR = "tile"
 
@@ -39,27 +38,6 @@ open class BaseMapActivity :
     override fun onPause() {
         super.onPause()
         map.onPause()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_map, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id: Int = item.itemId
-        return if (id == R.id.activity_map_it_message) {
-            goToChatActivity()
-            true
-        } else if (id == R.id.activity_map_it_alert) {
-            goToAlertActivity()
-            true
-        }  else if (id == R.id.activity_map_it_weather) {
-            goToWeatherActivity()
-            true
-        }  else {
-            super.onOptionsItemSelected(item)
-        }
     }
 
     protected open fun initMap() {
@@ -104,26 +82,5 @@ open class BaseMapActivity :
         val rotationGestureOverlay = RotationGestureOverlay(map)
         rotationGestureOverlay.isEnabled = true
         map.overlays.add(rotationGestureOverlay)
-    }
-
-    private fun goToChatActivity() {
-        val intent = Intent(this, ChatActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToAlertActivity() {
-        val intent = Intent(this, AlertActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
-    }
-
-    private fun goToWeatherActivity() {
-        val intent = Intent(this, WeatherActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-        startActivity(intent)
     }
 }
