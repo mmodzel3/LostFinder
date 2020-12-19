@@ -1,25 +1,39 @@
 package com.github.mmodzel3.lostfinder.weather
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.github.mmodzel3.lostfinder.R
 
-class WeatherFragment(private val type: Int,
-                      private val weather: MutableLiveData<Weather>): Fragment() {
+class WeatherFragment: Fragment() {
     companion object {
         const val WEATHER_NOW_TYPE = 0
         const val WEATHER_NEXT_HOUR_TYPE = 1
         const val WEATHER_TODAY_TYPE = 2
         const val WEATHER_TOMORROW_TYPE = 3
+
+        private const val TYPE = "type"
+
+        fun create(type: Int): WeatherFragment {
+            val weatherFragment = WeatherFragment()
+            val bundle = Bundle(1)
+
+            bundle.putInt(TYPE, type)
+
+            weatherFragment.arguments = bundle
+            return weatherFragment
+        }
     }
+
+    internal lateinit var weatherEndpointViewModel: WeatherEndpointViewModel
+
     private lateinit var weatherTypeNameTextView: TextView
     private lateinit var weatherConditionTextView: TextView
     private lateinit var temperatureTextView: TextView
@@ -53,26 +67,58 @@ class WeatherFragment(private val type: Int,
         windSpeedTextView = view.findViewById(R.id.fragment_weather_tv_wind_speed)
         windDegreeTextView = view.findViewById(R.id.fragment_weather_tv_wind_degree)
 
+        weatherEndpointViewModel = provideWeatherEndpointViewModel()
+
         showWeatherType()
         observeWeatherData()
     }
 
-    private fun showWeatherType() {
-        if (type == WEATHER_NOW_TYPE) {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_now_full)
-        } else if (type == WEATHER_NEXT_HOUR_TYPE) {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_next_hour_full)
-        } else if (type == WEATHER_TODAY_TYPE) {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_today_full)
-        } else {
-            weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_tomorrow_full)
+    internal fun observeWeatherData() {
+        val observer = Observer<Weather> {
+            showWeatherData(it)
+        }
+
+        when (arguments?.getInt(TYPE)) {
+            WEATHER_NOW_TYPE -> {
+                weatherEndpointViewModel.now.observe(viewLifecycleOwner, observer)
+            }
+            WEATHER_NEXT_HOUR_TYPE -> {
+                weatherEndpointViewModel.nextHour.observe(viewLifecycleOwner, observer)
+            }
+            WEATHER_TODAY_TYPE -> {
+                weatherEndpointViewModel.today.observe(viewLifecycleOwner, observer)
+            }
+            else -> {
+                weatherEndpointViewModel.tomorrow.observe(viewLifecycleOwner, observer)
+            }
         }
     }
 
-    private fun observeWeatherData() {
-        weather.observe(viewLifecycleOwner, Observer {
-            showWeatherData(it)
-        })
+    private fun provideWeatherEndpointViewModel(): WeatherEndpointViewModel {
+        val weatherEndpoint: WeatherEndpoint = WeatherEndpointFactory.createWeatherEndpoint()
+        val weatherApiKey: String = requireView().context.getString(R.string.weather_api_key)
+        val weatherUnits: String = requireView().context.getString(R.string.activity_weather_units)
+        val viewModelFactory = WeatherEndpointViewModelFactory(weatherEndpoint, weatherApiKey, weatherUnits)
+
+        return ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(WeatherEndpointViewModel::class.java)
+    }
+
+    private fun showWeatherType() {
+        when (arguments?.getInt(TYPE)) {
+            WEATHER_NOW_TYPE -> {
+                weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_now_full)
+            }
+            WEATHER_NEXT_HOUR_TYPE -> {
+                weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_next_hour_full)
+            }
+            WEATHER_TODAY_TYPE -> {
+                weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_today_full)
+            }
+            else -> {
+                weatherTypeNameTextView.text = view?.context?.getString(R.string.fragment_weather_tomorrow_full)
+            }
+        }
     }
 
     private fun showWeatherData(weather: Weather) {

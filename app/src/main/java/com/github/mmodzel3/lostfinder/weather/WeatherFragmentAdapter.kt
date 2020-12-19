@@ -12,13 +12,13 @@ class WeatherFragmentAdapter(fragmentActivity: FragmentActivity,
 
     override fun createFragment(position: Int): Fragment {
         return if (position == 0) {
-            WeatherFragment(WeatherFragment.WEATHER_NOW_TYPE, weatherEndpointViewModel.now)
+            WeatherFragment.create(WeatherFragment.WEATHER_NOW_TYPE)
         } else if (position == 1) {
-            WeatherFragment(WeatherFragment.WEATHER_NEXT_HOUR_TYPE, weatherEndpointViewModel.nextHour)
+            WeatherFragment.create(WeatherFragment.WEATHER_NEXT_HOUR_TYPE)
         } else if (position == 2) {
-            WeatherFragment(WeatherFragment.WEATHER_TODAY_TYPE, weatherEndpointViewModel.today)
+            WeatherFragment.create(WeatherFragment.WEATHER_TODAY_TYPE)
         } else {
-            WeatherFragment(WeatherFragment.WEATHER_TOMORROW_TYPE, weatherEndpointViewModel.tomorrow)
+            WeatherFragment.create(WeatherFragment.WEATHER_TOMORROW_TYPE)
         }
     }
 }

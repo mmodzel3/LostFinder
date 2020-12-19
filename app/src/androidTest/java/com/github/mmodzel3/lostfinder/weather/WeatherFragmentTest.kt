@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.weather.WeatherFragment.Companion.WEATHER_NOW_TYPE
+import com.github.mmodzel3.lostfinder.weather.WeatherFragment.Companion.WEATHER_TOMORROW_TYPE
 import org.junit.Before
 import org.junit.Test
 
@@ -23,23 +24,25 @@ class WeatherFragmentTest : WeatherEndpointTestAbstract() {
         weatherData = MutableLiveData()
 
         fragmentScenario = launchFragmentInContainer {
-            WeatherFragment(WEATHER_NOW_TYPE, weatherData)
+            WeatherFragment.create(WEATHER_TOMORROW_TYPE)
         }
     }
 
     @Test
     fun whenUpdateWeatherDataThenFragmentIsUpdatedWithCorrectData() {
         var typeName: String = ""
-
-        val weather: Weather = updateWeatherData()
-
-        Thread.sleep(1000)
+        val weather: Weather = createTestWeatherCurrent().convertToWeather()
 
         fragmentScenario.onFragment(object : FragmentScenario.FragmentAction<WeatherFragment> {
             override fun perform(fragment: WeatherFragment) {
-                typeName = fragment.getString(R.string.fragment_weather_now_full)
+                val weatherEndpointViewModel: WeatherEndpointViewModel = fragment.weatherEndpointViewModel
+                weatherEndpointViewModel.tomorrow.value = weather
+
+                typeName = fragment.getString(R.string.fragment_weather_tomorrow_full)
             }
         })
+
+        Thread.sleep(1000)
 
         onView(ViewMatchers.withId(R.id.fragment_weather_tv_type_name))
                 .check(matches(withText(typeName)))
@@ -64,12 +67,5 @@ class WeatherFragmentTest : WeatherEndpointTestAbstract() {
 
         onView(ViewMatchers.withId(R.id.fragment_weather_tv_wind_degree))
                 .check(matches(withText(weather.windDegree.toString())))
-    }
-
-    private fun updateWeatherData(): Weather {
-        val weather: Weather = createTestWeatherCurrent().convertToWeather()
-
-        weatherData.postValue(weather)
-        return weather
     }
 }
