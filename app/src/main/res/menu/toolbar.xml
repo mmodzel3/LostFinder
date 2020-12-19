@@ -25,4 +25,10 @@
         android:icon="@drawable/ic_weather"
         app:showAsAction="ifRoom"
         android:title="@string/activity_toolbar_weather" />
+
+    <item
+        android:id="@+id/activity_toolbar_it_logout"
+        android:icon="@drawable/ic_logout"
+        app:showAsAction="ifRoom"
+        android:title="@string/activity_toolbar_logout" />
 </menu>

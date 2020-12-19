@@ -88,11 +88,7 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
     @Test
     fun whenAccountWithCorrectCredentialsAndTokenIsNotCachedThenGotToken() {
         runBlocking {
-            val encryptedPassword: String = encryptPassword(PASSWORD)
-
-            mockServerTokenResponse()
-            accountManager.addAccountExplicitly(createTestAccount(), encryptedPassword, null)
-            val token: String = tokenManager.getToken()
+            val token: String = createTestAccountAndGetTokenFromServer()
             assertThat(token).matches(TOKEN)
         }
     }
@@ -100,12 +96,7 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
     @Test
     fun whenAccountWithCorrectCredentialsAndTokenIsCachedThenGotToken() {
         runBlocking {
-            val encryptedPassword: String = encryptPassword(PASSWORD)
-            val account: Account = createTestAccount()
-
-            mockServerTokenResponse()
-            accountManager.addAccountExplicitly(account, encryptedPassword, null)
-            tokenManager.getToken()
+            createTestAccountAndGetTokenFromServer()
 
             mockServerFailureResponse()
             val token: String = tokenManager.getToken()
@@ -116,16 +107,42 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
     @Test
     fun whenAccountWithCachedTokenThenGotToken() {
         runBlocking {
-            val encryptedPassword: String = encryptPassword(PASSWORD)
-            val account: Account = createTestAccount()
-
-            mockServerTokenResponse()
-            accountManager.addAccountExplicitly(account, encryptedPassword, null)
-            accountManager.setAuthToken(account, tokenType, TOKEN)
+            createTestAccountAndSetTestToken()
 
             val token: String = tokenManager.getToken()
             assertThat(token).matches(TOKEN)
         }
+    }
+
+    @Test
+    fun whenLogoutToLoggedAccountThenTokenAndPasswordAreRemoved() {
+        runBlocking {
+            createTestAccountAndSetTestToken()
+
+            tokenManager.logout()
+
+            val account: Account = accountManager.accounts[0]
+            val token: String? = accountManager.blockingGetAuthToken(account, accountType, true)
+            assertThat(token).isNull()
+        }
+    }
+
+    private suspend fun createTestAccountAndGetTokenFromServer(): String {
+        val encryptedPassword: String = encryptPassword(PASSWORD)
+
+        mockServerTokenResponse()
+        accountManager.addAccountExplicitly(createTestAccount(), encryptedPassword, null)
+
+        return tokenManager.getToken()
+    }
+
+    private fun createTestAccountAndSetTestToken() {
+        val encryptedPassword: String = encryptPassword(PASSWORD)
+        val account: Account = createTestAccount()
+
+        mockServerTokenResponse()
+        accountManager.addAccountExplicitly(account, encryptedPassword, null)
+        accountManager.setAuthToken(account, tokenType, TOKEN)
     }
 
     private fun removeAccounts() {

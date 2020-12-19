@@ -415,4 +415,5 @@
     <string name="fragment_weather_broken_clouds">Broken clouds</string>
     <string name="fragment_weather_overcast_clouds">Overcast clouds</string>
     <string name="fragment_weather_unknown">Unknown</string>
+    <string name="activity_toolbar_logout">Logout</string>
 </resources>

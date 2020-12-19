@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder
 
+import android.accounts.AccountManager
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.mmodzel3.lostfinder.alert.AlertActivity
 import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
+import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 
 abstract class LoggedUserActivityAbstract : AppCompatActivity() {
@@ -29,6 +31,9 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
             true
         } else if (id == R.id.activity_toolbar_it_weather) {
             goToWeatherActivity()
+            true
+        } else if (id == R.id.activity_toolbar_it_logout) {
+            logout()
             true
         } else {
             super.onOptionsItemSelected(item)
@@ -65,9 +70,15 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
     protected fun goToLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
         startActivity(intent)
         finish()
+    }
+
+    private fun logout() {
+        val tokenManager: TokenManager = TokenManager.getInstance(applicationContext)
+        tokenManager.logout()
+        goToLoginActivity()
     }
 }

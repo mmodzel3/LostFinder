@@ -61,6 +61,12 @@ open class TokenManager protected constructor(private val context: Context?) {
         }
     }
 
+    open fun logout() {
+        if (account != null) {
+            accountManager.clearPassword(account)
+        }
+    }
+
     private suspend fun getAndCheckTokenForAccount(account: Account) : String {
         val token: String = getTokenForAccount(account)
 
