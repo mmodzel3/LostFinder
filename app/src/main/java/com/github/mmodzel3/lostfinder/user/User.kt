@@ -8,20 +8,20 @@ data class User(override val id: String,
                 val email: String,
                 val password: String?,
                 val username: String,
-                val role: String,
+                val role: UserRole,
                 override val location: Location?,
                 override val lastUpdateDate: Date,
                 val notificationDestToken: String?) : ServerEndpointLocationData {
 
     fun isUser() : Boolean {
-        return role == "USER"
+        return true
     }
 
-    fun isAdmin() : Boolean {
-        return role == "ADMIN"
+    fun isManager() : Boolean {
+        return role.isManager()
     }
 
     fun isOwner() : Boolean {
-        return role == "OWNER"
+        return role.isOwner()
     }
 }

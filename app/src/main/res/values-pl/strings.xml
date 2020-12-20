@@ -36,6 +36,7 @@
         Uruchom aplikację ponownie i wyraź zgodę na dostęp do twojej bieżącej lokalizacji.
     </string>
 
+    <string name="activity_map_current_location_marker_title">Ja</string>
     <string name="desc_center_map_user_location">Wyśrodkuj mapę do bieżącej mojej lokalizacji</string>
     <string name="email">Adres email</string>
     <string name="username">Nazwa użytkownika</string>
