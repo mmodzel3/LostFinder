@@ -15,6 +15,7 @@ class AlertsLocationsOverlay(private val map: MapView, private val context: Cont
     override fun createMarker(data: Alert): Marker {
         val marker = Marker(map)
         setMarkerTitle(marker, data)
+        setMarkerDescription(marker, data)
         setMarkerIcon(marker, data)
 
         return marker
@@ -23,6 +24,10 @@ class AlertsLocationsOverlay(private val map: MapView, private val context: Cont
     private fun setMarkerTitle(marker: Marker, alert: Alert) {
         marker.title = AlertTypeTitleConverter.convertAlertTypeToTitle(context, alert.type) +
                 " [" + alert.user.username + "]"
+    }
+
+    private fun setMarkerDescription(marker: Marker, alert: Alert) {
+        marker.subDescription = alert.description
     }
 
     private fun setMarkerIcon(marker: Marker, alert: Alert) {
