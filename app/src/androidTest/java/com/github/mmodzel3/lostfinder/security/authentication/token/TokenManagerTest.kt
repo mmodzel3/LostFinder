@@ -1,4 +1,4 @@
-package com.github.mmodzel3.lostfinder.authentication.token
+package com.github.mmodzel3.lostfinder.security.authentication.token
 
 import android.accounts.Account
 import android.accounts.AccountManager
@@ -6,9 +6,8 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointTestAbstract
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
-import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -119,6 +118,7 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
         runBlocking {
             createTestAccountAndSetTestToken()
 
+            mockLogoutEndpointResponse()
             tokenManager.logout()
 
             val account: Account = accountManager.accounts[0]
@@ -155,5 +155,9 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
 
     private fun encryptPassword(password: String) : String {
         return Encryptor.getInstance().encrypt(password, ApplicationProvider.getApplicationContext())
+    }
+
+    private fun mockLogoutEndpointResponse() {
+        mockServerJsonResponse(ServerResponse.OK)
     }
 }

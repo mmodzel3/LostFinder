@@ -2,21 +2,18 @@ package com.github.mmodzel3.lostfinder.security.authentication.authenticator
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.content.Context
 import com.github.mmodzel3.lostfinder.notification.PushNotificationService
-import com.github.mmodzel3.lostfinder.security.authentication.encryption.DecryptorStub
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginAccountManagerTestAbstract
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginInvalidCredentialsException
 import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockitokotlin2.any
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import com.nhaarman.mockitokotlin2.any
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PowerMockIgnore
 import org.powermock.core.classloader.annotations.PrepareForTest

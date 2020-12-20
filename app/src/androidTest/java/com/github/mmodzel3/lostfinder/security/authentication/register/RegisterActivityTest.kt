@@ -1,15 +1,9 @@
 package com.github.mmodzel3.lostfinder.security.authentication.register
 
-import android.accounts.Account
-import android.accounts.AccountManager
 import android.view.View
-import android.widget.Checkable
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -18,12 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.github.mmodzel3.lostfinder.R
 import com.google.common.truth.Truth.assertThat
-import org.hamcrest.BaseMatcher
-import org.hamcrest.CoreMatchers.isA
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Description
 import org.hamcrest.Matchers
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

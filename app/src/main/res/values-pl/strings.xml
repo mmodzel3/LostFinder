@@ -418,4 +418,8 @@
     <string name="fragment_weather_overcast_clouds">Pochmurnie</string>
     <string name="fragment_weather_unknown">Pogoda nieznana</string>
     <string name="activity_toolbar_logout">Wyloguj</string>
+    <string name="activity_toolbar_logout_msg_success">Wylogowano z konta</string>
+    <string name="activity_toolbar_logout_err_api_access_error">
+        Problem z przesłaniem żądania wylogowania do serwera. Sprawdź swoje połączenie z siecią.
+    </string>
 </resources>

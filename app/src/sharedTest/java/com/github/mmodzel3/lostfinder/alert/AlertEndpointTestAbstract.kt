@@ -5,6 +5,7 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.user.UserRole
 import org.junit.Before
 import java.util.*
 import kotlin.collections.ArrayList
@@ -14,7 +15,7 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
         const val ALERT_USER_ID = "123456"
         const val ALERT_USER_NAME = "example"
         const val ALERT_USER_EMAIL = "example@example.com"
-        const val ALERT_USER_ROLE = "OWNER"
+        val ALERT_USER_ROLE = UserRole.OWNER
         val ALERT_TYPE = AlertType.HELP
         const val ALERT_TITLE = "title"
         const val ALERT_DESCRIPTION = "description"

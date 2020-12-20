@@ -2,7 +2,6 @@ package com.github.mmodzel3.lostfinder.alert
 
 import androidx.lifecycle.Observer
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
-import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

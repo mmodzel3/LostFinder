@@ -4,6 +4,7 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.user.UserRole
 import org.junit.Before
 import java.util.*
 import kotlin.collections.ArrayList
@@ -13,7 +14,7 @@ abstract class ChatEndpointTestAbstract : ServerEndpointTestAbstract() {
         const val MSG_USER_ID = "123456"
         const val MSG_USER_NAME = "example"
         const val MSG_USER_EMAIL = "example@example.com"
-        const val MSG_USER_ROLE = "OWNER"
+        val MSG_USER_ROLE = UserRole.OWNER
         const val MSG_TEXT = "example text"
         const val DAY_BEFORE_IN_MILLISECONDS = 24*60*60*1000
     }

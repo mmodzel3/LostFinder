@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.TextView
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManagerStub
 import com.github.mmodzel3.lostfinder.user.User
+import com.github.mmodzel3.lostfinder.user.UserRole
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -23,12 +24,12 @@ class ChatAdapterTest {
         const val USER_ID1 = "1"
         const val USER_EMAIL1 = "example@example.com"
         const val USER_NAME1 = "user"
-        const val USER_ROLE1 = "USER"
+        val USER_ROLE1 = UserRole.USER
         const val USER1_MSG_COUNT = 4
         const val USER_ID2 = "2"
         const val USER_EMAIL2 = "example1@example.com"
         const val USER_NAME2 = "user1"
-        const val USER_ROLE2 = "OWNER"
+        val USER_ROLE2 = UserRole.OWNER
         const val USER2_MSG_COUNT = 4
     }
 
