@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.widget.*
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.R
@@ -143,6 +144,7 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
 
     private suspend fun addUserAlert(userAlert: UserAlert) {
         try {
+            Log.d("AlertAdd", userAlert.toString())
             alertEndpoint.addAlert(userAlert)
 
             Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
