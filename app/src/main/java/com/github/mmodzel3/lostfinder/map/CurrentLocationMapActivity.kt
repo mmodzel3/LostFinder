@@ -7,6 +7,8 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.IBinder
 import android.view.View
+import androidx.core.content.ContextCompat
+import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
@@ -19,6 +21,7 @@ open class CurrentLocationMapActivity : BaseMapActivity() {
     protected lateinit var currentLocationMarker: Marker
 
     private lateinit var currentLocationConnection : ServiceConnection
+    private var gotFirstLocation: Boolean = false
 
     override fun initMap() {
         super.initMap()
@@ -50,6 +53,13 @@ open class CurrentLocationMapActivity : BaseMapActivity() {
     private fun initCurrentLocationMarker() {
         currentLocationMarker = Marker(map)
         currentLocationMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            currentLocationMarker.icon = ContextCompat.getDrawable(applicationContext, R.drawable.ic_location_marker_current)
+        }
+
+        currentLocationMarker.title = getString(R.string.activity_map_current_location_marker_title)
+
         map.overlays.add(currentLocationMarker)
 
         listenToCurrentLocation()
@@ -59,6 +69,11 @@ open class CurrentLocationMapActivity : BaseMapActivity() {
         currentLocationBinder.registerListener(object : CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
                 currentLocationMarker.position = GeoPoint(location)
+
+                if (!gotFirstLocation) {
+                    gotFirstLocation = true
+                    mapController.animateTo(currentLocationMarker.position)
+                }
             }
         })
     }

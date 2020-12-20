@@ -3,6 +3,7 @@ package com.github.mmodzel3.lostfinder.map
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
+import androidx.core.content.ContextCompat
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.location.Location
 import org.osmdroid.events.MapEventsReceiver
@@ -90,6 +91,8 @@ class ChooseLocationMapActivity : DataLocationsMapActivity() {
     private fun addChosenLocationMarkerToMap(point: GeoPoint) {
         chosenLocationMarker = Marker(map)
         chosenLocationMarker.position = point
+        chosenLocationMarker.icon = ContextCompat.getDrawable(applicationContext, R.drawable.ic_location_marker_add)
+        chosenLocationMarker.title = getString(R.string.activity_map_chosen_location_title)
         map.overlays.add(chosenLocationMarker)
     }
 

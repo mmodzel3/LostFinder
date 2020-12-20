@@ -6,7 +6,15 @@ import androidx.lifecycle.ViewModelProvider
 class WeatherEndpointViewModelFactory(private val weatherEndpoint: WeatherEndpoint,
                                       private val weatherApiKey: String,
                                       private val weatherUnits: String) : ViewModelProvider.Factory {
+    companion object {
+        private var weatherEndpointViewModel: WeatherEndpointViewModel? = null
+    }
+
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return WeatherEndpointViewModel(weatherEndpoint, weatherApiKey, weatherUnits) as T
+        if (weatherEndpointViewModel == null) {
+            weatherEndpointViewModel = WeatherEndpointViewModel(weatherEndpoint, weatherApiKey, weatherUnits)
+        }
+
+        return weatherEndpointViewModel!! as T
     }
 }

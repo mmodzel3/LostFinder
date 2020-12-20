@@ -20,6 +20,8 @@ open class DataLocationsOverlay<T: ServerEndpointLocationData>(private val map: 
         if (markers.size != data.size) {
             removeOldData(data)
         }
+
+        map.invalidate()
     }
 
     protected fun updateDataLocation(data: T) {

@@ -36,7 +36,9 @@
         Restart application and accept requested permission.
     </string>
 
+    <string name="activity_map_current_location_marker_title">Me</string>
     <string name="desc_center_map_user_location">Center map to user location</string>
+    <string name="activity_map_chosen_location_title">Chosen location</string>
     <string name="email">Email address</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
