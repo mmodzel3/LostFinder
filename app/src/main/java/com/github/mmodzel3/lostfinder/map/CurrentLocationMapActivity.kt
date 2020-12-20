@@ -21,6 +21,7 @@ open class CurrentLocationMapActivity : BaseMapActivity() {
     protected lateinit var currentLocationMarker: Marker
 
     private lateinit var currentLocationConnection : ServiceConnection
+    private var gotFirstLocation: Boolean = false
 
     override fun initMap() {
         super.initMap()
@@ -68,6 +69,11 @@ open class CurrentLocationMapActivity : BaseMapActivity() {
         currentLocationBinder.registerListener(object : CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
                 currentLocationMarker.position = GeoPoint(location)
+
+                if (!gotFirstLocation) {
+                    gotFirstLocation = true
+                    mapController.animateTo(currentLocationMarker.position)
+                }
             }
         })
     }
