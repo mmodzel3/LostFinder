@@ -38,10 +38,8 @@ class AlertAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapte
         holder.description = alert.description
         holder.range = alert.range
 
-        if (alert.user.email == tokenManager.getTokenEmailAddress()
-                || tokenManager.getTokenRole().isManager()) {
-            holder.isEndAlertButtonEnabled = true
-        }
+        holder.isEndAlertButtonEnabled = (alert.user.email == tokenManager.getTokenEmailAddress()
+                || tokenManager.getTokenRole().isManager())
 
         holder.setOnEndAlertClickListener {
             onEndAlertClick(alert.id)
