@@ -11,7 +11,6 @@
     <color name="light_gray">#CADCDCDC</color>
     <color name="very_light_gray">#CAF1F1F1</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="transparent">#00FFFFFF</color>
     <color name="transparent_purple_500">#806200EE</color>
     <color name="transparent_purple_700">#803700B3</color>
 </resources>
