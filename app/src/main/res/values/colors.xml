@@ -10,6 +10,7 @@
     <color name="gray">#CACACACA</color>
     <color name="light_gray">#CADCDCDC</color>
     <color name="very_light_gray">#CAF1F1F1</color>
+    <color name="deep_light_gray">#FFFCFCFC</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent_purple_500">#806200EE</color>
     <color name="transparent_purple_700">#803700B3</color>
