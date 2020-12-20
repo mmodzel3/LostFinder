@@ -3,16 +3,41 @@
     <item android:state_enabled="false">
         <shape android:shape="oval">
             <solid android:color="@color/gray"/>
+            <size android:width="200dp" android:height="200dp" />
         </shape>
     </item>
     <item android:state_pressed="true">
-        <shape android:shape="oval">
-            <solid android:color="@color/purple_700"/>
-        </shape>
+        <layer-list>
+            <item>
+                <shape android:shape="oval">
+                    <gradient android:angle="270"
+                        android:endColor="@color/transparent_purple_700" android:startColor="@color/transparent_purple_500" />
+                    <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+                    <size android:width="200dp" android:height="200dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/purple_700"/>
+                </shape>
+            </item>
+        </layer-list>
     </item>
-    <item >
-        <shape android:shape="oval">
-            <solid android:color="@color/purple_500"/>
-        </shape>
+    <item>
+        <layer-list>
+            <item>
+                <shape android:shape="oval">
+                    <gradient android:angle="270"
+                        android:endColor="@color/transparent_purple_700" android:startColor="@color/transparent_purple_500" />
+                    <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+                    <size android:width="200dp" android:height="200dp" />
+                </shape>
+            </item>
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/purple_500"/>
+                </shape>
+            </item>
+        </layer-list>
     </item>
 </selector>
