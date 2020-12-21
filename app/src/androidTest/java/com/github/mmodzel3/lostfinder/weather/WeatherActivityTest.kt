@@ -11,6 +11,7 @@ import com.github.mmodzel3.lostfinder.R
 import com.google.common.truth.Truth.assertThat
 import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matchers
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
@@ -30,6 +31,12 @@ class WeatherActivityTest : WeatherEndpointTestAbstract() {
         }
     }
 
+    @After
+    override fun tearDown() {
+        super.tearDown()
+        weatherScenario.close()
+    }
+
     @Test
     fun whenGotLocationThenDataIsFetched() {
         mockGetWeatherForecastResponse(createTestWeatherForecast())
@@ -41,7 +48,7 @@ class WeatherActivityTest : WeatherEndpointTestAbstract() {
         val recordedRequest: RecordedRequest? = server.takeRequest(2000, TimeUnit.MILLISECONDS)
         assertThat(recordedRequest).isNotNull()
 
-        Thread.sleep(2000)
+        Thread.sleep(5000)
     }
 
     @Test
@@ -59,7 +66,7 @@ class WeatherActivityTest : WeatherEndpointTestAbstract() {
                 .inRoot(withDecorView(Matchers.not(decorView)))
                 .check(matches(isDisplayed()));
 
-        Thread.sleep(2000)
+        Thread.sleep(5000)
     }
 
     @Test
@@ -75,6 +82,6 @@ class WeatherActivityTest : WeatherEndpointTestAbstract() {
                 .inRoot(withDecorView(Matchers.not(decorView)))
                 .check(matches(isDisplayed()));
 
-        Thread.sleep(2000)
+        Thread.sleep(5000)
     }
 }

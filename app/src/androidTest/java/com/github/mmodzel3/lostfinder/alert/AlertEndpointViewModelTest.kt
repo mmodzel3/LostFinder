@@ -5,6 +5,7 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.*
@@ -29,12 +30,17 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
         latch = CountDownLatch(1)
     }
 
+    @After
+    override fun tearDown() {
+        super.tearDown()
+    }
+
     @Test
     fun whenFetchAllDataAndAlertApiAccessErrorThenStatusIsError() {
         mockServerFailureResponse()
 
         observeAndWaitForStatusChange {
-            runBlocking {
+            runBlocking(Dispatchers.IO) {
                 alertEndpointViewModel.fetchAllData()
             }
         }
@@ -46,8 +52,10 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
     fun whenFetchDataThenGotDataAdded() {
         mockGetActiveAlertsResponse()
 
-        runBlocking {
-            alertEndpointViewModel.fetchAllData()
+        observeAndWaitForStatusChange {
+            runBlocking(Dispatchers.IO) {
+                alertEndpointViewModel.fetchAllData()
+            }
         }
 
         assertThat(alertEndpointViewModel.dataCache).hasSize(alerts.size)
@@ -66,8 +74,10 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
 
         mockGetActiveAlertsResponse()
 
-        runBlocking {
-            alertEndpointViewModel.fetchAllData()
+        observeAndWaitForStatusChange {
+            runBlocking(Dispatchers.IO) {
+                alertEndpointViewModel.fetchAllData()
+            }
         }
 
         assertThat(alertEndpointViewModel.dataCache).hasSize(alerts.size)

@@ -2,10 +2,10 @@ package com.github.mmodzel3.lostfinder.chat
 
 import androidx.lifecycle.Observer
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
-import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.*
@@ -28,6 +28,11 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
 
         chatEndpointViewModel = ChatEndpointViewModel(chatEndpoint)
         latch = CountDownLatch(1)
+    }
+
+    @After
+    override fun tearDown() {
+        super.tearDown()
     }
 
     @Test
@@ -60,8 +65,10 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
     fun whenFetchAdditionalMessagesThenGotDataAdded() {
         mockGetMessagesResponse()
 
-        runBlocking {
-            chatEndpointViewModel.fetchAdditionalMessages()
+        observeAndWaitForStatusChange {
+            runBlocking {
+                chatEndpointViewModel.fetchAdditionalMessages()
+            }
         }
 
         assertThat(chatEndpointViewModel.dataCache).hasSize(messages.size)
@@ -80,8 +87,10 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
 
         mockGetMessagesResponse()
 
-        runBlocking {
-            chatEndpointViewModel.fetchAllData()
+        observeAndWaitForStatusChange {
+            runBlocking {
+                chatEndpointViewModel.fetchAllData()
+            }
         }
 
         assertThat(chatEndpointViewModel.dataCache).hasSize(messages.size)

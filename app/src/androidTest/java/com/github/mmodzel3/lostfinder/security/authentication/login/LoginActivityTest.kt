@@ -70,6 +70,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
 
         IdlingRegistry.getInstance().unregister(loginIdlingResource.idlingResource)
         removeAccounts()
+        
+        
     }
 
     @Test
@@ -85,6 +87,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         val accounts: Array<out Account> = accountManager.getAccountsByType(accountType)
 
         assertThat(accounts).asList().hasSize(ONE_ELEMENT_LIST_SIZE)
+
+        Thread.sleep(10000)
     }
 
     @Test
@@ -96,6 +100,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
 
         val account: Account = checkIfAccountExistsAndGetIt()
         assertThat(account.name).matches(EMAIL_ADDRESS)
+
+        Thread.sleep(10000)
     }
 
     @Test
@@ -107,6 +113,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         val account: Account = checkIfAccountExistsAndGetIt()
         val password: String? = accountManager.getPassword(account)
         assertThat(password).isNotEmpty()
+
+        Thread.sleep(10000)
     }
 
     @Test
@@ -118,6 +126,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         val account: Account = checkIfAccountExistsAndGetIt()
         val password: String? = accountManager.getPassword(account)
         assertThat(password).isNull()
+
+        Thread.sleep(10000)
     }
 
     @Test
@@ -126,9 +136,12 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         fillFields(EMAIL_ADDRESS, PASSWORD, false)
         performLogin()
 
+        Thread.sleep(1000)
         onView(withText(R.string.err_login_invalid_credentials))
                 .inRoot(withDecorView(not(decorView)))
                 .check(matches(isDisplayed()))
+
+        Thread.sleep(2000)
     }
 
     @Test
@@ -137,9 +150,12 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         fillFields(EMAIL_ADDRESS, PASSWORD, false)
         performLogin()
 
+        Thread.sleep(1000)
         onView(withText(R.string.err_login_access))
                 .inRoot(withDecorView(not(decorView)))
-                .check(matches(isDisplayed()));
+                .check(matches(isDisplayed()))
+
+        Thread.sleep(2000)
     }
 
     @Test
@@ -153,6 +169,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         val account: Account = checkIfAccountExistsAndGetIt()
         val token: String? = accountManager.blockingGetAuthToken(account, tokenType, true)
         assertThat(token).matches(TOKEN)
+
+        Thread.sleep(10000)
     }
 
     @Test
@@ -166,6 +184,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         val account: Account = checkIfAccountExistsAndGetIt()
         val token: String? = accountManager.blockingGetAuthToken(account, tokenType, true)
         assertThat(token).matches(TOKEN)
+
+        Thread.sleep(10000)
     }
 
     @Test
@@ -175,6 +195,8 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         performLogin()
 
         activityScenario.state.isAtLeast(Lifecycle.State.DESTROYED)
+
+        Thread.sleep(10000)
     }
 
     private fun checkIfAccountExistsAndGetIt() : Account {
