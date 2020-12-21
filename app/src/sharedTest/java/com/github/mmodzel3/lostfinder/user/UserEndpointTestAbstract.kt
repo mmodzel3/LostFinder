@@ -31,6 +31,14 @@ abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
         mockServerJsonResponse(ServerResponse.OK)
     }
 
+    fun mockSuccessChangePasswordResponse() {
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    fun mockInvalidOldPasswordChangePasswordResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PARAM)
+    }
+
     protected fun createTestUsers() {
         val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS)
         val user = User(USER_ID, USER_EMAIL, null, USER_NAME, USER_ROLE, null, yesterday, null)

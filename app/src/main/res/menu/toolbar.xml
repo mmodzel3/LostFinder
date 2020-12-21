@@ -27,6 +27,12 @@
         android:title="@string/activity_toolbar_weather" />
 
     <item
+        android:id="@+id/activity_toolbar_it_change_password"
+        android:icon="@drawable/ic_change_password"
+        app:showAsAction="ifRoom"
+        android:title="@string/activity_toolbar_change_password" />
+
+    <item
         android:id="@+id/activity_toolbar_it_logout"
         android:icon="@drawable/ic_logout"
         app:showAsAction="ifRoom"

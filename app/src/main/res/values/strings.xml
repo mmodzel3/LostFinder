@@ -18,6 +18,10 @@
         Weather
     </string>
 
+    <string name="activity_toolbar_change_password">
+        Change password
+    </string>
+
     <string name="location_notification_message">
         Your location is used to track your movement.
     </string>
@@ -421,5 +425,24 @@
     <string name="activity_toolbar_logout_msg_success">Logout completed</string>
     <string name="activity_toolbar_logout_err_api_access_error">
         Problem with sending logout request to server. Check your connection.
+    </string>
+    <string name="activity_user_change_password_old_password">Old password</string>
+    <string name="activity_user_change_password_new_password">New password</string>
+    <string name="activity_user_change_password_repeated_new_password">Repeated new password</string>
+    <string name="activity_user_change_password_change_password">Change password</string>
+    <string name="activity_user_change_password_err_api_access_error">
+        Problem with sending change password request to server. Check your connection.
+    </string>
+    <string name="activity_user_change_password_err_invalid_token">
+        Problem with sending change password request to server. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_user_change_password_msg_success">
+        Account password changed.
+    </string>
+    <string name="activity_user_change_password_err_not_same_new_passwords">
+        New password and repeated password are not same.
+    </string>
+    <string name="activity_user_change_password_err_invalid_old_password">
+        Invalid old password for account. Try again.
     </string>
 </resources>

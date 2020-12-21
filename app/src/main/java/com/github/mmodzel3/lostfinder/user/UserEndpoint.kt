@@ -17,4 +17,8 @@ interface UserEndpoint : ServerEndpointInterface {
 
     @POST("/api/user/notification/token")
     suspend fun updateUserNotificationDestToken(@Query("token") token: String): ServerResponse
+
+    @POST("/api/user/password")
+    suspend fun updateUserPassword(@Query("oldPassword") oldPassword: String,
+                                   @Query("newPassword") newPassword: String): ServerResponse
 }
