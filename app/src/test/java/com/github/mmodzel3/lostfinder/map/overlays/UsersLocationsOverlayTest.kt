@@ -43,8 +43,7 @@ class UsersLocationsOverlayTest : UserEndpointTestAbstract() {
         usersLocationsOverlay.markers.forEach {
             val user: User = usersMap[it.key]!!
             val username: String = user.username
-            val role: String = user.role
-            assertThat(it.value.title).isEqualTo(username + "\n[" + role + "]")
+            assertThat(it.value.title).isEqualTo("$username\n[$USER_ROLE]")
         }
     }
 

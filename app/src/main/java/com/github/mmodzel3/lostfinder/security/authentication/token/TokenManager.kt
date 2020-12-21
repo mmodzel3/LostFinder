@@ -6,6 +6,8 @@ import android.accounts.AuthenticatorException
 import android.content.Context
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
+import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpoint
+import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpointFactory
 import com.github.mmodzel3.lostfinder.user.UserRole
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,6 +21,9 @@ open class TokenManager protected constructor(private val context: Context?) {
             return tokenManager!!
         }
     }
+
+    private val logoutEndpoint: LogoutEndpoint by lazy {
+        LogoutEndpointFactory.createLogoutEndpoint(this) }
 
     private val accountManager by lazy { AccountManager.get(context) }
 
@@ -61,9 +66,14 @@ open class TokenManager protected constructor(private val context: Context?) {
         }
     }
 
-    open fun logout() {
+    open suspend fun logout() {
         if (account != null) {
-            accountManager.clearPassword(account)
+            try {
+                logoutEndpoint.logout()
+                accountManager.clearPassword(account)
+            } catch (e: InvalidTokenException) {
+                accountManager.clearPassword(account)
+            }
         }
     }
 

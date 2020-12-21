@@ -5,6 +5,7 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.*
@@ -29,12 +30,17 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
         latch = CountDownLatch(1)
     }
 
+    @After
+    override fun tearDown() {
+        super.tearDown()
+    }
+
     @Test
     fun whenFetchAllDataAndUserApiAccessErrorThenStatusIsError() {
         mockServerFailureResponse()
 
         observeAndWaitForStatusChange {
-            runBlocking {
+            runBlocking(Dispatchers.IO) {
                 userEndpointViewModel.fetchAllData()
             }
         }
@@ -46,8 +52,10 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
     fun whenFetchAllDataAndHasNothingCachedThenGotDataAdded() {
         mockGetAllUsersResponse()
 
-        runBlocking {
-            userEndpointViewModel.fetchAllData()
+        observeAndWaitForStatusChange {
+            runBlocking(Dispatchers.IO) {
+                userEndpointViewModel.fetchAllData()
+            }
         }
 
         assertThat(userEndpointViewModel.dataCache).hasSize(users.size)
@@ -68,8 +76,10 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
         updateTestUsers()
         mockGetAllUsersResponse()
 
-        runBlocking {
-            userEndpointViewModel.fetchAllData()
+        observeAndWaitForStatusChange {
+            runBlocking(Dispatchers.IO) {
+                userEndpointViewModel.fetchAllData()
+            }
         }
 
         assertThat(userEndpointViewModel.dataCache).hasSize(users.size)

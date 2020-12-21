@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.weather.WeatherFragment.Companion.WEATHER_NOW_TYPE
 import com.github.mmodzel3.lostfinder.weather.WeatherFragment.Companion.WEATHER_TOMORROW_TYPE
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 

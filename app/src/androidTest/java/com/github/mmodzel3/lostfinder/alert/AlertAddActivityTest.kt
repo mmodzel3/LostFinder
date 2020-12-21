@@ -7,6 +7,7 @@ import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
@@ -40,7 +41,6 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
         alertAddScenario.close()
     }
 
-
     @Test
     fun whenAddAlertThenUserAlertIsSend() {
         startActivity()
@@ -49,7 +49,7 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
         fillFields()
 
         onView(withId(R.id.activity_alert_add_bt_add))
-                .perform(click())
+                .perform(scrollTo(), click())
 
         val request: RecordedRequest? = server.takeRequest(1000, TimeUnit.MILLISECONDS)
         assertThat(request).isNotNull()
@@ -64,7 +64,7 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
         fillFields()
 
         onView(withId(R.id.activity_alert_add_bt_add))
-                .perform(click())
+                .perform(scrollTo(), click())
 
         Thread.sleep(1000)
         onView(withText(R.string.activity_alert_add_err_add_alert_api_access_problem))
@@ -77,12 +77,12 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
     @Test
     fun whenAddAlertWithInvalidCredentialsThenErrorToastIsShown() {
         startActivity()
-        mockInvalidCredentialsResponse()
 
         fillFields()
 
+        mockInvalidCredentialsResponse()
         onView(withId(R.id.activity_alert_add_bt_add))
-                .perform(click())
+                .perform(scrollTo(), click())
 
         Thread.sleep(1000)
         onView(withText(R.string.activity_alert_add_err_add_alert_invalid_token))
@@ -154,7 +154,7 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
         onData(allOf(`is`(instanceOf(String::class.java)),
                 `is`(titleStringArray[1]))).inRoot(isPlatformPopup()).perform(click())
 
-        Thread.sleep(1000)
+        Thread.sleep(1500)
     }
 
     private fun startActivity(userRole: UserRole = UserRole.OWNER) {

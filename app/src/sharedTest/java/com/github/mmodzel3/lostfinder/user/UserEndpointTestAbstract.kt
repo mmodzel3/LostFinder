@@ -9,7 +9,7 @@ abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
         const val USER_ID = "123456"
         const val USER_EMAIL = "example@example.com"
         const val USER_NAME = "example"
-        const val USER_ROLE = "ADMIN"
+        val USER_ROLE = UserRole.MANAGER
         const val DAY_BEFORE_IN_MILLISECONDS = 24*60*60*1000
     }
 

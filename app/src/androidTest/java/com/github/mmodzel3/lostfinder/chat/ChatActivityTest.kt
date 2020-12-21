@@ -126,7 +126,7 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
         onView(withId(R.id.activity_chat_bt_send))
             .perform(click())
 
-        val request: RecordedRequest? = server.takeRequest(1, TimeUnit.MILLISECONDS)
+        val request: RecordedRequest? = server.takeRequest(500, TimeUnit.MILLISECONDS)
         assertThat(request).isNull()
     }
 
@@ -176,6 +176,8 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
         chatScenario.onActivity {
             decorView = it.window.decorView
         }
+
+        Thread.sleep(1000)
     }
 
     private fun startActivityWithApiAccessError() {
@@ -187,6 +189,8 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
         chatScenario.onActivity {
             decorView = it.window.decorView
         }
+
+        Thread.sleep(1000)
     }
 
     private fun startActivityWithInvalidCredentials() {
@@ -198,5 +202,7 @@ class ChatActivityTest : ChatEndpointTestAbstract() {
         chatScenario.onActivity {
             decorView = it.window.decorView
         }
+
+        Thread.sleep(1000)
     }
 }

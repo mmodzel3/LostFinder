@@ -4,6 +4,7 @@ import android.accounts.AbstractAccountAuthenticator
 import android.accounts.Account
 import android.accounts.AccountAuthenticatorResponse
 import android.accounts.AccountManager
+import android.accounts.AccountManager.KEY_BOOLEAN_RESULT
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -69,6 +70,13 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
                              account: Account?,
                              features: Array<out String>?): Bundle {
         throw UnsupportedOperationException()
+    }
+
+    override fun getAccountRemovalAllowed(response: AccountAuthenticatorResponse, account: Account): Bundle {
+        val bundle = Bundle()
+        bundle.putBoolean(KEY_BOOLEAN_RESULT, false)
+
+        return bundle
     }
 
     private fun createLoginActivityIntentBundle(response: AccountAuthenticatorResponse?,
