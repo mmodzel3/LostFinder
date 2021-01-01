@@ -445,4 +445,12 @@
     <string name="activity_user_change_password_err_invalid_old_password">
         Nieprawidłowe stare hasło do konta. Spróbuj jeszcze raz.
     </string>
+    <string name="activity_map_navigation_drawer_open">Otwórz</string>
+    <string name="activity_map_navigation_drawer_close">Zamknij</string>
+    <string name="activity_map_navigation_drawer_alerts_title">
+        Alerty
+    </string>
+    <string name="activity_map_navigation_drawer_users_title">
+        Użytkownicy
+    </string>
 </resources>

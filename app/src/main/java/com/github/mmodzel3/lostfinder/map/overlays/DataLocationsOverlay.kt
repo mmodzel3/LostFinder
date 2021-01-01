@@ -1,8 +1,6 @@
 package com.github.mmodzel3.lostfinder.map.overlays
 
-import android.util.Log
 import com.github.mmodzel3.lostfinder.server.ServerEndpointLocationData
-import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.FolderOverlay
 import org.osmdroid.views.overlay.Marker
@@ -35,7 +33,7 @@ open class DataLocationsOverlay<T: ServerEndpointLocationData>(private val map: 
     protected fun addMarker(data: T) {
         if (data.location != null) {
             val marker: Marker = createMarker(data)
-            marker.position = GeoPoint(data.location!!.latitude, data.location!!.longitude)
+            marker.position = data.location!!.toGeoPoint()
 
             markers[data.id] = marker
             add(marker)
@@ -49,7 +47,7 @@ open class DataLocationsOverlay<T: ServerEndpointLocationData>(private val map: 
     protected fun updateMarker(data: T) {
         if (data.location != null) {
             val marker: Marker = markers[data.id]!!
-            marker.position = GeoPoint(data.location!!.latitude, data.location!!.longitude)
+            marker.position = data.location!!.toGeoPoint()
             markers[data.id] = marker
         } else {
             removeMarker(data)

@@ -12,7 +12,7 @@ import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 
 
-class ChooseLocationMapActivity : DataLocationsMapActivity() {
+class ChooseLocationMapActivity : DataLocationsWithNavDrawerMapActivity() {
     companion object {
         const val LOCATION_LONGITUDE_INTENT = "LOCATION_LONGITUDE_INTENT"
         const val LOCATION_LATITUDE_INTENT = "LOCATION_LATITUDE_INTENT"

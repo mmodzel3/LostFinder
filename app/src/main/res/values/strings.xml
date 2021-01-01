@@ -445,4 +445,12 @@
     <string name="activity_user_change_password_err_invalid_old_password">
         Invalid old password for account. Try again.
     </string>
+    <string name="activity_map_navigation_drawer_open">Open</string>
+    <string name="activity_map_navigation_drawer_close">Close</string>
+    <string name="activity_map_navigation_drawer_alerts_title">
+        Alerts
+    </string>
+    <string name="activity_map_navigation_drawer_users_title">
+        Users
+    </string>
 </resources>

@@ -1,5 +1,11 @@
 package com.github.mmodzel3.lostfinder.location
 
-data class Location(val longitude: Double,
-                    val latitude: Double) {
+import org.osmdroid.util.GeoPoint
+
+data class Location(val latitude: Double,
+                    val longitude: Double) {
+
+    fun toGeoPoint(): GeoPoint {
+        return GeoPoint(latitude, longitude)
+    }
 }

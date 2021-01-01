@@ -1,7 +1,5 @@
 package com.github.mmodzel3.lostfinder.map
 
-import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -12,14 +10,9 @@ import com.github.mmodzel3.lostfinder.alert.AlertEndpointViewModel
 import com.github.mmodzel3.lostfinder.alert.AlertEndpointViewModelFactory
 import com.github.mmodzel3.lostfinder.map.overlays.AlertsLocationsOverlay
 import com.github.mmodzel3.lostfinder.map.overlays.UsersLocationsOverlay
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.user.*
-import kotlinx.coroutines.test.withTestContext
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.overlay.FolderOverlay
-import org.osmdroid.views.overlay.Marker
 
 open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() {
 
@@ -30,7 +23,7 @@ open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() 
         UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
     }
 
-    private val userEndpointViewModel: UserEndpointViewModel by viewModels {
+    protected val userEndpointViewModel: UserEndpointViewModel by viewModels {
         UserEndpointViewModelFactory(userEndpoint)
     }
 
@@ -38,7 +31,7 @@ open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() 
         AlertEndpointFactory.createAlertEndpoint(TokenManager.getInstance(applicationContext))
     }
 
-    private val alertEndpointViewModel: AlertEndpointViewModel by viewModels {
+    protected val alertEndpointViewModel: AlertEndpointViewModel by viewModels {
         AlertEndpointViewModelFactory(alertEndpoint)
     }
 
