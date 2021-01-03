@@ -1,10 +1,7 @@
 package com.github.mmodzel3.lostfinder.location
 
 import android.Manifest
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
@@ -108,7 +106,13 @@ class CurrentLocationService : Service() {
         val title: CharSequence = getText(R.string.location_notification_title)
         val text: CharSequence = getText(R.string.location_err_endpoint_access)
 
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.ic_user_location_center)

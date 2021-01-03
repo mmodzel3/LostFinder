@@ -73,8 +73,7 @@ class UserActivity : LoggedUserActivityAbstract() {
         })
     }
 
-    private suspend fun sendUpdateUserAccount(requestFunction: suspend () -> ServerResponse,
-                                              onSuccess: () -> Unit) {
+    private suspend fun sendUpdateUserAccount(requestFunction: suspend () -> ServerResponse) {
         try {
             when (requestFunction()) {
                 ServerResponse.NOT_FOUND -> {
@@ -89,9 +88,10 @@ class UserActivity : LoggedUserActivityAbstract() {
                 else -> {
                     Toast.makeText(this, R.string.activity_user_msg_success, Toast.LENGTH_SHORT)
                         .show()
-                    onSuccess()
                 }
             }
+
+            userEndpointViewModel.forceUpdate()
         } catch (e : UserEndpointAccessErrorException) {
             Toast.makeText(this, R.string.activity_user_err_api_access_problem, Toast.LENGTH_LONG)
                 .show()
@@ -109,10 +109,7 @@ class UserActivity : LoggedUserActivityAbstract() {
     }
 
     private suspend fun sendUpdateUserRole(user: User, role: UserRole) {
-        sendUpdateUserAccount({ userEndpoint.updateUserRole(user.email, role) }, {
-                userEndpointViewModel.update(listOf(User(user.id, user.email, user.password, user.username,
-                role, user.location, Date(), user.lastLoginDate, user.blocked, user.deleted, user.notificationDestToken)))
-        })
+        sendUpdateUserAccount { userEndpoint.updateUserRole(user.email, role) }
     }
 
     private fun onDecreaseRole(user: User) {
@@ -128,10 +125,7 @@ class UserActivity : LoggedUserActivityAbstract() {
     }
 
     private suspend fun sendUpdateBlock(user: User, isBlocked: Boolean) {
-        sendUpdateUserAccount({ userEndpoint.updateUserBlock(user.email, isBlocked) }, {
-            userEndpointViewModel.update(listOf(User(user.id, user.email, user.password, user.username,
-                user.role, user.location, Date(), user.lastLoginDate, isBlocked, user.deleted, user.notificationDestToken)))
-        })
+        sendUpdateUserAccount { userEndpoint.updateUserBlock(user.email, isBlocked) }
     }
 
     private fun onUnblockAccount(user: User) {
@@ -147,10 +141,7 @@ class UserActivity : LoggedUserActivityAbstract() {
     }
 
     private suspend fun deleteUser(user: User) {
-        sendUpdateUserAccount({ userEndpoint.deleteUser(user.email) }, {
-            userEndpointViewModel.update(listOf(User(user.id, user.email, user.password, user.username,
-                user.role, user.location, Date(), user.lastLoginDate, user.blocked, true, user.notificationDestToken)))
-        })
+        sendUpdateUserAccount { userEndpoint.deleteUser(user.email) }
     }
 
     private fun observeUserUpdates() {
