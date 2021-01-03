@@ -15,9 +15,9 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
     val status: MutableLiveData<ServerEndpointStatus> = MutableLiveData()
     protected open val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
     internal val dataCache: MutableMap<String, T> = mutableMapOf()
+    internal val lock = Any()
     private lateinit var handler: Handler
     private lateinit var updateRunnable: Runnable
-    private val lock = Any()
 
     fun forceUpdate() {
         viewModelScope.launch {
@@ -49,7 +49,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         handler.removeCallbacks(updateRunnable)
     }
 
-    internal fun update(dataToUpdate: List<T>) {
+    internal open fun update(dataToUpdate: List<T>) {
         synchronized(lock) {
             if (updateCache(dataToUpdate)) {
                 data.postValue(dataCache)

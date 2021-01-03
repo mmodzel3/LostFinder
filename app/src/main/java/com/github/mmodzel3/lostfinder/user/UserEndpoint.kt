@@ -10,7 +10,7 @@ import retrofit2.http.Query
 
 interface UserEndpoint : ServerEndpointInterface {
     @GET("/api/users")
-    suspend fun getAllUsers(): List<User>
+    suspend fun getUsers(@Query("all") all: Boolean = false): List<User>
 
     @POST("/api/user/location")
     suspend fun updateUserLocation(@Body location: Location): ServerResponse
@@ -21,4 +21,15 @@ interface UserEndpoint : ServerEndpointInterface {
     @POST("/api/user/password")
     suspend fun updateUserPassword(@Query("oldPassword") oldPassword: String,
                                    @Query("newPassword") newPassword: String): ServerResponse
+
+    @POST("/api/user/role")
+    suspend fun updateUserRole(@Query("userEmail") email: String,
+                                   @Query("role") role: UserRole): ServerResponse
+
+    @POST("/api/user/block")
+    suspend fun updateUserBlock(@Query("userEmail") email: String,
+                               @Query("isBlocked") isBlocked: Boolean): ServerResponse
+
+    @POST("/api/user/delete")
+    suspend fun deleteUser(@Query("userEmail") email: String = ""): ServerResponse
 }

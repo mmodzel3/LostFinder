@@ -4,11 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.server.ServerEndpointViewModelAbstract
-import kotlinx.coroutines.launch
 
 class UserEndpointViewModel(private val userEndpoint: UserEndpoint) : ServerEndpointViewModelAbstract<User>() {
     val users: MutableLiveData<MutableMap<String, User>>
         get() = data
+    val allUsers = MutableLiveData<MutableMap<String, User>>()
+
+    var fetchAll: Boolean = false
 
     init {
         runPeriodicUpdates()
@@ -19,9 +21,27 @@ class UserEndpointViewModel(private val userEndpoint: UserEndpoint) : ServerEndp
         stopPeriodicUpdates()
     }
 
+    override fun update(dataToUpdate: List<User>) {
+        synchronized(lock) {
+            dataCache.clear()
+
+            if (updateCache(dataToUpdate)) {
+                data.postValue(dataCache.filter {
+                    !it.value.blocked && !it.value.deleted
+                }.toMutableMap())
+
+                allUsers.postValue(dataCache)
+            }
+
+            if (status.value != ServerEndpointStatus.OK) {
+                status.postValue(ServerEndpointStatus.OK)
+            }
+        }
+    }
+
     override suspend fun fetchAllData() {
         try {
-            val userData: List<User> = userEndpoint.getAllUsers()
+            val userData: List<User> = userEndpoint.getUsers(fetchAll)
             update(userData)
         } catch (e: InvalidTokenException) {
             status.postValue(ServerEndpointStatus.INVALID_TOKEN)

@@ -19,6 +19,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
     companion object {
         const val AUTHENTICATOR_INFO = "AUTH_INFO"
         const val INVALID_CREDENTIALS = "Invalid credentials"
+        const val ACCOUNT_BLOCKED = "Account blocked"
         const val LOGIN_ENDPOINT_ACCESS_ERROR = "Login endpoint access error"
         const val USER_DATA_SAVE_PASSWORD = "SAVE_PASSWORD"
         const val USER_DATA_ROLE = "USER_ROLE"
@@ -101,6 +102,8 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
             createTokenBundle(account, token)
         } catch (e: LoginInvalidCredentialsException) {
             createAuthErrorBundle(response, INVALID_CREDENTIALS)
+        } catch (e: LoginAccountBlockedException) {
+            createAuthErrorBundle(response, ACCOUNT_BLOCKED)
         } catch (e: LoginEndpointAccessErrorException) {
             createAuthErrorBundle(response, LOGIN_ENDPOINT_ACCESS_ERROR)
         }
@@ -134,8 +137,10 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         val pushNotificationDestToken: String? = PushNotificationService.getNotificationDestToken(context)
         val loginInfo: LoginInfo = loginEndpoint.login(account.name, password, pushNotificationDestToken)
 
-        if (loginInfo.token.isNotEmpty()) {
+        if (loginInfo.token.isNotEmpty() && !loginInfo.blocked) {
             return loginInfo
+        } else if (loginInfo.blocked) {
+            throw LoginAccountBlockedException()
         } else {
             throw LoginInvalidCredentialsException()
         }

@@ -18,6 +18,10 @@
         Pogoda
     </string>
 
+    <string name="activity_toolbar_user">
+        Użytkownicy
+    </string>
+
     <string name="activity_toolbar_change_password">
         Zmień hasło
     </string>
@@ -53,14 +57,15 @@
     <string name="token_type">jwt</string>
     <string name="err_login_access">Problem z połączeniem do serwera.</string>
     <string name="err_login_invalid_credentials">Nieprawidłowy email lub hasło. Spróbuj wpisać dane jeszcze raz.</string>
+    <string name="err_login_account_blocked">Twoje konto jest zablokowane. Nie ma możliwości zalogowania się na konto.</string>
     <string name="err_login">Problem w trakcie logowania na serwer.</string>
     <string name="err_fetching">Problem z pobraniem danych. Sprawdź połączenie z siecią.</string>
     <string name="err_invalid_token">Sesja wygasła. Sprawdź połączenie z siecią.</string>
     <string name="msg_fetching">Dane są pobierane z serwera.</string>
 
-    <string name="role_user">UŻYTKOWNIK</string>
-    <string name="role_admin">KIEROWNIK</string>
-    <string name="role_owner">WŁAŚCICIEL</string>
+    <string name="role_user">Użytkownik</string>
+    <string name="role_manager">Kierownik</string>
+    <string name="role_owner">Właściciel</string>
 
     <string name="location_err_endpoint_access">
         Problem z wysłaniem lokalizacji do serwera. Sprawdź swoje połączenie z siecią.
@@ -452,5 +457,65 @@
     </string>
     <string name="activity_map_navigation_drawer_users_title">
         Użytkownicy
+    </string>
+    <string name="activity_user_info_user_desc">
+        Użytkownik
+    </string>
+    <string name="activity_user_info_example_username">
+        Bob
+    </string>
+    <string name="activity_user_info_example_email">
+        example@example.com
+    </string>
+    <string name="activity_user_info_role">
+        Uprawnienie:
+    </string>
+    <string name="activity_user_info_example_role">
+        Właściciel
+    </string>
+    <string name="activity_user_info_last_login">
+        Logowanie:
+    </string>
+    <string name="activity_user_info_example_last_login">
+        2020-12-12 15:16:00
+    </string>
+    <string name="activity_user_info_last_login_no_information">
+        Brak informacji
+    </string>
+    <string name="activity_user_info_increase_permissions_desc">
+        Zwiększ uprawnienia
+    </string>
+    <string name="activity_user_info_decrease_permissions_desc">
+        Zmniejsz uprawnienia
+    </string>
+    <string name="activity_user_info_block_account_desc">
+        Zablokuj konto
+    </string>
+    <string name="activity_user_info_unblock_account_desc">
+        Odblokuj konto
+    </string>
+    <string name="activity_user_info_delete_account_desc">
+        Usuń konto
+    </string>
+    <string name="activity_user_msg_success">
+        Konto użytkownika zostało zaktualizowane.
+    </string>
+    <string name="activity_user_err_api_access_problem">
+        Problem z wysłaniem żądania na serwer. Sprawdź swoje połączenie z siecią.
+    </string>
+    <string name="activity_user_err_invalid_token">
+        Problem z wysłaniem żądania na serwer. Twoja sesja wygasła. Zaloguj się ponownie.
+    </string>
+    <string name="activity_user_err_not_found">
+        Problem z aktualizacją konta użytkownika. Podane konto nie istnieje.
+    </string>
+    <string name="activity_user_err_invalid_permission">
+        Problem z aktualizacją konta użytkownika. Nie masz odpowiednich uprawnień w celu wykonania akcji.
+    </string>
+    <string name="activity_user_err_fetching_api_access_error">
+        Problem z pobraniem danych użytkowników. Sprawdź swoje połączenie z siecią.
+    </string>
+    <string name="activity_user_err_fetching_invalid_token">
+        Problem z pobraniem danych użytkowników. Twoja sesja wygasła. Zaloguj się ponownie.
     </string>
 </resources>

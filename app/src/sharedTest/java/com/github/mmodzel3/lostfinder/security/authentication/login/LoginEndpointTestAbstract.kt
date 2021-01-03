@@ -26,7 +26,7 @@ abstract class LoginEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     private fun mockServerLoginInfoResponse(token: String, role: UserRole = UserRole.OWNER) {
-        val loginInfo = LoginInfo(token, role)
+        val loginInfo = LoginInfo(token, role, false)
         mockServerJsonResponse(loginInfo)
     }
 }

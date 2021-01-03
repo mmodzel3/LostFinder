@@ -15,6 +15,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpo
 import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpointFactory
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.user.UserActivity
 import com.github.mmodzel3.lostfinder.user.UserChangePasswordActivity
 import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import kotlinx.coroutines.launch
@@ -39,6 +40,9 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
             true
         } else if (id == R.id.activity_toolbar_it_weather) {
             goToWeatherActivity()
+            true
+        } else if (id == R.id.activity_toolbar_it_user) {
+            goToUserActivity()
             true
         } else if (id == R.id.activity_toolbar_it_change_password) {
             goToUserChangePasswordActivity()
@@ -74,6 +78,13 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
     protected fun goToWeatherActivity() {
         val intent = Intent(this, WeatherActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        startActivity(intent)
+    }
+
+    protected fun goToUserActivity() {
+        val intent = Intent(this, UserActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)

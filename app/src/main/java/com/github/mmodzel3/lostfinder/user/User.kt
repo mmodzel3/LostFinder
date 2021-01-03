@@ -11,6 +11,9 @@ data class User(override val id: String,
                 val role: UserRole,
                 override val location: Location?,
                 override val lastUpdateDate: Date,
+                val lastLoginDate: Date?,
+                val blocked: Boolean,
+                val deleted: Boolean,
                 val notificationDestToken: String?) : ServerEndpointLocationData {
 
     fun isUser() : Boolean {

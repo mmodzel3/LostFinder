@@ -120,7 +120,7 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
         val newUsers: MutableList<User> = ArrayList()
 
         users.forEach {
-            newUsers.add(User(it.id, it.email, it.password, it.username, it.role, it.location, Date(), null))
+            newUsers.add(User(it.id, it.email, it.password, it.username, it.role, it.location, Date(), Date(), false, false, null))
         }
 
         users = newUsers
