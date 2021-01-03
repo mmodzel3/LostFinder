@@ -68,7 +68,7 @@ class PushNotificationAlertConverter private constructor() : PushNotificationCon
 
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.ic_user_location_center)
+                .setSmallIcon(R.drawable.ic_person_search)
                 .setColor(Color.RED)
                 .setContentTitle(title)
                 .setContentText(text)

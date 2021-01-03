@@ -115,7 +115,7 @@ class CurrentLocationService : Service() {
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setSmallIcon(R.drawable.ic_user_location_center)
+                .setSmallIcon(R.drawable.ic_person_search)
                 .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
                 .setColor(Color.RED)
                 .setAutoCancel(false)

@@ -44,7 +44,7 @@ class PushNotificationChatMessageConverter private constructor() : PushNotificat
 
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.ic_user_location_center)
+                .setSmallIcon(R.drawable.ic_person_search)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setVibrate(longArrayOf(500, 500))
