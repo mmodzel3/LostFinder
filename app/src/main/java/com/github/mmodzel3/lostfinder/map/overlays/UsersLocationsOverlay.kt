@@ -7,15 +7,12 @@ import androidx.core.content.ContextCompat
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserRole
+import com.github.mmodzel3.lostfinder.user.UserRoleStringConverter
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
 
 class UsersLocationsOverlay(private val map: MapView, private val context: Context): DataLocationsOverlay<User>(map) {
-    private val roleUser = context.getString(R.string.role_user)
-    private val roleAdmin = context.getString(R.string.role_admin)
-    private val roleOwner = context.getString(R.string.role_owner)
-
     override fun createMarker(data: User): Marker {
         val marker = Marker(map)
         setMarkerTitle(marker, data)
@@ -25,17 +22,7 @@ class UsersLocationsOverlay(private val map: MapView, private val context: Conte
     }
 
     private fun setMarkerTitle(marker: Marker, user: User) {
-        val role: String = when(user.role) {
-            UserRole.MANAGER -> {
-                roleAdmin
-            }
-            UserRole.OWNER -> {
-                roleOwner
-            }
-            else -> {
-                roleUser
-            }
-        }
+        val role: String = UserRoleStringConverter.convertRoleToString(context, user.role)
 
         marker.title = user.username + "\n[" + role + "]"
     }

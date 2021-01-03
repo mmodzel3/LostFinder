@@ -41,7 +41,7 @@ abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
 
     protected fun createTestUsers() {
         val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS)
-        val user = User(USER_ID, USER_EMAIL, null, USER_NAME, USER_ROLE, null, yesterday, null)
+        val user = User(USER_ID, USER_EMAIL, null, USER_NAME, USER_ROLE, null, yesterday, yesterday, false, false, null)
         users = listOf(user)
     }
 }

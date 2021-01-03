@@ -125,7 +125,7 @@ class ChatAdapterTest {
     }
 
     private fun createTestUsers() {
-        user1 = User(USER_ID1, USER_EMAIL1, null, USER_NAME1, USER_ROLE1, null, Date(), null)
-        user2 = User(USER_ID2, USER_EMAIL2, null, USER_NAME2, USER_ROLE2, null, Date(), null)
+        user1 = User(USER_ID1, USER_EMAIL1, null, USER_NAME1, USER_ROLE1, null, Date(), Date(), false, false, null)
+        user2 = User(USER_ID2, USER_EMAIL2, null, USER_NAME2, USER_ROLE2, null, Date(), Date(), false, false, null)
     }
 }

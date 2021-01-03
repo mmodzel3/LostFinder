@@ -116,6 +116,9 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
             Authenticator.INVALID_CREDENTIALS -> {
                 Toast.makeText(this, R.string.err_login_invalid_credentials, Toast.LENGTH_LONG).show()
             }
+            Authenticator.ACCOUNT_BLOCKED -> {
+                Toast.makeText(this, R.string.err_login_account_blocked, Toast.LENGTH_LONG).show()
+            }
             Authenticator.LOGIN_ENDPOINT_ACCESS_ERROR -> {
                 Toast.makeText(this, R.string.err_login_access, Toast.LENGTH_LONG).show()
             }

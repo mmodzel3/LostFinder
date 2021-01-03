@@ -18,8 +18,16 @@
         Weather
     </string>
 
+    <string name="activity_toolbar_user">
+        User
+    </string>
+
     <string name="activity_toolbar_change_password">
         Change password
+    </string>
+
+    <string name="activity_toolbar_delete_account">
+        Delete account
     </string>
 
     <string name="location_notification_message">
@@ -53,14 +61,15 @@
     <string name="token_type">jwt</string>
     <string name="err_login_access">Problem with connection to server.</string>
     <string name="err_login_invalid_credentials">Invalid login or password. Try again.</string>
+    <string name="err_login_account_blocked">Your account is blocked. You cannot log in to your account.</string>
     <string name="err_login">Problem while trying to login to server.</string>
     <string name="err_fetching">Problem with fetching data. Try checking your connection.</string>
     <string name="err_invalid_token">Token expired. Log in to the server once again.</string>
     <string name="msg_fetching">Data is downloaded from the server.</string>
 
-    <string name="role_user">USER</string>
-    <string name="role_admin">ADMIN</string>
-    <string name="role_owner">OWNER</string>
+    <string name="role_user">User</string>
+    <string name="role_manager">Manager</string>
+    <string name="role_owner">Owner</string>
 
     <string name="location_err_endpoint_access">
         Problem with sending location to server. Check your internet connection.
@@ -452,5 +461,83 @@
     </string>
     <string name="activity_map_navigation_drawer_users_title">
         Users
+    </string>
+    <string name="activity_user_info_user_desc">
+        User
+    </string>
+    <string name="activity_user_info_example_username">
+        Bob
+    </string>
+    <string name="activity_user_info_example_email">
+        example@example.com
+    </string>
+    <string name="activity_user_info_role">
+        Role:
+    </string>
+    <string name="activity_user_info_example_role">
+        Owner
+    </string>
+    <string name="activity_user_info_last_login">
+        Last login:
+    </string>
+    <string name="activity_user_info_example_last_login">
+        2020-12-12 15:16:00
+    </string>
+    <string name="activity_user_info_last_login_no_information">
+        No information
+    </string>
+    <string name="activity_user_info_increase_permissions_desc">
+        Increase permissions
+    </string>
+    <string name="activity_user_info_decrease_permissions_desc">
+        Decrease permissions
+    </string>
+    <string name="activity_user_info_block_account_desc">
+        Block account
+    </string>
+    <string name="activity_user_info_unblock_account_desc">
+        Unblock account
+    </string>
+    <string name="activity_user_info_delete_account_desc">
+        Delete account
+    </string>
+    <string name="activity_user_msg_success">
+        Account updated.
+    </string>
+    <string name="activity_user_err_api_access_problem">
+        Problem with sending account update request to server. Check your connection.
+    </string>
+    <string name="activity_user_err_invalid_token">
+        Problem with sending account update request to server. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_user_err_not_found">
+        Problem with account updating. Account for your request does not exist.
+    </string>
+    <string name="activity_user_err_invalid_permission">
+        Problem with account updating. You do not have required permissions to send request.
+    </string>
+    <string name="activity_user_err_fetching_api_access_error">
+        Problem with fetching users data. Check your connection.
+    </string>
+    <string name="activity_user_err_fetching_invalid_token">
+        Problem with fetching users data. Your session is expired. Log in once again.
+    </string>
+    <string name="yes">
+        Yes
+    </string>
+    <string name="no">
+        No
+    </string>
+    <string name="activity_toolbar_delete_account_msg_are_you_sure">
+        Are you sure to delete account?
+    </string>
+    <string name="activity_toolbar_msg_success">
+        Account is deleted.
+    </string>
+    <string name="activity_toolbar_err_delete_account_api_access_problem">
+        Problem with deleting account. Check your connection.
+    </string>
+    <string name="activity_toolbar_err_delete_account_invalid_token">
+        Problem with deleting account. Your session is expired. Log in once again.
     </string>
 </resources>

@@ -63,6 +63,6 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
 
     protected fun createTestUser() {
         user = User(ALERT_USER_ID, ALERT_USER_EMAIL, null,
-            ALERT_USER_NAME, ALERT_USER_ROLE, null, Date(), null)
+            ALERT_USER_NAME, ALERT_USER_ROLE, null, Date(), Date(), false, false, null)
     }
 }
