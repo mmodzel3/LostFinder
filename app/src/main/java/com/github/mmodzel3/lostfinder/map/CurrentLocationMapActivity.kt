@@ -72,7 +72,7 @@ open class CurrentLocationMapActivity : BaseMapActivity() {
 
                 if (!gotFirstLocation) {
                     gotFirstLocation = true
-                    mapController.animateTo(currentLocationMarker.position)
+                    mapController.setCenter(currentLocationMarker.position)
                 }
             }
         }
