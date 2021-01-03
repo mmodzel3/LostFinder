@@ -37,15 +37,21 @@
             android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".security.authentication.login.LoginActivity" />
         <activity android:name=".chat.ChatActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".alert.AlertActivity" />
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".alert.AlertActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".alert.AlertAddActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".alert.AlertActivity" />
         <activity android:name=".map.ChooseLocationMapActivity" />
-        <activity android:name=".weather.WeatherActivity" />
-        <activity android:name=".user.UserActivity" />
+        <activity android:name=".weather.WeatherActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".user.UserActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".user.UserChangePasswordActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".MainActivity" />
 
         <service
             android:name=".security.authentication.authenticator.AuthenticatorService"
