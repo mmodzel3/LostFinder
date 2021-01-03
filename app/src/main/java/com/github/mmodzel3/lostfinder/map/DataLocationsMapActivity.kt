@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.map
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -79,6 +80,7 @@ open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() 
     private fun initAlertsLocationsOverlay() {
         alertsLocationsOverlay = AlertsLocationsOverlay(map, applicationContext)
         alertEndpointViewModel.alerts.observe(this, Observer {
+            Log.d("xxx", it.toString())
             alertsLocationsOverlay.updateDataLocations(it)
             map.invalidate()
         })

@@ -58,8 +58,7 @@ class WeatherActivity: LoggedUserActivityAbstract() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        stopListeningToCurrentLocation()
+        unbindFromCurrentLocationService()
     }
 
     internal fun onLocationChange(latitude: Double, longitude: Double) {
@@ -119,6 +118,11 @@ class WeatherActivity: LoggedUserActivityAbstract() {
         }
 
         currentLocationBinder.registerListener(currentLocationListener!!)
+    }
+
+    private fun unbindFromCurrentLocationService() {
+        stopListeningToCurrentLocation()
+        unbindService(currentLocationConnection)
     }
 
     private fun stopListeningToCurrentLocation() {

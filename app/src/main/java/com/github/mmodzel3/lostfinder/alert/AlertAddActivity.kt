@@ -31,6 +31,7 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
 
     private lateinit var currentLocationBinder : CurrentLocationBinder
     private lateinit var currentLocationConnection : ServiceConnection
+    private var currentLocationListener: CurrentLocationListener? = null
 
     private var currentLocation: Location? = null
     private var currentLocationRange: Double = DEFAULT_RANGE
@@ -47,6 +48,11 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         initChooseLocationButton()
         bindToCurrentLocationService()
         bindAlertTitles()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindFromCurrentLocationService()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -76,6 +82,11 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         Intent(this, CurrentLocationService::class.java).also { intent ->
             bindService(intent, currentLocationConnection, Context.BIND_AUTO_CREATE)
         }
+    }
+
+    private fun unbindFromCurrentLocationService() {
+        stopListeningToCurrentLocation()
+        unbindService(currentLocationConnection)
     }
 
     private fun initAddButton() {
@@ -130,16 +141,24 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
     }
 
     private fun listenToCurrentLocation() {
-        currentLocationBinder.registerListener(object : CurrentLocationListener {
+        currentLocationListener = object : CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
                 currentLocation = location
                 currentLocationRange = if (location.hasAccuracy()) location.accuracy.toDouble()
                 else currentLocationRange
 
-                setAlertLocationHint(currentLocation!!.longitude, currentLocation!!.latitude)
+                setAlertLocationHint(currentLocation!!.latitude, currentLocation!!.longitude)
                 setAlertRangeHint(currentLocationRange)
             }
-        })
+        }
+
+        currentLocationBinder.registerListener(currentLocationListener!!)
+    }
+
+    private fun stopListeningToCurrentLocation() {
+        if (currentLocationListener != null) {
+            currentLocationBinder.unregisterListener(currentLocationListener!!)
+        }
     }
 
     private suspend fun addUserAlert(userAlert: UserAlert) {
@@ -204,7 +223,7 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         latitudeEditText.setText(latitude.toString(), TextView.BufferType.EDITABLE)
     }
 
-    private fun setAlertLocationHint(longitude: Double, latitude: Double) {
+    private fun setAlertLocationHint(latitude: Double, longitude: Double) {
         val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
         val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
 

@@ -183,7 +183,7 @@ class CurrentLocationService : Service() {
     private fun sendLocationChangeToServer(location: Location) {
         ioScope.launch {
             try {
-                userEndpoint.updateUserLocation(Location(location.longitude, location.latitude))
+                userEndpoint.updateUserLocation(Location(location.latitude, location.longitude))
                 hideEndpointAccessErrorNotificationIfVisible()
             } catch (e: UserEndpointAccessErrorException) {
                 showEndpointAccessErrorNotificationIfNotVisible()
