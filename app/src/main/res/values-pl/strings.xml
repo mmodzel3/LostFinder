@@ -540,4 +540,7 @@
     <string name="activity_toolbar_err_delete_account_invalid_token">
         Problem z wysłaniem żądania usunięcia konta. Twoja sesja wygasła. Zaloguj się ponownie.
     </string>
+    <string name="activity_splash_screen_logo_desc">
+        Logo aplikacji poszukiwanie
+    </string>
 </resources>
