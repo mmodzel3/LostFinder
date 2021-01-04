@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewModel() {
     companion object {
         const val UPDATE_INTERVALS = 60 * 1000L
-        const val FAILURE_REDOWNLOAD_TIME = 10 * 1000L
+        const val FAILURE_REDOWNLOAD_TIME = 40 * 1000L
     }
 
     val status: MutableLiveData<ServerEndpointStatus> = MutableLiveData()
