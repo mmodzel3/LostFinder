@@ -142,7 +142,7 @@ open class ChatActivity : LoggedUserActivityAbstract() {
 
     private fun onSendButtonClick() {
         val text: String = messageEditText.text.toString()
-        val message: ChatUserMessage = ChatUserMessage(text, Date())
+        val message = ChatUserMessage(text, Date())
 
         if (text.trim() != "") {
             disableSendButton()
@@ -157,6 +157,7 @@ open class ChatActivity : LoggedUserActivityAbstract() {
             try {
                 chatEndpoint.sendMessage(message)
                 messageEditText.setText("")
+                recyclerView.smoothScrollToPosition(0)
             } catch (e: ChatEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.activity_chat_err_sending_msg_api_access_problem,
                     Toast.LENGTH_SHORT).show()
