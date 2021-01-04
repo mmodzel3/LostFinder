@@ -16,7 +16,7 @@ class UserEndpointTest : UserEndpointTestAbstract() {
 
         assertThrows<UserEndpointAccessErrorException> {
             runBlocking {
-                userEndpoint.getAllUsers()
+                userEndpoint.getUsers()
             }
         }
     }

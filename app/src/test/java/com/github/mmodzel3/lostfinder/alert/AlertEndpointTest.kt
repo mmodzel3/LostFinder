@@ -1,6 +1,5 @@
 package com.github.mmodzel3.lostfinder.alert
 
-import com.github.mmodzel3.lostfinder.chat.ChatEndpointAccessErrorException
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

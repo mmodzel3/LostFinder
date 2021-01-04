@@ -56,7 +56,7 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
         val yesterday = Date(System.currentTimeMillis() - UserEndpointTestAbstract.DAY_BEFORE_IN_MILLISECONDS)
 
         for (id in 1..4) {
-            alerts.add(Alert(id.toString(), ALERT_TYPE, user, Location(ALERT_LONGITUDE, ALERT_LATITUDE), ALERT_RANGE.toDouble(),
+            alerts.add(Alert(id.toString(), ALERT_TYPE, user, Location(ALERT_LATITUDE, ALERT_LONGITUDE), ALERT_RANGE.toDouble(),
                             ALERT_DESCRIPTION, yesterday, yesterday, null, yesterday))
         }
     }

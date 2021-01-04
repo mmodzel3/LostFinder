@@ -59,10 +59,10 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == CHOOSE_LOCATION_CODE && resultCode == RESULT_OK && data != null) {
-            val chosenLocationLongitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LONGITUDE_INTENT, 0.0)
             val chosenLocationLatitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LATITUDE_INTENT, 0.0)
+            val chosenLocationLongitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LONGITUDE_INTENT, 0.0)
 
-            setAlertLocationText(chosenLocationLongitude, chosenLocationLatitude)
+            setAlertLocationText(chosenLocationLatitude, chosenLocationLongitude)
         }
     }
 
@@ -119,16 +119,16 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         val rangeText: String = rangeEditText.text.toString().trim()
         val range: Double = if (rangeText.isNotEmpty()) rangeText.toDouble() else currentLocationRange
 
+        val latitudeText: String = latitudeEditText.text.toString().trim()
+        val latitude: Double? = if (latitudeText.isNotEmpty()) latitudeText.toDouble()
+        else currentLocation?.latitude
+
         val longitudeText: String = longitudeEditText.text.toString().trim()
         val longitude: Double? = if (longitudeText.isNotEmpty()) longitudeText.toDouble()
                                     else currentLocation?.longitude
 
-        val latitudeText: String = latitudeEditText.text.toString().trim()
-        val latitude: Double? = if (latitudeText.isNotEmpty()) latitudeText.toDouble()
-                                    else currentLocation?.latitude
-
-        val location = if (longitude != null && latitude != null)
-                            com.github.mmodzel3.lostfinder.location.Location(longitude, latitude)
+        val location = if (latitude != null && longitude != null)
+                            com.github.mmodzel3.lostfinder.location.Location(latitude, longitude)
                         else null
 
         val sendDate = Date()
@@ -215,20 +215,20 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         titleSpinner.adapter = spinnerArrayAdapter
     }
 
-    private fun setAlertLocationText(longitude: Double, latitude: Double) {
-        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
+    private fun setAlertLocationText(latitude: Double, longitude: Double) {
         val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
+        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
 
-        longitudeEditText.setText(longitude.toString(), TextView.BufferType.EDITABLE)
         latitudeEditText.setText(latitude.toString(), TextView.BufferType.EDITABLE)
+        longitudeEditText.setText(longitude.toString(), TextView.BufferType.EDITABLE)
     }
 
     private fun setAlertLocationHint(latitude: Double, longitude: Double) {
-        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
         val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
+        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
 
-        longitudeEditText.hint = longitude.toString()
         latitudeEditText.hint = latitude.toString()
+        longitudeEditText.hint = longitude.toString()
     }
 
     private fun setAlertRangeHint(range: Double) {
