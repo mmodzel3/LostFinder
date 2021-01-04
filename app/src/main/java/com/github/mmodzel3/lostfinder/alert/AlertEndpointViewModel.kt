@@ -14,18 +14,7 @@ class AlertEndpointViewModel (private val alertEndpoint: AlertEndpoint) : Server
 
     init {
         listenToAlertNotifications()
-        forceUpdate()
-    }
-
-    override suspend fun fetchAllData() {
-        try {
-            val alertsData: List<Alert> = alertEndpoint.getAllActiveAlerts()
-            update(alertsData)
-        } catch (e: InvalidTokenException) {
-            status.postValue(ServerEndpointStatus.INVALID_TOKEN)
-        } catch (e: AlertEndpointAccessErrorException) {
-            status.postValue(ServerEndpointStatus.ERROR)
-        }
+        runUpdate { fetchAllData() }
     }
 
     override fun updateCache(dataToUpdate: List<Alert>): Boolean {
@@ -36,6 +25,10 @@ class AlertEndpointViewModel (private val alertEndpoint: AlertEndpoint) : Server
         }
 
         return dataChanged
+    }
+
+    internal suspend fun fetchAllData(): List<Alert> {
+        return alertEndpoint.getAllActiveAlerts()
     }
 
     private fun removeEndedAlerts() {

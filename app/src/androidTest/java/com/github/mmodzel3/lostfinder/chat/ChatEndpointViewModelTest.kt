@@ -36,25 +36,12 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
     }
 
     @Test
-    fun whenFetchAllDataAndUserApiAccessErrorThenStatusIsError() {
+    fun whenUpdateDataAndUserApiAccessErrorThenStatusIsError() {
         mockServerFailureResponse()
 
         observeAndWaitForStatusChange {
             runBlocking {
-                chatEndpointViewModel.fetchAllData()
-            }
-        }
-
-        assertThat(chatEndpointViewModel.status.value).isEqualTo(ServerEndpointStatus.ERROR)
-    }
-
-    @Test
-    fun whenFetchAdditionalMessagesAndUserApiAccessErrorThenStatusIsError() {
-        mockServerFailureResponse()
-
-        observeAndWaitForStatusChange {
-            runBlocking {
-                chatEndpointViewModel.fetchAllData()
+                chatEndpointViewModel.updateTask { chatEndpointViewModel.fetchAdditionalMessages() }
             }
         }
 
@@ -67,7 +54,7 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking {
-                chatEndpointViewModel.fetchAdditionalMessages()
+                chatEndpointViewModel.updateTask { chatEndpointViewModel.fetchAdditionalMessages() }
             }
         }
 
@@ -81,7 +68,7 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
     }
 
     @Test
-    fun whenFetchAllDataAndHasDataCachedThenGotDataUpdated() {
+    fun whenFetchAdditionalMessagesAndHasDataCachedThenGotDataUpdated() {
         chatEndpointViewModel.dataCache.putAll(changeTestMessagesToMap())
         updateTestMessages()
 
@@ -89,7 +76,7 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking {
-                chatEndpointViewModel.fetchAllData()
+                chatEndpointViewModel.updateTask { chatEndpointViewModel.fetchAdditionalMessages() }
             }
         }
 
