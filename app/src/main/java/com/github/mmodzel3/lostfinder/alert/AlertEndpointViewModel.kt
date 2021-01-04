@@ -14,7 +14,14 @@ class AlertEndpointViewModel (private val alertEndpoint: AlertEndpoint) : Server
 
     init {
         listenToAlertNotifications()
+    }
+
+    override fun observeUpdates() {
         runUpdate { fetchAllData() }
+    }
+
+    override fun unObserveUpdates() {
+        stopUpdates()
     }
 
     override fun updateCache(dataToUpdate: List<Alert>): Boolean {

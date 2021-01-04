@@ -60,6 +60,7 @@ open class ChatActivity : LoggedUserActivityAbstract() {
     override fun onResume() {
         super.onResume()
 
+        chatEndpointViewModel.observeUpdates()
         PushNotificationChatMessageConverter.getInstance().showNotifications = false
     }
 
@@ -67,6 +68,7 @@ open class ChatActivity : LoggedUserActivityAbstract() {
         super.onPause()
 
         PushNotificationChatMessageConverter.getInstance().showNotifications = true
+        chatEndpointViewModel.unObserveUpdates()
     }
 
     override fun onDestroy() {

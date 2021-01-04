@@ -20,15 +20,33 @@ class ChatEndpointViewModel (private val chatEndpoint: ChatEndpoint) : ServerPus
 
     init {
         listenToChatMessagesNotifications()
-        forceFetchAdditionalMessages()
+    }
+
+    override fun observeUpdates() {
+        runUpdate { fetchAdditionalMessages() }
+    }
+
+    override fun unObserveUpdates() {
+        stopUpdates()
     }
 
     fun forceFetchAdditionalMessages() {
         runUpdate { fetchAdditionalMessages() }
     }
 
+    internal suspend fun fetchAllMessages(): List<ChatMessage> {
+        val messages: MutableList<ChatMessage> = ArrayList()
+        val pages: Int = dataCache.size / MESSAGES_PER_PAGE
+
+        for (page in 0..pages) {
+            messages.addAll(fetchMessages(page))
+        }
+
+        return messages
+    }
+
     internal suspend fun fetchAdditionalMessages(): List<ChatMessage> {
-        val page: Int = dataCache.size / MESSAGES_PER_PAGE;
+        val page: Int = dataCache.size / MESSAGES_PER_PAGE
         return fetchMessages(page)
     }
 

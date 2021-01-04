@@ -53,6 +53,18 @@ open class AlertActivity : LoggedUserActivityAbstract() {
         observeEndAlert()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        alertEndpointViewModel.observeUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        alertEndpointViewModel.unObserveUpdates()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 

@@ -26,6 +26,9 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         stopUpdates()
     }
 
+    abstract fun observeUpdates()
+    abstract fun unObserveUpdates()
+
     protected fun stopUpdates() {
         if (updateRunnable != null) {
             handler.removeCallbacks(updateRunnable!!)
@@ -74,7 +77,9 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         } catch (e: ServerEndpointAccessErrorException) {
             status.postValue(ServerEndpointStatus.ERROR)
 
-            handler.postDelayed(updateRunnable!!, FAILURE_REDOWNLOAD_TIME)
+            if (updateRunnable != null) {
+                handler.postDelayed(updateRunnable!!, FAILURE_REDOWNLOAD_TIME)
+            }
         }
     }
 

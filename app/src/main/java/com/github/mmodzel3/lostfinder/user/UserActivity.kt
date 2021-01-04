@@ -14,7 +14,6 @@ import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import kotlinx.coroutines.launch
-import java.util.*
 
 class UserActivity : LoggedUserActivityAbstract() {
     private lateinit var tokenManager: TokenManager
@@ -42,6 +41,18 @@ class UserActivity : LoggedUserActivityAbstract() {
         initRecyclerView()
         listenToUserManagementEvents()
         observeUserUpdates()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        userEndpointViewModel.observeUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        userEndpointViewModel.unObserveUpdates()
     }
 
     private fun initRecyclerView() {

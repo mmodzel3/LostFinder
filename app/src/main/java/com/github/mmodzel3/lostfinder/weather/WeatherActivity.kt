@@ -32,6 +32,7 @@ class WeatherActivity: LoggedUserActivityAbstract() {
     private lateinit var currentLocationBinder : CurrentLocationBinder
     private lateinit var currentLocationConnection : ServiceConnection
     private var currentLocationListener: CurrentLocationListener? = null
+    private var lastLocation: Location? = null
 
     private var fetchedWeatherData: Boolean = false
 
@@ -54,6 +55,14 @@ class WeatherActivity: LoggedUserActivityAbstract() {
         initTabLayout()
         bindToCurrentLocationService()
         observeWeatherStatus()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (lastLocation != null) {
+            weatherEndpointViewModel.forceFetchData(lastLocation!!.latitude, lastLocation!!.longitude)
+        }
     }
 
     override fun onDestroy() {
@@ -113,6 +122,7 @@ class WeatherActivity: LoggedUserActivityAbstract() {
     private fun listenToCurrentLocation() {
         currentLocationListener = object: CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
+                lastLocation = location
                 onLocationChange(location.latitude, location.longitude)
             }
         }

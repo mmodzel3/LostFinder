@@ -11,8 +11,12 @@ class UserEndpointViewModel(private val userEndpoint: UserEndpoint) : ServerEndp
 
     var fetchAll: Boolean = false
 
-    init {
+    override fun observeUpdates() {
         forceUpdate()
+    }
+
+    override fun unObserveUpdates() {
+        stopUpdates()
     }
 
     fun forceUpdate() {

@@ -47,6 +47,20 @@ open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() 
         initAlertsLocationsOverlay()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        userEndpointViewModel.observeUpdates()
+        alertEndpointViewModel.observeUpdates()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        userEndpointViewModel.unObserveUpdates()
+        alertEndpointViewModel.unObserveUpdates()
+    }
+
     private fun initUsersLocationsOverlay() {
         usersLocationsOverlay = UsersLocationsOverlay(map, applicationContext)
         userEndpointViewModel.users.observe(this, Observer {
