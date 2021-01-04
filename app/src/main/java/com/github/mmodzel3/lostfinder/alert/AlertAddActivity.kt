@@ -7,11 +7,11 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
-import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
+import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
@@ -26,7 +26,6 @@ import kotlin.math.roundToInt
 class AlertAddActivity : LoggedUserActivityAbstract() {
     companion object {
         const val DEFAULT_RANGE = 180.0
-        const val CHOOSE_LOCATION_CODE = 1
     }
 
     private lateinit var currentLocationBinder : CurrentLocationBinder
@@ -35,6 +34,16 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
 
     private var currentLocation: Location? = null
     private var currentLocationRange: Double = DEFAULT_RANGE
+
+    private val resultChooseLocationLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            val data = result.data!!
+            val chosenLocationLatitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LATITUDE_INTENT, 0.0)
+            val chosenLocationLongitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LONGITUDE_INTENT, 0.0)
+
+            setAlertLocationText(chosenLocationLatitude, chosenLocationLongitude)
+        }
+    }
 
     private val alertEndpoint: AlertEndpoint by lazy {
         AlertEndpointFactory.createAlertEndpoint(TokenManager.getInstance(applicationContext))
@@ -53,17 +62,6 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
     override fun onDestroy() {
         super.onDestroy()
         unbindFromCurrentLocationService()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == CHOOSE_LOCATION_CODE && resultCode == RESULT_OK && data != null) {
-            val chosenLocationLatitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LATITUDE_INTENT, 0.0)
-            val chosenLocationLongitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LONGITUDE_INTENT, 0.0)
-
-            setAlertLocationText(chosenLocationLatitude, chosenLocationLongitude)
-        }
     }
 
     private fun bindToCurrentLocationService() {
@@ -163,7 +161,6 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
 
     private suspend fun addUserAlert(userAlert: UserAlert) {
         try {
-            Log.d("AlertAdd", userAlert.toString())
             alertEndpoint.addAlert(userAlert)
 
             Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
@@ -250,6 +247,6 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         val intent = Intent(this, ChooseLocationMapActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
-        startActivityForResult(intent, CHOOSE_LOCATION_CODE)
+        resultChooseLocationLauncher.launch(intent)
     }
 }
