@@ -32,6 +32,8 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id: Int = item.itemId
+        closeOptionsMenu()
+
         return if (id == R.id.activity_toolbar_it_map) {
             goToMapActivity()
             true
