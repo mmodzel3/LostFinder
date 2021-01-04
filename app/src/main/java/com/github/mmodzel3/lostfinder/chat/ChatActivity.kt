@@ -44,7 +44,6 @@ open class ChatActivity : LoggedUserActivityAbstract() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_chat)
-
         tokenManager = TokenManager.getInstance(applicationContext)
 
         recyclerView = findViewById(R.id.activity_chat_rv_message_list)

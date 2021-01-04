@@ -80,7 +80,7 @@ open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() 
     private fun initAlertsLocationsOverlay() {
         alertsLocationsOverlay = AlertsLocationsOverlay(map, applicationContext)
         alertEndpointViewModel.alerts.observe(this, Observer {
-            Log.d("xxx", it.toString())
+
             alertsLocationsOverlay.updateDataLocations(it)
             map.invalidate()
         })
