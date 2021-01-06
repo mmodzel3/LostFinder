@@ -21,6 +21,8 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     companion object {
         const val EMAIL_ADDRESS = "example@example.com"
         const val PASSWORD = "password"
+        const val SERVER_PASSWORD = "server_password"
+        const val WRONG_SERVER_PASSWORD = "wrong_server_password"
         const val USERNAME = "user123"
     }
 
@@ -43,7 +45,7 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     fun whenRegisterWithFilledDataThenAccountIsRegisteredAndActivityIsFinishing() {
         mockServerRegisterResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, USERNAME)
+        fillFields(EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
@@ -54,7 +56,7 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     fun whenRegisterWithDuplicatedDataThenErrorToastIsShown() {
         mockServerDuplicatedResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, USERNAME)
+        fillFields(EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
@@ -68,7 +70,7 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     fun whenRegisterWithNotFilledEmailThenErrorToastIsShown() {
         mockServerRegisterResponse()
 
-        fillFields("", PASSWORD, USERNAME)
+        fillFields("", PASSWORD, SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
@@ -82,7 +84,7 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     fun whenRegisterWithNotFilledPasswordThenErrorToastIsShown() {
         mockServerRegisterResponse()
 
-        fillFields(EMAIL_ADDRESS, "", USERNAME)
+        fillFields(EMAIL_ADDRESS, "", SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
@@ -96,7 +98,7 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     fun whenRegisterWithNotFilledUsernameThenErrorToastIsShown() {
         mockServerRegisterResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, "")
+        fillFields(EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, "")
         performRegister()
 
         Thread.sleep(1000)
@@ -107,10 +109,24 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
     }
 
     @Test
+    fun whenRegisterAndInvalidServerPasswordThenErrorToastIsShown() {
+        mockServerInvalidPasswordResponse()
+
+        fillFields(EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, USERNAME)
+        performRegister()
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_register_err_invalid_server_password))
+            .inRoot(withDecorView(Matchers.not(decorView)))
+            .check(matches(isDisplayed()))
+        Thread.sleep(2000)
+    }
+
+    @Test
     fun whenRegisterAndApiAccessErrorThenErrorToastIsShown() {
         mockServerFailureResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, USERNAME)
+        fillFields(EMAIL_ADDRESS, PASSWORD, WRONG_SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
@@ -120,9 +136,10 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
         Thread.sleep(2000)
     }
 
-    private fun fillFields(emailAddress: String, password: String, username: String) {
+    private fun fillFields(emailAddress: String, password: String, serverPassword: String, username: String) {
         onView(withId(R.id.activity_register_et_email_address)).perform(replaceText(emailAddress))
         onView(withId(R.id.activity_register_et_password)).perform(replaceText(password))
+        onView(withId(R.id.activity_register_et_server_password)).perform(replaceText(password))
         onView(withId(R.id.activity_register_et_username)).perform(replaceText(username))
     }
 

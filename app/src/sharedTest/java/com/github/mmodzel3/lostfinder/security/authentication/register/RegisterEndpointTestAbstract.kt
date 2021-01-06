@@ -20,4 +20,8 @@ abstract class RegisterEndpointTestAbstract : ServerEndpointTestAbstract() {
     fun mockServerDuplicatedResponse() {
         mockServerJsonResponse(ServerResponse.DUPLICATED)
     }
+
+    fun mockServerInvalidPasswordResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
+    }
 }

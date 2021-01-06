@@ -7,6 +7,7 @@ class RegisterEndpointTest : RegisterEndpointTestAbstract() {
     companion object {
         private const val EMAIL_ADDRESS = "example@example.com"
         private const val PASSWORD = "password"
+        private const val SERVER_PASSWORD = "123"
         private const val USERNAME = "user123"
     }
 
@@ -16,7 +17,7 @@ class RegisterEndpointTest : RegisterEndpointTestAbstract() {
 
         assertThrows<RegisterEndpointAccessErrorException> {
             runBlocking {
-                registerEndpoint.register(EMAIL_ADDRESS, PASSWORD, USERNAME)
+                registerEndpoint.register(EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, USERNAME)
             }
         }
     }

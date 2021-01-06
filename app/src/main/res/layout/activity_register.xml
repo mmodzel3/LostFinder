@@ -63,7 +63,23 @@
             android:inputType="textPassword" />
 
         <View
-            android:id="@+id/activity_register_dv_password_buttons"
+            android:id="@+id/activity_register_dv_password_server_password"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="?android:attr/listDivider"
+            tools:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/activity_register_et_server_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="false"
+            android:ems="10"
+            android:hint="@string/server_password"
+            android:inputType="textPassword" />
+
+        <View
+            android:id="@+id/activity_register_dv_server_password_buttons"
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:background="?android:attr/listDivider"
