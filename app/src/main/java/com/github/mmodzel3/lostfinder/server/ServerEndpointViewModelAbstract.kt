@@ -5,48 +5,82 @@ import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import kotlinx.coroutines.launch
 
 abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewModel() {
     companion object {
         const val UPDATE_INTERVALS = 60 * 1000L
+        const val FAILURE_REDOWNLOAD_TIME = 40 * 1000L
     }
 
     val status: MutableLiveData<ServerEndpointStatus> = MutableLiveData()
     protected open val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
     internal val dataCache: MutableMap<String, T> = mutableMapOf()
     internal val lock = Any()
-    private lateinit var handler: Handler
-    private lateinit var updateRunnable: Runnable
+    private val handler: Handler = Handler(Looper.getMainLooper())
+    private var updateRunnable: Runnable? = null
 
-    fun forceUpdate() {
-        viewModelScope.launch {
-            if (status.value != ServerEndpointStatus.OK &&
-                    status.value != ServerEndpointStatus.FETCHING) {
-                status.postValue(ServerEndpointStatus.FETCHING)
-            }
+    override fun onCleared() {
+        super.onCleared()
+        stopUpdates()
+    }
 
-            fetchAllData()
+    abstract fun observeUpdates()
+    abstract fun unObserveUpdates()
+
+    protected fun stopUpdates() {
+        if (updateRunnable != null) {
+            handler.removeCallbacks(updateRunnable!!)
         }
     }
 
-    internal open suspend fun fetchAllData() {
-
+    protected fun runUpdate(fetchData: suspend () -> List<T>) {
+        stopUpdates()
+        initUpdateTask(fetchData)
+        handler.post(updateRunnable!!)
     }
 
-    protected fun runPeriodicUpdates() {
-        handler = Handler(Looper.getMainLooper())
+    protected fun runPeriodicUpdates(fetchData: suspend () -> List<T>) {
+        stopUpdates()
+        initPeriodicUpdateTask(fetchData)
+        handler.post(updateRunnable!!)
+    }
+
+    protected fun initUpdateTask(fetchData: suspend () -> List<T>) {
         updateRunnable = Runnable {
-            forceUpdate()
-            handler.postDelayed(updateRunnable, UPDATE_INTERVALS)
+            viewModelScope.launch {
+                updateTask { fetchData() }
+            }
         }
-
-        status.postValue(ServerEndpointStatus.FETCHING)
-        handler.post(updateRunnable)
     }
 
-    protected fun stopPeriodicUpdates() {
-        handler.removeCallbacks(updateRunnable)
+    protected fun initPeriodicUpdateTask(fetchData: suspend () -> List<T>) {
+        updateRunnable = Runnable {
+            viewModelScope.launch {
+                updateTask { fetchData() }
+                handler.postDelayed(updateRunnable!!, UPDATE_INTERVALS)
+            }
+        }
+    }
+
+    internal open suspend fun updateTask(fetchData: suspend () -> List<T>) {
+        if (status.value != ServerEndpointStatus.OK &&
+            status.value != ServerEndpointStatus.FETCHING) {
+            status.postValue(ServerEndpointStatus.FETCHING)
+        }
+
+        try {
+            update(fetchData())
+        } catch (e: InvalidTokenException) {
+            status.postValue(ServerEndpointStatus.INVALID_TOKEN)
+        } catch (e: ServerEndpointAccessErrorException) {
+            status.postValue(ServerEndpointStatus.ERROR)
+
+            if (updateRunnable != null) {
+                handler.postDelayed(updateRunnable!!, FAILURE_REDOWNLOAD_TIME)
+            }
+        }
     }
 
     internal open fun update(dataToUpdate: List<T>) {

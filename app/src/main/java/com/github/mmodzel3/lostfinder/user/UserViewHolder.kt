@@ -3,16 +3,12 @@ package com.github.mmodzel3.lostfinder.user
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.location.Location
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.round
 
 class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val userNameTextView: TextView = itemView.findViewById(R.id.activity_user_info_tv_username)

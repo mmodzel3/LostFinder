@@ -8,18 +8,12 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
-import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.alert.AlertActivity
-import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
@@ -32,6 +26,7 @@ class WeatherActivity: LoggedUserActivityAbstract() {
     private lateinit var currentLocationBinder : CurrentLocationBinder
     private lateinit var currentLocationConnection : ServiceConnection
     private var currentLocationListener: CurrentLocationListener? = null
+    private var lastLocation: Location? = null
 
     private var fetchedWeatherData: Boolean = false
 
@@ -56,10 +51,17 @@ class WeatherActivity: LoggedUserActivityAbstract() {
         observeWeatherStatus()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (lastLocation != null) {
+            weatherEndpointViewModel.forceFetchData(lastLocation!!.latitude, lastLocation!!.longitude)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-
-        stopListeningToCurrentLocation()
+        unbindFromCurrentLocationService()
     }
 
     internal fun onLocationChange(latitude: Double, longitude: Double) {
@@ -114,11 +116,17 @@ class WeatherActivity: LoggedUserActivityAbstract() {
     private fun listenToCurrentLocation() {
         currentLocationListener = object: CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
+                lastLocation = location
                 onLocationChange(location.latitude, location.longitude)
             }
         }
 
         currentLocationBinder.registerListener(currentLocationListener!!)
+    }
+
+    private fun unbindFromCurrentLocationService() {
+        stopListeningToCurrentLocation()
+        unbindService(currentLocationConnection)
     }
 
     private fun stopListeningToCurrentLocation() {

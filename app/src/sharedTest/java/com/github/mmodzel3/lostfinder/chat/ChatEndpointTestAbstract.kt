@@ -37,7 +37,7 @@ abstract class ChatEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     fun mockSendMessageResponse() {
-        mockServerJsonResponse(messages[0])
+        mockServerJsonResponse(ServerResponse.OK)
     }
 
     protected fun createTestMessages() {

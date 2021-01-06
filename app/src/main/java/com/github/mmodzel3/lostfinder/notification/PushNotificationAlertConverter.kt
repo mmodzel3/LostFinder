@@ -1,13 +1,16 @@
 package com.github.mmodzel3.lostfinder.notification
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.alert.Alert
+import com.github.mmodzel3.lostfinder.alert.AlertActivity
 import com.github.mmodzel3.lostfinder.alert.AlertTypeTitleConverter
 
 class PushNotificationAlertConverter private constructor() : PushNotificationConverterAbstract<Alert>() {
@@ -58,8 +61,14 @@ class PushNotificationAlertConverter private constructor() : PushNotificationCon
     }
 
     private fun createAlertNotification(context: Context, title: String, text: String): Notification {
+        val intent = Intent(context, AlertActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_user_location_center)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_person_search)
                 .setColor(Color.RED)
                 .setContentTitle(title)
                 .setContentText(text)

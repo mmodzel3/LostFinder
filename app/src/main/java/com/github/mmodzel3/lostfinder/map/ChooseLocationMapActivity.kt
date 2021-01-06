@@ -14,8 +14,8 @@ import org.osmdroid.views.overlay.Marker
 
 class ChooseLocationMapActivity : DataLocationsWithNavDrawerMapActivity() {
     companion object {
-        const val LOCATION_LONGITUDE_INTENT = "LOCATION_LONGITUDE_INTENT"
         const val LOCATION_LATITUDE_INTENT = "LOCATION_LATITUDE_INTENT"
+        const val LOCATION_LONGITUDE_INTENT = "LOCATION_LONGITUDE_INTENT"
     }
 
     private lateinit var chosenLocation: Location
@@ -75,7 +75,7 @@ class ChooseLocationMapActivity : DataLocationsWithNavDrawerMapActivity() {
     }
 
     private fun setChosenLocation(point: GeoPoint) {
-        chosenLocation = Location(point.longitude, point.latitude)
+        chosenLocation = Location(point.latitude, point.longitude)
 
         if (!isLocationChosen) {
             addChosenLocationMarkerToMap(point)
@@ -103,8 +103,8 @@ class ChooseLocationMapActivity : DataLocationsWithNavDrawerMapActivity() {
 
     private fun finishSendLocationBack() {
         val output = Intent()
-        output.putExtra(LOCATION_LONGITUDE_INTENT, chosenLocation.longitude)
         output.putExtra(LOCATION_LATITUDE_INTENT, chosenLocation.latitude)
+        output.putExtra(LOCATION_LONGITUDE_INTENT, chosenLocation.longitude)
         setResult(RESULT_OK, output)
         finish()
     }

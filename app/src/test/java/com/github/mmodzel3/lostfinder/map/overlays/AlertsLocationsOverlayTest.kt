@@ -9,7 +9,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import org.mockito.Mockito.*
+import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.mock
 import org.osmdroid.views.MapView
 import org.osmdroid.views.MapViewRepository
 

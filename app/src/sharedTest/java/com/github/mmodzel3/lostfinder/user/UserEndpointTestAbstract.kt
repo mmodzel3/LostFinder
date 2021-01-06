@@ -39,6 +39,18 @@ abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
         mockServerJsonResponse(ServerResponse.INVALID_PARAM)
     }
 
+    fun mockUserManagementResponse() {
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    fun mockUserManagementInvalidPermissionResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
+    }
+
+    fun mockUserManagementNotFoundResponse() {
+        mockServerJsonResponse(ServerResponse.NOT_FOUND)
+    }
+
     protected fun createTestUsers() {
         val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS)
         val user = User(USER_ID, USER_EMAIL, null, USER_NAME, USER_ROLE, null, yesterday, yesterday, false, false, null)

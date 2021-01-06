@@ -41,7 +41,7 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                userEndpointViewModel.fetchAllData()
+                userEndpointViewModel.updateTask { userEndpointViewModel.fetchAllData() }
             }
         }
 
@@ -54,7 +54,7 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                userEndpointViewModel.fetchAllData()
+                userEndpointViewModel.updateTask { userEndpointViewModel.fetchAllData() }
             }
         }
 
@@ -78,7 +78,7 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                userEndpointViewModel.fetchAllData()
+                userEndpointViewModel.updateTask { userEndpointViewModel.fetchAllData() }
             }
         }
 

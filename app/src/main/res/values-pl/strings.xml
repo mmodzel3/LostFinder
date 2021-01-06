@@ -163,6 +163,14 @@
         Problem z zakończeniem alertu. Sprawdź połączenie z siecią.
     </string>
 
+    <string name="activity_alert_err_end_alert_invalid_permission">
+        Problem z zakończeniem alertu. Nie masz uprawnień, aby zakończyć alert.
+    </string>
+
+    <string name="activity_alert_err_end_alert_not_found">
+        Problem z zakończeniem alertu. Alert nie istnieje.
+    </string>
+
     <string-array name="activity_alert_add_predefined_user">
         <item>Pomocy!</item>
         <item>Zwierzę!</item>
@@ -260,6 +268,10 @@
 
     <string name="activity_alert_add_msg_add_alert_success">
         Alert został wysłany.
+    </string>
+
+    <string name="activity_alert_add_err_add_alert_invalid_permission">
+        Nie masz uprawnień do przesłania tego alertu.
     </string>
 
     <string name="activity_map_add_alert_desc">

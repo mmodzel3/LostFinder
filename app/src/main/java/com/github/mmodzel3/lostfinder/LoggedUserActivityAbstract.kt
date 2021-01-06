@@ -2,6 +2,7 @@ package com.github.mmodzel3.lostfinder
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -18,11 +19,16 @@ import com.github.mmodzel3.lostfinder.user.*
 import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import kotlinx.coroutines.launch
 
-
 abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
     private val userEndpoint: UserEndpoint by lazy {
         UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -32,6 +38,8 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id: Int = item.itemId
+        closeOptionsMenu()
+
         return if (id == R.id.activity_toolbar_it_map) {
             goToMapActivity()
             true
@@ -56,9 +64,16 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
         } else if (id == R.id.activity_toolbar_it_logout) {
             logout()
             true
+        } else if (id == android.R.id.home) {
+            onBackPressed()
+            true
         } else {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onBackPressed() {
+        goToMapActivity()
     }
 
     protected fun goToMapActivity() {

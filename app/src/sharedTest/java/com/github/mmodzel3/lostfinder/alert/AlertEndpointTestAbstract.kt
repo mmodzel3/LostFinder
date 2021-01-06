@@ -43,11 +43,23 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     fun mockAddAlertResponse() {
-        mockServerJsonResponse(alerts[0])
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    fun mockAddAlertInvalidPermissionResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
     }
 
     fun mockEndAlertResponse() {
-        mockServerJsonResponse(alerts[0])
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    fun mockEndAlertInvalidPermissionResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
+    }
+
+    fun mockEndAlertNotFoundResponse() {
+        mockServerJsonResponse(ServerResponse.NOT_FOUND)
     }
 
     protected fun createTestAlerts() {
@@ -56,7 +68,7 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
         val yesterday = Date(System.currentTimeMillis() - UserEndpointTestAbstract.DAY_BEFORE_IN_MILLISECONDS)
 
         for (id in 1..4) {
-            alerts.add(Alert(id.toString(), ALERT_TYPE, user, Location(ALERT_LONGITUDE, ALERT_LATITUDE), ALERT_RANGE.toDouble(),
+            alerts.add(Alert(id.toString(), ALERT_TYPE, user, Location(ALERT_LATITUDE, ALERT_LONGITUDE), ALERT_RANGE.toDouble(),
                             ALERT_DESCRIPTION, yesterday, yesterday, null, yesterday))
         }
     }

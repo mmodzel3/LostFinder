@@ -52,16 +52,4 @@ abstract class ServerEndpointTestAbstract : ThrownExceptionTestAbstract() {
             MockResponse()
                 .setResponseCode(401))
     }
-
-    fun mockUserManagementResponse() {
-        mockServerJsonResponse(ServerResponse.OK)
-    }
-
-    fun mockUserManagementInvalidPermissionResponse() {
-        mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
-    }
-
-    fun mockUserManagementNotFoundResponse() {
-        mockServerJsonResponse(ServerResponse.NOT_FOUND)
-    }
 }

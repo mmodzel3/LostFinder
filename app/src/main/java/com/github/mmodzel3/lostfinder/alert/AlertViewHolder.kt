@@ -93,10 +93,10 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if (locationString != "") {
                 val locationSplit: List<String> = locationString.split(", ")
 
-                val longitude = locationSplit[0].removePrefix("(").toDouble()
-                val latitude = locationSplit[1].removeSuffix(")").toDouble()
+                val latitude = locationSplit[0].removePrefix("(").toDouble()
+                val longitude = locationSplit[1].removeSuffix(")").toDouble()
 
-                return Location(longitude, latitude)
+                return Location(latitude, longitude)
             } else {
                 return null
             }
@@ -104,8 +104,8 @@ class AlertViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         set(value: Location?) {
             val locationString: String = if (value != null)
-                "(${round(value.longitude * 10000) / 10000}, " +
-                        "${round(value.latitude * 10000) / 10000})" else ""
+                "(${round(value.latitude * 10000) / 10000}, " +
+                        "${round(value.longitude * 10000) / 10000})" else ""
 
             locationTextView.text = locationString
         }

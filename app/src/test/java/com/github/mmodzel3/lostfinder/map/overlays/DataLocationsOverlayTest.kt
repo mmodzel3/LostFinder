@@ -81,7 +81,7 @@ class DataLocationsOverlayTest {
 
         data = HashMap()
         for (i in 1..10) {
-            val elem = ServerEndpointLocationDataImpl(i.toString(), Location(TEST_LONGITUDE, TEST_LATITUDE), yesterday)
+            val elem = ServerEndpointLocationDataImpl(i.toString(), Location(TEST_LATITUDE, TEST_LONGITUDE), yesterday)
 
             data[i.toString()] = elem
         }
@@ -103,7 +103,7 @@ class DataLocationsOverlayTest {
         val newData : MutableMap<String, ServerEndpointLocationDataImpl> = HashMap()
 
         data.forEach {
-            val newElem = ServerEndpointLocationDataImpl(it.value.id, Location(TEST_LONGITUDE, TEST_LATITUDE), Date())
+            val newElem = ServerEndpointLocationDataImpl(it.value.id, Location(TEST_LATITUDE, TEST_LONGITUDE), Date())
 
             newData[it.key] = newElem
         }

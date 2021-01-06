@@ -1,7 +1,5 @@
 package com.github.mmodzel3.lostfinder.weather
 
-import android.content.Context
-import android.util.Log
 import com.github.mmodzel3.lostfinder.R
 
 object WeatherConditionConverter {

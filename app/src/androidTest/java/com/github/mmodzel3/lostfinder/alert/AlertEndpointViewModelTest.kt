@@ -36,12 +36,12 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
     }
 
     @Test
-    fun whenFetchAllDataAndAlertApiAccessErrorThenStatusIsError() {
+    fun whenUpdateDataAndAlertApiAccessErrorThenStatusIsError() {
         mockServerFailureResponse()
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                alertEndpointViewModel.fetchAllData()
+                alertEndpointViewModel.updateTask { alertEndpointViewModel.fetchAllData() }
             }
         }
 
@@ -49,12 +49,12 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
     }
 
     @Test
-    fun whenFetchDataThenGotDataAdded() {
+    fun whenUpdateDataAndNoDataThenGotDataAdded() {
         mockGetActiveAlertsResponse()
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                alertEndpointViewModel.fetchAllData()
+                alertEndpointViewModel.updateTask { alertEndpointViewModel.fetchAllData() }
             }
         }
 
@@ -68,7 +68,7 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
     }
 
     @Test
-    fun whenFetchAllDataAndHasDataCachedThenGotDataUpdated() {
+    fun whenUpdateDataAndHasDataCachedThenGotDataUpdated() {
         alertEndpointViewModel.dataCache.putAll(changeTestAlertsToMap())
         updateTestAlerts()
 
@@ -76,7 +76,7 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                alertEndpointViewModel.fetchAllData()
+                alertEndpointViewModel.updateTask { alertEndpointViewModel.fetchAllData() }
             }
         }
 

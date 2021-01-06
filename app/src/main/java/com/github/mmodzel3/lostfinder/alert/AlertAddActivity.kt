@@ -7,17 +7,18 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
-import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
+import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
 import com.github.mmodzel3.lostfinder.map.ChooseLocationMapActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.UserRole
 import kotlinx.coroutines.launch
 import java.util.*
@@ -26,14 +27,24 @@ import kotlin.math.roundToInt
 class AlertAddActivity : LoggedUserActivityAbstract() {
     companion object {
         const val DEFAULT_RANGE = 180.0
-        const val CHOOSE_LOCATION_CODE = 1
     }
 
     private lateinit var currentLocationBinder : CurrentLocationBinder
     private lateinit var currentLocationConnection : ServiceConnection
+    private var currentLocationListener: CurrentLocationListener? = null
 
     private var currentLocation: Location? = null
     private var currentLocationRange: Double = DEFAULT_RANGE
+
+    private val resultChooseLocationLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            val data = result.data!!
+            val chosenLocationLatitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LATITUDE_INTENT, 0.0)
+            val chosenLocationLongitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LONGITUDE_INTENT, 0.0)
+
+            setAlertLocationText(chosenLocationLatitude, chosenLocationLongitude)
+        }
+    }
 
     private val alertEndpoint: AlertEndpoint by lazy {
         AlertEndpointFactory.createAlertEndpoint(TokenManager.getInstance(applicationContext))
@@ -49,15 +60,9 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         bindAlertTitles()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == CHOOSE_LOCATION_CODE && resultCode == RESULT_OK && data != null) {
-            val chosenLocationLongitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LONGITUDE_INTENT, 0.0)
-            val chosenLocationLatitude = data.getDoubleExtra(ChooseLocationMapActivity.LOCATION_LATITUDE_INTENT, 0.0)
-
-            setAlertLocationText(chosenLocationLongitude, chosenLocationLatitude)
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindFromCurrentLocationService()
     }
 
     private fun bindToCurrentLocationService() {
@@ -76,6 +81,11 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         Intent(this, CurrentLocationService::class.java).also { intent ->
             bindService(intent, currentLocationConnection, Context.BIND_AUTO_CREATE)
         }
+    }
+
+    private fun unbindFromCurrentLocationService() {
+        stopListeningToCurrentLocation()
+        unbindService(currentLocationConnection)
     }
 
     private fun initAddButton() {
@@ -108,16 +118,16 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         val rangeText: String = rangeEditText.text.toString().trim()
         val range: Double = if (rangeText.isNotEmpty()) rangeText.toDouble() else currentLocationRange
 
+        val latitudeText: String = latitudeEditText.text.toString().trim()
+        val latitude: Double? = if (latitudeText.isNotEmpty()) latitudeText.toDouble()
+        else currentLocation?.latitude
+
         val longitudeText: String = longitudeEditText.text.toString().trim()
         val longitude: Double? = if (longitudeText.isNotEmpty()) longitudeText.toDouble()
                                     else currentLocation?.longitude
 
-        val latitudeText: String = latitudeEditText.text.toString().trim()
-        val latitude: Double? = if (latitudeText.isNotEmpty()) latitudeText.toDouble()
-                                    else currentLocation?.latitude
-
-        val location = if (longitude != null && latitude != null)
-                            com.github.mmodzel3.lostfinder.location.Location(longitude, latitude)
+        val location = if (latitude != null && longitude != null)
+                            com.github.mmodzel3.lostfinder.location.Location(latitude, longitude)
                         else null
 
         val sendDate = Date()
@@ -130,27 +140,40 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
     }
 
     private fun listenToCurrentLocation() {
-        currentLocationBinder.registerListener(object : CurrentLocationListener {
+        currentLocationListener = object : CurrentLocationListener {
             override fun onLocalisationChange(location: Location) {
                 currentLocation = location
                 currentLocationRange = if (location.hasAccuracy()) location.accuracy.toDouble()
                 else currentLocationRange
 
-                setAlertLocationHint(currentLocation!!.longitude, currentLocation!!.latitude)
+                setAlertLocationHint(currentLocation!!.latitude, currentLocation!!.longitude)
                 setAlertRangeHint(currentLocationRange)
             }
-        })
+        }
+
+        currentLocationBinder.registerListener(currentLocationListener!!)
+    }
+
+    private fun stopListeningToCurrentLocation() {
+        if (currentLocationListener != null) {
+            currentLocationBinder.unregisterListener(currentLocationListener!!)
+        }
     }
 
     private suspend fun addUserAlert(userAlert: UserAlert) {
         try {
-            Log.d("AlertAdd", userAlert.toString())
-            alertEndpoint.addAlert(userAlert)
+            val response: ServerResponse = alertEndpoint.addAlert(userAlert)
 
-            Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
+            if (response == ServerResponse.OK) {
+                Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
                     Toast.LENGTH_SHORT).show()
 
-            finish()
+                finish()
+            } else if (response == ServerResponse.INVALID_PERMISSION) {
+                Toast.makeText(this, R.string.activity_alert_add_err_add_alert_invalid_permission,
+                    Toast.LENGTH_SHORT).show()
+            }
+
         } catch (e: AlertEndpointAccessErrorException) {
             Toast.makeText(this, R.string.activity_alert_add_err_add_alert_api_access_problem,
                     Toast.LENGTH_LONG).show()
@@ -196,20 +219,20 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         titleSpinner.adapter = spinnerArrayAdapter
     }
 
-    private fun setAlertLocationText(longitude: Double, latitude: Double) {
-        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
+    private fun setAlertLocationText(latitude: Double, longitude: Double) {
         val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
+        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
 
-        longitudeEditText.setText(longitude.toString(), TextView.BufferType.EDITABLE)
         latitudeEditText.setText(latitude.toString(), TextView.BufferType.EDITABLE)
+        longitudeEditText.setText(longitude.toString(), TextView.BufferType.EDITABLE)
     }
 
-    private fun setAlertLocationHint(longitude: Double, latitude: Double) {
-        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
+    private fun setAlertLocationHint(latitude: Double, longitude: Double) {
         val latitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_latitude)
+        val longitudeEditText: EditText = findViewById(R.id.activity_alert_add_et_longitude)
 
-        longitudeEditText.hint = longitude.toString()
         latitudeEditText.hint = latitude.toString()
+        longitudeEditText.hint = longitude.toString()
     }
 
     private fun setAlertRangeHint(range: Double) {
@@ -231,6 +254,6 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         val intent = Intent(this, ChooseLocationMapActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
-        startActivityForResult(intent, CHOOSE_LOCATION_CODE)
+        resultChooseLocationLauncher.launch(intent)
     }
 }

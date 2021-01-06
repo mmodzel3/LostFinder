@@ -1,15 +1,9 @@
 package com.github.mmodzel3.lostfinder.map
 
 import android.Manifest
-import android.content.Intent
-import android.view.Menu
-import android.view.MenuItem
 import androidx.preference.PreferenceManager
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.alert.AlertActivity
-import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.permissions.AppCompactActivityWithPermissionsRequest
-import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import org.osmdroid.api.IMapController
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory

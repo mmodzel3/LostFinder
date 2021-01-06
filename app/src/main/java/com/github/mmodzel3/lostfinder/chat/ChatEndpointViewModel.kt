@@ -20,44 +20,38 @@ class ChatEndpointViewModel (private val chatEndpoint: ChatEndpoint) : ServerPus
 
     init {
         listenToChatMessagesNotifications()
-        forceFetchAdditionalMessages()
+    }
+
+    override fun observeUpdates() {
+        runUpdate { fetchAdditionalMessages() }
+    }
+
+    override fun unObserveUpdates() {
+        stopUpdates()
     }
 
     fun forceFetchAdditionalMessages() {
-        status.postValue(ServerEndpointStatus.FETCHING)
-
-        viewModelScope.launch {
-            fetchAdditionalMessages()
-        }
+        runUpdate { fetchAdditionalMessages() }
     }
 
-    override suspend fun fetchAllData() {
-        try {
-            val pages: Int = dataCache.size / MESSAGES_PER_PAGE;
-            for (page: Int in 0..pages) {
-                fetchMessages(page)
-            }
-        } catch (e: InvalidTokenException) {
-            status.postValue(ServerEndpointStatus.INVALID_TOKEN)
-        } catch (e: ChatEndpointAccessErrorException) {
-            status.postValue(ServerEndpointStatus.ERROR)
+    internal suspend fun fetchAllMessages(): List<ChatMessage> {
+        val messages: MutableList<ChatMessage> = ArrayList()
+        val pages: Int = dataCache.size / MESSAGES_PER_PAGE
+
+        for (page in 0..pages) {
+            messages.addAll(fetchMessages(page))
         }
+
+        return messages
     }
 
-    internal suspend fun fetchAdditionalMessages() {
-        try {
-            val page: Int = dataCache.size / MESSAGES_PER_PAGE;
-            fetchMessages(page)
-        } catch (e: InvalidTokenException) {
-            status.postValue(ServerEndpointStatus.INVALID_TOKEN)
-        } catch (e: ChatEndpointAccessErrorException) {
-            status.postValue(ServerEndpointStatus.ERROR)
-        }
+    internal suspend fun fetchAdditionalMessages(): List<ChatMessage> {
+        val page: Int = dataCache.size / MESSAGES_PER_PAGE
+        return fetchMessages(page)
     }
 
-    private suspend fun fetchMessages(page: Int) {
-        val messagesData: List<ChatMessage> = chatEndpoint.getMessages(page, MESSAGES_PER_PAGE)
-        update(messagesData)
+    private suspend fun fetchMessages(page: Int): List<ChatMessage> {
+        return chatEndpoint.getMessages(page, MESSAGES_PER_PAGE)
     }
 
     private fun listenToChatMessagesNotifications() {

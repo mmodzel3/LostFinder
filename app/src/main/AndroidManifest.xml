@@ -15,11 +15,11 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:allowBackup="false"
         android:theme="@style/Theme.LostFinder">
 
         <activity
@@ -34,11 +34,11 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".security.authentication.login.LoginActivity" />
         <activity android:name=".security.authentication.register.RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".security.authentication.login.LoginActivity" />
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".chat.ChatActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".alert.AlertActivity" />
+        <activity android:name=".alert.AlertActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".alert.AlertAddActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".map.ChooseLocationMapActivity" />

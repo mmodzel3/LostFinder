@@ -4,15 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 class AlertEndpointViewModelFactory(private val alertEndpoint: AlertEndpoint) : ViewModelProvider.Factory {
-    companion object {
-        private var alertEndpointViewModel: AlertEndpointViewModel? = null
-    }
-
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (alertEndpointViewModel == null) {
-            alertEndpointViewModel = AlertEndpointViewModel(alertEndpoint)
-        }
-
-        return alertEndpointViewModel!! as T
+        return AlertEndpointViewModel(alertEndpoint) as T
     }
 }

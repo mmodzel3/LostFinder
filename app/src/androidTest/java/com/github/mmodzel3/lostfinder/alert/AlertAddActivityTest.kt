@@ -24,7 +24,6 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
-
 class AlertAddActivityTest : AlertEndpointTestAbstract() {
     private lateinit var alertAddScenario: ActivityScenario<AlertAddActivity>
     private lateinit var decorView: View
@@ -70,6 +69,24 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
         onView(withText(R.string.activity_alert_add_err_add_alert_api_access_problem))
                 .inRoot(withDecorView(not(decorView)))
                 .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun whenAddAlertWithInvalidPermissionThenErrorToastIsShown() {
+        startActivity()
+
+        fillFields()
+
+        mockAddAlertInvalidPermissionResponse()
+        onView(withId(R.id.activity_alert_add_bt_add))
+            .perform(scrollTo(), click())
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_alert_add_err_add_alert_invalid_permission))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()));
 
         Thread.sleep(2000)
     }
