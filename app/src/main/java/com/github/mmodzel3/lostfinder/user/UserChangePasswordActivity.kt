@@ -28,6 +28,10 @@ class UserChangePasswordActivity : LoggedUserActivityAbstract() {
         initChangePasswordButton()
     }
 
+    override fun onBackPressed() {
+        goToSettingsActivity()
+    }
+
     private fun initChangePasswordButton() {
         val changePasswordButton: Button = findViewById(R.id.activity_user_change_password_bt_change_password)
 

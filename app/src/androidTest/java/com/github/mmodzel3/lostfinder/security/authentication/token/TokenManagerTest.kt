@@ -5,6 +5,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.github.mmodzel3.lostfinder.server.ServerResponse
@@ -114,6 +115,26 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
     }
 
     @Test
+    fun whenAccountWithCachedTokenAndGetTokenEmailAddressThenGotEmail() {
+        runBlocking {
+            createTestAccountAndSetTestToken()
+
+            val email: String = tokenManager.getTokenEmailAddress()
+            assertThat(email).matches(EMAIL_ADDRESS)
+        }
+    }
+
+    @Test
+    fun whenAccountWithCachedTokenAndGetTokenUsernameThenGotUsername() {
+        runBlocking {
+            createTestAccountAndSetTestToken()
+
+            val username: String = tokenManager.getTokenUsername()
+            assertThat(username).matches(USERNAME)
+        }
+    }
+
+    @Test
     fun whenLogoutToLoggedAccountThenTokenAndPasswordAreRemoved() {
         runBlocking {
             createTestAccountAndSetTestToken()
@@ -143,6 +164,8 @@ class TokenManagerTest : LoginEndpointTestAbstract() {
         mockServerTokenResponse()
         accountManager.addAccountExplicitly(account, encryptedPassword, null)
         accountManager.setAuthToken(account, tokenType, TOKEN)
+
+        accountManager.setUserData(account, Authenticator.USER_DATA_USERNAME, USERNAME)
     }
 
     private fun removeAccounts() {

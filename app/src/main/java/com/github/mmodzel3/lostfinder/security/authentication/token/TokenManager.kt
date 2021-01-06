@@ -49,6 +49,14 @@ open class TokenManager protected constructor(private val context: Context?) {
         }
     }
 
+    open fun getTokenUsername() : String {
+        if (account != null) {
+            return accountManager.getUserData(account!!, Authenticator.USER_DATA_USERNAME)!!
+        } else {
+            throw InvalidTokenException()
+        }
+    }
+
     open fun getTokenRole() : UserRole {
         if (account != null) {
             val userRole: String = accountManager.getUserData(account!!, Authenticator.USER_DATA_ROLE)!!

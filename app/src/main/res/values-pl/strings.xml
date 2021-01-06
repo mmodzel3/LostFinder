@@ -22,12 +22,8 @@
         Użytkownicy
     </string>
 
-    <string name="activity_toolbar_change_password">
-        Zmień hasło
-    </string>
-
-    <string name="activity_toolbar_delete_account">
-        Usuń konto
+    <string name="activity_toolbar_settings">
+        Ustawienia
     </string>
 
     <string name="location_notification_message">
@@ -545,16 +541,37 @@
     <string name="no">
         Nie
     </string>
-    <string name="activity_toolbar_msg_success">
+    <string name="activity_settings_user_desc">
+        Użytkownik
+    </string>
+    <string name="activity_settings_username">
+        Nazwa użytkownika:
+    </string>
+    <string name="activity_settings_username_example">
+        Bob
+    </string>
+    <string name="activity_settings_email">
+        Adres email:
+    </string>
+    <string name="activity_settings_email_example">
+        example@example.com
+    </string>
+    <string name="activity_settings_change_password">
+        Zmień hasło
+    </string>
+    <string name="activity_settings_delete_account">
+        Usuń konto
+    </string>
+    <string name="activity_settings_msg_delete_account_success">
         Konto zostało usunięte.
     </string>
-    <string name="activity_toolbar_delete_account_msg_are_you_sure">
+    <string name="activity_settings_msg_delete_account_are_you_sure">
         Czy na pewno chcesz usunąć konto?
     </string>
-    <string name="activity_toolbar_err_delete_account_api_access_problem">
+    <string name="activity_settings_err_delete_account_api_access_problem">
         Problem z wysłaniem żądania usunięcia konta. Sprawdź połączenie z siecią.
     </string>
-    <string name="activity_toolbar_err_delete_account_invalid_token">
+    <string name="activity_settings_err_delete_account_invalid_token">
         Problem z wysłaniem żądania usunięcia konta. Twoja sesja wygasła. Zaloguj się ponownie.
     </string>
     <string name="activity_splash_screen_logo_desc">

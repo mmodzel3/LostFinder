@@ -14,4 +14,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent_purple_500">#806200EE</color>
     <color name="transparent_purple_700">#803700B3</color>
+    <color name="red_500">#EE0000</color>
+    <color name="red_700">#B30000</color>
+    <color name="transparent_red_500">#80EE0000</color>
+    <color name="transparent_red_700">#80B30000</color>
 </resources>

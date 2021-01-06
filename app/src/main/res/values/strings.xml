@@ -22,12 +22,8 @@
         User
     </string>
 
-    <string name="activity_toolbar_change_password">
-        Change password
-    </string>
-
-    <string name="activity_toolbar_delete_account">
-        Delete account
+    <string name="activity_toolbar_settings">
+        Settings
     </string>
 
     <string name="location_notification_message">
@@ -545,16 +541,37 @@
     <string name="no">
         No
     </string>
-    <string name="activity_toolbar_delete_account_msg_are_you_sure">
+    <string name="activity_settings_user_desc">
+        User
+    </string>
+    <string name="activity_settings_username">
+        Username:
+    </string>
+    <string name="activity_settings_username_example">
+        Bob
+    </string>
+    <string name="activity_settings_email">
+        Email:
+    </string>
+    <string name="activity_settings_email_example">
+        example@example.com
+    </string>
+    <string name="activity_settings_change_password">
+        Change password
+    </string>
+    <string name="activity_settings_delete_account">
+        Delete account
+    </string>
+    <string name="activity_settings_msg_delete_account_are_you_sure">
         Are you sure to delete account?
     </string>
-    <string name="activity_toolbar_msg_success">
+    <string name="activity_settings_msg_delete_account_success">
         Account is deleted.
     </string>
-    <string name="activity_toolbar_err_delete_account_api_access_problem">
+    <string name="activity_settings_err_delete_account_api_access_problem">
         Problem with deleting account. Check your connection.
     </string>
-    <string name="activity_toolbar_err_delete_account_invalid_token">
+    <string name="activity_settings_err_delete_account_invalid_token">
         Problem with deleting account. Your session is expired. Log in once again.
     </string>
     <string name="activity_splash_screen_logo_desc">

@@ -22,6 +22,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         const val ACCOUNT_BLOCKED = "Account blocked"
         const val LOGIN_ENDPOINT_ACCESS_ERROR = "Login endpoint access error"
         const val USER_DATA_SAVE_PASSWORD = "SAVE_PASSWORD"
+        const val USER_DATA_USERNAME = "USER_NAME"
         const val USER_DATA_ROLE = "USER_ROLE"
     }
 
@@ -118,6 +119,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
             val password: String = getAccountEncodedPassword(account)
             val loginInfo: LoginInfo = retrieveAccountLoginInfoFromServer(account, password)
 
+            accountManager.setUserData(account, USER_DATA_USERNAME, loginInfo.username)
             accountManager.setUserData(account, USER_DATA_ROLE, loginInfo.role.toString())
             return loginInfo.token
         }

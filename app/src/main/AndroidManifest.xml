@@ -44,6 +44,7 @@
         <activity android:name=".map.ChooseLocationMapActivity" />
         <activity android:name=".weather.WeatherActivity" />
         <activity android:name=".user.UserActivity" />
+        <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".user.UserChangePasswordActivity"
             android:windowSoftInputMode="adjustResize" />
 

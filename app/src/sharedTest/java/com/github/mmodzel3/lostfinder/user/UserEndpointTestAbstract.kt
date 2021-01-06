@@ -39,6 +39,10 @@ abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
         mockServerJsonResponse(ServerResponse.INVALID_PARAM)
     }
 
+    fun mockDeleteAccountResponse() {
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
     fun mockUserManagementResponse() {
         mockServerJsonResponse(ServerResponse.OK)
     }

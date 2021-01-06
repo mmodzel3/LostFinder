@@ -15,15 +15,12 @@ import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivit
 import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.settings.SettingsActivity
 import com.github.mmodzel3.lostfinder.user.*
 import com.github.mmodzel3.lostfinder.weather.WeatherActivity
 import kotlinx.coroutines.launch
 
 abstract class LoggedUserActivityAbstract : AppCompatActivity() {
-
-    private val userEndpoint: UserEndpoint by lazy {
-        UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +52,8 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
         } else if (id == R.id.activity_toolbar_it_user) {
             goToUserActivity()
             true
-        } else if (id == R.id.activity_toolbar_it_change_password) {
-            goToUserChangePasswordActivity()
-            true
-        } else if (id == R.id.activity_toolbar_it_delete_account) {
-            deleteAccount()
+        } else if (id == R.id.activity_toolbar_it_settings) {
+            goToSettingsActivity()
             true
         } else if (id == R.id.activity_toolbar_it_logout) {
             logout()
@@ -111,8 +105,8 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
         startActivity(intent)
     }
 
-    protected fun goToUserChangePasswordActivity() {
-        val intent = Intent(this, UserChangePasswordActivity::class.java)
+    protected fun goToSettingsActivity() {
+        val intent = Intent(this, SettingsActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
         startActivity(intent)
@@ -143,44 +137,6 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
                     this@LoggedUserActivityAbstract,
                     R.string.activity_toolbar_logout_err_api_access_error, Toast.LENGTH_LONG
                 ).show()
-            }
-        }
-    }
-
-    private fun deleteAccount() {
-        val dialogClickListener =
-            DialogInterface.OnClickListener { _, which ->
-                when (which) {
-                    DialogInterface.BUTTON_POSITIVE -> {
-                        sendDeleteRequest()
-                    }
-                    DialogInterface.BUTTON_NEGATIVE -> {
-                    }
-                }
-            }
-
-        AlertDialog.Builder(this)
-            .setMessage(R.string.activity_toolbar_delete_account_msg_are_you_sure)
-            .setPositiveButton(R.string.yes, dialogClickListener)
-            .setNegativeButton(R.string.no, dialogClickListener).show()
-    }
-
-    private fun sendDeleteRequest() {
-        lifecycleScope.launch {
-            try {
-                userEndpoint.deleteUser()
-
-                Toast.makeText(this@LoggedUserActivityAbstract, R.string.activity_toolbar_msg_success,
-                    Toast.LENGTH_LONG).show()
-
-                goToLoginActivity()
-            } catch (e: UserEndpointAccessErrorException) {
-                Toast.makeText(this@LoggedUserActivityAbstract, R.string.activity_toolbar_err_delete_account_api_access_problem,
-                    Toast.LENGTH_LONG).show()
-            } catch (e: InvalidTokenException) {
-                Toast.makeText(this@LoggedUserActivityAbstract, R.string.activity_toolbar_err_delete_account_invalid_token,
-                    Toast.LENGTH_LONG).show()
-                goToLoginActivity()
             }
         }
     }

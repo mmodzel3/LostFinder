@@ -33,16 +33,10 @@
         android:title="@string/activity_toolbar_user" />
 
     <item
-        android:id="@+id/activity_toolbar_it_change_password"
-        android:icon="@drawable/ic_change_password"
+        android:id="@+id/activity_toolbar_it_settings"
+        android:icon="@drawable/ic_edit"
         app:showAsAction="ifRoom"
-        android:title="@string/activity_toolbar_change_password" />
-
-    <item
-        android:id="@+id/activity_toolbar_it_delete_account"
-        android:icon="@drawable/ic_change_password"
-        app:showAsAction="ifRoom"
-        android:title="@string/activity_toolbar_delete_account" />
+        android:title="@string/activity_toolbar_settings" />
 
     <item
         android:id="@+id/activity_toolbar_it_logout"
