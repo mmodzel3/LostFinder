@@ -1,6 +1,7 @@
 package com.github.mmodzel3.lostfinder.chat
 
 import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.user.UserRole
@@ -36,7 +37,7 @@ abstract class ChatEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     fun mockSendMessageResponse() {
-        mockServerJsonResponse(messages[0])
+        mockServerJsonResponse(ServerResponse.OK)
     }
 
     protected fun createTestMessages() {
