@@ -1,7 +1,6 @@
 package com.github.mmodzel3.lostfinder.map
 
 import android.content.Intent
-import android.util.Log
 import android.widget.ImageButton
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.alert.AlertAddActivity

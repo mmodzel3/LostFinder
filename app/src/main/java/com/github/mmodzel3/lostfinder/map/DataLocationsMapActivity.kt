@@ -1,6 +1,5 @@
 package com.github.mmodzel3.lostfinder.map
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer

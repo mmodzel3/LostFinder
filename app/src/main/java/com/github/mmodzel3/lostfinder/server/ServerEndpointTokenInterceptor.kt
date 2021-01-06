@@ -5,7 +5,6 @@ import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
 
 class ServerEndpointTokenInterceptor(private val tokenManager: TokenManager) : Interceptor {

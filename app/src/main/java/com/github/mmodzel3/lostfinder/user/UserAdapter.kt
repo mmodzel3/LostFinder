@@ -1,12 +1,10 @@
 package com.github.mmodzel3.lostfinder.user
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
-
 
 class UserAdapter(private val tokenManager: TokenManager) : RecyclerView.Adapter<UserViewHolder>() {
     companion object {

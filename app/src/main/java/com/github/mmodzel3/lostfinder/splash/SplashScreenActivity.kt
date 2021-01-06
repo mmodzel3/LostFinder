@@ -11,8 +11,6 @@ import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
-import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
-import com.github.mmodzel3.lostfinder.server.ServerEndpointViewModelAbstract
 import kotlinx.coroutines.launch
 
 class SplashScreenActivity: AppCompatActivity() {

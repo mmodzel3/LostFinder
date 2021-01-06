@@ -1,8 +1,6 @@
 package com.github.mmodzel3.lostfinder.map.overlays
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.user.User

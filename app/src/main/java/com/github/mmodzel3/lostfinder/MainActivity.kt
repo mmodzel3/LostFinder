@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import com.github.mmodzel3.lostfinder.map.DataLocationsWithAlertAddMapActivity
 
-
 class MainActivity: DataLocationsWithAlertAddMapActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

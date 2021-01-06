@@ -24,7 +24,6 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
-
 class AlertAddActivityTest : AlertEndpointTestAbstract() {
     private lateinit var alertAddScenario: ActivityScenario<AlertAddActivity>
     private lateinit var decorView: View

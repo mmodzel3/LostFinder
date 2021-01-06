@@ -1,7 +1,6 @@
 package com.github.mmodzel3.lostfinder.chat
 
 import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
-import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.user.UserRole

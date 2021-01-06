@@ -1,28 +1,22 @@
 package com.github.mmodzel3.lostfinder.user
 
 import android.view.View
-import androidx.core.view.size
 import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.alert.AlertEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManagerStub
 import com.google.common.truth.Truth.assertThat
-import okhttp3.mockwebserver.RecordedRequest
-import org.hamcrest.Matchers.isEmptyString
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.util.concurrent.TimeUnit
 
 class UserChangePasswordActivityTest : UserEndpointTestAbstract() {
     companion object {
