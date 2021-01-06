@@ -74,6 +74,24 @@ class AlertAddActivityTest : AlertEndpointTestAbstract() {
     }
 
     @Test
+    fun whenAddAlertWithInvalidPermissionThenErrorToastIsShown() {
+        startActivity()
+
+        fillFields()
+
+        mockAddAlertInvalidPermissionResponse()
+        onView(withId(R.id.activity_alert_add_bt_add))
+            .perform(scrollTo(), click())
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_alert_add_err_add_alert_invalid_permission))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
     fun whenAddAlertWithInvalidCredentialsThenErrorToastIsShown() {
         startActivity()
 

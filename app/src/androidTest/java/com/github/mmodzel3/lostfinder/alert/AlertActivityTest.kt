@@ -91,6 +91,42 @@ class AlertActivityTest : AlertEndpointTestAbstract() {
     }
 
     @Test
+    fun whenEndAlertInRecyclerViewWithInvalidPermissionThenErrorToastIsShown() {
+        startActivityNormally()
+
+        mockEndAlertInvalidPermissionResponse()
+        onView(withId(R.id.activity_alert_rv_alert_list))
+            .perform(RecyclerViewActions
+                .actionOnItemAtPosition<RecyclerView.ViewHolder>(0,
+                    clickOnViewChild(R.id.activity_alert_info_bt_end_alert)))
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_alert_err_end_alert_invalid_permission))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun whenEndAlertInRecyclerViewthatDoesNotExistThenErrorToastIsShown() {
+        startActivityNormally()
+
+        mockEndAlertNotFoundResponse()
+        onView(withId(R.id.activity_alert_rv_alert_list))
+            .perform(RecyclerViewActions
+                .actionOnItemAtPosition<RecyclerView.ViewHolder>(0,
+                    clickOnViewChild(R.id.activity_alert_info_bt_end_alert)))
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_alert_err_end_alert_not_found))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
     fun whenEndAlertInRecyclerViewWithApiErrorProblemThenErrorToastIsShown() {
         startActivityNormally()
 

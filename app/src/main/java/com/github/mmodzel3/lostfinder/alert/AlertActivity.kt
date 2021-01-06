@@ -15,6 +15,7 @@ import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import kotlinx.coroutines.launch
 
 
@@ -125,7 +126,15 @@ open class AlertActivity : LoggedUserActivityAbstract() {
         val activity: Activity = this
         lifecycleScope.launch {
             try {
-                alertEndpoint.endAlert(alertId)
+                val response: ServerResponse = alertEndpoint.endAlert(alertId)
+
+                if (response == ServerResponse.INVALID_PERMISSION) {
+                    Toast.makeText(activity, R.string.activity_alert_err_end_alert_invalid_permission,
+                        Toast.LENGTH_LONG).show()
+                } else if (response == ServerResponse.NOT_FOUND) {
+                    Toast.makeText(activity, R.string.activity_alert_err_end_alert_not_found,
+                        Toast.LENGTH_LONG).show()
+                }
             } catch (e: AlertEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.activity_alert_err_end_alert_api_access_problem,
                         Toast.LENGTH_LONG).show()

@@ -18,6 +18,7 @@ import com.github.mmodzel3.lostfinder.location.CurrentLocationService
 import com.github.mmodzel3.lostfinder.map.ChooseLocationMapActivity
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.UserRole
 import kotlinx.coroutines.launch
 import java.util.*
@@ -161,12 +162,18 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
 
     private suspend fun addUserAlert(userAlert: UserAlert) {
         try {
-            alertEndpoint.addAlert(userAlert)
+            val response: ServerResponse = alertEndpoint.addAlert(userAlert)
 
-            Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
+            if (response == ServerResponse.OK) {
+                Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
                     Toast.LENGTH_SHORT).show()
 
-            finish()
+                finish()
+            } else if (response == ServerResponse.INVALID_PERMISSION) {
+                Toast.makeText(this, R.string.activity_alert_add_err_add_alert_invalid_permission,
+                    Toast.LENGTH_SHORT).show()
+            }
+
         } catch (e: AlertEndpointAccessErrorException) {
             Toast.makeText(this, R.string.activity_alert_add_err_add_alert_api_access_problem,
                     Toast.LENGTH_LONG).show()

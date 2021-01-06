@@ -163,6 +163,14 @@
         Problem with ending alert. Check your internet connection.
     </string>
 
+    <string name="activity_alert_err_end_alert_invalid_permission">
+        Problem with ending alert. You do not have permission to end it.
+    </string>
+
+    <string name="activity_alert_err_end_alert_not_found">
+        Problem with ending alert. Alert does not exist.
+    </string>
+
     <string-array name="activity_alert_add_predefined_user">
         <item>Help!</item>
         <item>Animal!</item>
@@ -260,6 +268,10 @@
 
     <string name="activity_alert_add_msg_add_alert_success">
         Alert was sent to server.
+    </string>
+
+    <string name="activity_alert_add_err_add_alert_invalid_permission">
+        You do not have permission to send alert.
     </string>
 
     <string name="activity_map_add_alert_desc">

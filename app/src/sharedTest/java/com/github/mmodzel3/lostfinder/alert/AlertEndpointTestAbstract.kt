@@ -2,6 +2,7 @@ package com.github.mmodzel3.lostfinder.alert
 
 import com.github.mmodzel3.lostfinder.location.Location
 import com.github.mmodzel3.lostfinder.server.ServerEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.user.UserRole
@@ -42,11 +43,23 @@ abstract class AlertEndpointTestAbstract : ServerEndpointTestAbstract() {
     }
 
     fun mockAddAlertResponse() {
-        mockServerJsonResponse(alerts[0])
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    fun mockAddAlertInvalidPermissionResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
     }
 
     fun mockEndAlertResponse() {
-        mockServerJsonResponse(alerts[0])
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
+    fun mockEndAlertInvalidPermissionResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
+    }
+
+    fun mockEndAlertNotFoundResponse() {
+        mockServerJsonResponse(ServerResponse.NOT_FOUND)
     }
 
     protected fun createTestAlerts() {
