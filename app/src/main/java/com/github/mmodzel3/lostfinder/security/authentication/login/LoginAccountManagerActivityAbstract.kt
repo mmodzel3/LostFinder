@@ -25,10 +25,9 @@ abstract class LoginAccountManagerActivityAbstract : AppCompatActivity() {
 
     internal fun loginUsingAccountManager(emailAddress: String,
                                           password: String,
-                                          savePassword: Boolean,
                                           accountManagerCallback: AccountManagerCallback<Bundle>) {
         removeAllAccounts()
-        val account: Account = addAccount(emailAddress, password, savePassword)
+        val account: Account = addAccount(emailAddress, password)
 
         accountManager.getAuthToken(account, tokenType, null, true, accountManagerCallback, null)
     }
@@ -45,12 +44,10 @@ abstract class LoginAccountManagerActivityAbstract : AppCompatActivity() {
         }
     }
 
-    private fun addAccount(emailAddress: String, password: String, savePassword: Boolean) : Account {
+    private fun addAccount(emailAddress: String, password: String) : Account {
         val encodedPassword: String = encryptPassword(password)
         val account = Account(emailAddress, accountType)
-
         val userData = Bundle()
-        userData.putString(Authenticator.USER_DATA_SAVE_PASSWORD, savePassword.toString())
 
         accountManager.addAccountExplicitly(account, encodedPassword, userData)
 

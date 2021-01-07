@@ -53,7 +53,6 @@
     <string name="server_password">Server password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="save_password">Save password</string>
     <string name="account_type">com.github.mmodzel3.lostfinder</string>
     <string name="token_type">jwt</string>
     <string name="err_login_access">Problem with connection to server.</string>

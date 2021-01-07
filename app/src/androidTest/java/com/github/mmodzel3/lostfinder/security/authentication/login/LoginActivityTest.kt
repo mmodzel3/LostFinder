@@ -3,13 +3,10 @@ package com.github.mmodzel3.lostfinder.security.authentication.login
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.view.View
-import android.widget.Checkable
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -18,10 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.github.mmodzel3.lostfinder.R
 import com.google.common.truth.Truth.assertThat
-import org.hamcrest.BaseMatcher
-import org.hamcrest.CoreMatchers.isA
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Description
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -70,8 +64,6 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
 
         IdlingRegistry.getInstance().unregister(loginIdlingResource.idlingResource)
         removeAccounts()
-        
-        
     }
 
     @Test
@@ -81,7 +73,7 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         addTestAccount(EMAIL_ADDRESS2, PASSWORD2)
         addTestAccount(EMAIL_ADDRESS3, PASSWORD3)
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
+        fillFields(EMAIL_ADDRESS, PASSWORD)
         performLogin()
 
         val accounts: Array<out Account> = accountManager.getAccountsByType(accountType)
@@ -95,7 +87,7 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
     fun whenLoginWithCorrectCredentialsThenAccountIsAdded() {
         mockServerTokenResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
+        fillFields(EMAIL_ADDRESS, PASSWORD)
         performLogin()
 
         val account: Account = checkIfAccountExistsAndGetIt()
@@ -105,9 +97,9 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
     }
 
     @Test
-    fun whenLoginAndSavePasswordThenPasswordIsSaved() {
+    fun whenLoginThenPasswordIsSaved() {
         mockServerTokenResponse()
-        fillFields(EMAIL_ADDRESS, PASSWORD, true)
+        fillFields(EMAIL_ADDRESS, PASSWORD)
         performLogin()
 
         val account: Account = checkIfAccountExistsAndGetIt()
@@ -118,22 +110,9 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
     }
 
     @Test
-    fun whenLoginAndNoSavePasswordThenPasswordIsNotSaved() {
-        mockServerTokenResponse()
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
-        performLogin()
-
-        val account: Account = checkIfAccountExistsAndGetIt()
-        val password: String? = accountManager.getPassword(account)
-        assertThat(password).isNull()
-
-        Thread.sleep(10000)
-    }
-
-    @Test
     fun whenLoginWithInvalidCredentialsThenErrorInvalidCredentialsToastIsShown() {
         mockServerInvalidCredentialsResponse()
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
+        fillFields(EMAIL_ADDRESS, PASSWORD)
         performLogin()
 
         Thread.sleep(1000)
@@ -147,7 +126,7 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
     @Test
     fun whenLoginAndServerReturnsErrorThenServerAccessErrorToastIsShown() {
         mockServerFailureResponse()
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
+        fillFields(EMAIL_ADDRESS, PASSWORD)
         performLogin()
 
         Thread.sleep(1000)
@@ -159,25 +138,10 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
     }
 
     @Test
-    fun whenLoginWithCorrectCredentialsAndNoSavingPasswordThenGotTokenAndItIsCached() {
+    fun whenLoginWithCorrectCredentialsThenGotTokenAndItIsCached() {
         mockServerTokenResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
-        performLogin()
-
-        mockServerFailureResponse()
-        val account: Account = checkIfAccountExistsAndGetIt()
-        val token: String? = accountManager.blockingGetAuthToken(account, tokenType, true)
-        assertThat(token).matches(TOKEN)
-
-        Thread.sleep(10000)
-    }
-
-    @Test
-    fun whenLoginWithCorrectCredentialsAndSavingPasswordThenGotTokenAndItIsCached() {
-        mockServerTokenResponse()
-
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
+        fillFields(EMAIL_ADDRESS, PASSWORD)
         performLogin()
 
         mockServerFailureResponse()
@@ -191,7 +155,7 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
     @Test
     fun whenLoginWithCorrectCredentialsThenActivityIsFinished() {
         mockServerTokenResponse()
-        fillFields(EMAIL_ADDRESS, PASSWORD, false)
+        fillFields(EMAIL_ADDRESS, PASSWORD)
         performLogin()
 
         activityScenario.state.isAtLeast(Lifecycle.State.DESTROYED)
@@ -211,26 +175,9 @@ class LoginActivityTest : LoginEndpointTestAbstract() {
         accountManager.addAccountExplicitly(account, password, null)
     }
 
-    private fun setChecked(checked: Boolean) = object : ViewAction {
-        val checkableViewMatcher = object : BaseMatcher<View>() {
-            override fun matches(item: Any?): Boolean = isA(Checkable::class.java).matches(item)
-            override fun describeTo(description: Description?) {
-                description?.appendText("is Checkable instance ")
-            }
-        }
-
-        override fun getConstraints(): BaseMatcher<View> = checkableViewMatcher
-        override fun getDescription(): String? = null
-        override fun perform(uiController: UiController?, view: View) {
-            val checkableView: Checkable = view as Checkable
-            checkableView.isChecked = checked
-        }
-    }
-
-    private fun fillFields(emailAddress: String, password: String, savePassword: Boolean) {
+    private fun fillFields(emailAddress: String, password: String) {
         onView(withId(R.id.activity_login_et_email_address)).perform(replaceText(emailAddress))
         onView(withId(R.id.activity_login_et_password)).perform(replaceText(password))
-        onView(withId(R.id.activity_login_sw_save_password)).perform(setChecked(savePassword))
     }
 
     private fun performLogin() {

@@ -29,11 +29,11 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
         enableLogin()
     }
 
-    internal fun login(emailAddress: String, password: String, savePassword: Boolean) {
+    internal fun login(emailAddress: String, password: String) {
         disableLogin()
 
         lifecycleScope.launch {
-            loginUsingAccountManager(emailAddress, password, savePassword,
+            loginUsingAccountManager(emailAddress, password,
                 createLoginAccountManagerCallback())
         }
     }
@@ -46,10 +46,9 @@ class LoginActivity : LoginAccountManagerActivityAbstract() {
     private fun onLoginClick() {
         val emailAddress: EditText = findViewById(R.id.activity_login_et_email_address)
         val password: EditText = findViewById(R.id.activity_login_et_password)
-        val savePassword: SwitchCompat = findViewById(R.id.activity_login_sw_save_password)
 
         loginIdlingResource.increment()
-        login(emailAddress.text.toString(), password.text.toString(), savePassword.isChecked)
+        login(emailAddress.text.toString(), password.text.toString())
     }
 
     private fun enableLogin() {
