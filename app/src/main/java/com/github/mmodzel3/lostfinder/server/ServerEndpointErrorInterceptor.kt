@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.server
 
+import android.util.Log
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -25,9 +26,7 @@ open class ServerEndpointErrorInterceptor : Interceptor {
     private fun proceedRequest(chain: Interceptor.Chain, request: Request) : Response? {
         try {
             return chain.proceed(request)
-        } catch (e: SocketTimeoutException) {
-            throw ServerEndpointAccessErrorException()
-        } catch (e: ConnectException) {
+        } catch (e: Exception) {
             throw ServerEndpointAccessErrorException()
         }
     }

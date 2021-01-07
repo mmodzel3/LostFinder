@@ -22,9 +22,7 @@ open class WeatherEndpointErrorInterceptor : Interceptor {
     private fun proceedRequest(chain: Interceptor.Chain, request: Request) : Response {
         try {
             return chain.proceed(request)
-        } catch (e: SocketTimeoutException) {
-            throw WeatherEndpointAccessErrorException()
-        } catch (e: ConnectException) {
+        } catch (e: Exception) {
             throw WeatherEndpointAccessErrorException()
         }
     }
