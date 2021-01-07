@@ -33,7 +33,7 @@ class TokenManagerStub(private val userEmail: String,
         return TOKEN
     }
 
-    override suspend fun logout() {
-
+    override suspend fun logout(): Boolean {
+        return true
     }
 }

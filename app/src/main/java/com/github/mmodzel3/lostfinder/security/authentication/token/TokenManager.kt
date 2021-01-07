@@ -74,15 +74,19 @@ open class TokenManager protected constructor(private val context: Context?) {
         }
     }
 
-    open suspend fun logout() {
+    open suspend fun logout() : Boolean {
         if (account != null) {
             try {
                 logoutEndpoint.logout()
                 accountManager.clearPassword(account)
+
+                return true
             } catch (e: InvalidTokenException) {
                 accountManager.clearPassword(account)
             }
         }
+
+        return false
     }
 
     private suspend fun getAndCheckTokenForAccount(account: Account) : String {

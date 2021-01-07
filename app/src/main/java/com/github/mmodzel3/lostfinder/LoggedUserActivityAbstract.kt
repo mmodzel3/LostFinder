@@ -132,11 +132,17 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                tokenManager.logout()
-                goToLoginActivity()
+                val fullLogout: Boolean = tokenManager.logout()
 
-                Toast.makeText(this@LoggedUserActivityAbstract,
-                    R.string.activity_logout_msg_success, Toast.LENGTH_LONG).show()
+                if (fullLogout) {
+                    Toast.makeText(this@LoggedUserActivityAbstract,
+                        R.string.activity_logout_msg_success, Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this@LoggedUserActivityAbstract,
+                        R.string.activity_logout_msg_partial_success, Toast.LENGTH_LONG).show()
+                }
+
+                goToLoginActivity()
             } catch (e: LogoutEndpointAccessErrorException) {
                 Toast.makeText(this@LoggedUserActivityAbstract,
                     R.string.activity_logout_err_api_access_error, Toast.LENGTH_LONG).show()

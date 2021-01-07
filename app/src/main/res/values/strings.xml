@@ -450,7 +450,13 @@
     <string name="fragment_weather_unknown">Unknown</string>
     <string name="activity_toolbar_logout">Logout</string>
     <string name="activity_toolbar_close">Close</string>
-    <string name="activity_logout_msg_success">Logout completed</string>
+    <string name="activity_logout_msg_success">Logout completed.</string>
+    <string name="activity_logout_msg_partial_success">
+        You have been logged out.
+        Your session is expired.
+        Your current location may still be kept on the server.
+        If you want to clear it. Log in and log out once again.
+    </string>
     <string name="activity_logout_err_api_access_error">
         Problem with sending logout request to server. Check your connection.
     </string>
