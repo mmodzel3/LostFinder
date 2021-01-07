@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".weather.WeatherActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/activity_weather_tab_layout"
