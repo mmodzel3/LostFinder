@@ -15,6 +15,9 @@ interface UserEndpoint : ServerEndpointInterface {
     @POST("/api/user/location")
     suspend fun updateUserLocation(@Body location: Location): ServerResponse
 
+    @POST("/api/user/location/clear")
+    suspend fun clearUserLocation(): ServerResponse
+
     @POST("/api/user/notification/token")
     suspend fun updateUserNotificationDestToken(@Query("token") token: String): ServerResponse
 

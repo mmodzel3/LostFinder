@@ -72,6 +72,11 @@
         Problem z wysłaniem lokalizacji do serwera. Sprawdź swoje połączenie z siecią.
     </string>
 
+    <string name="location_err_location_sharing_unavailable">
+        Udostępnianie bieżącej lokalizacji jest niemożliwe.
+        Włącz lokalizację GPS w telefonie oraz włącz udostępnianie lokalizacji w ustawieniach aplikacji.
+    </string>
+
     <string name="activity_chat_enter_message">
         Wprowadź wiadomość
     </string>
@@ -556,6 +561,9 @@
     <string name="activity_settings_email_example">
         example@example.com
     </string>
+    <string name="activity_settings_sharing_location">
+        Udostępnianie lokalizacji
+    </string>
     <string name="activity_settings_change_password">
         Zmień hasło
     </string>
@@ -573,6 +581,12 @@
     </string>
     <string name="activity_settings_err_delete_account_invalid_token">
         Problem z wysłaniem żądania usunięcia konta. Twoja sesja wygasła. Zaloguj się ponownie.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_api_access_problem">
+        Problem z usunięciem lokalizacji na serwerze. Sprawdź połączenie z siecią.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_invalid_token">
+        Problem z usunięciem lokalizacji na serwerze. Twoja sesja wygasła. Zaloguj się ponownie.
     </string>
     <string name="activity_splash_screen_logo_desc">
         Logo aplikacji poszukiwanie

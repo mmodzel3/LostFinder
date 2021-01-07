@@ -72,6 +72,11 @@
         Problem with sending location to server. Check your internet connection.
     </string>
 
+    <string name="location_err_location_sharing_unavailable">
+        Sharing current location is unavailable.
+        Turn on localization with GPS in your mobile phone and enable sharing location in application\'s settings.
+    </string>
+
     <string name="activity_chat_enter_message">
         Enter message
     </string>
@@ -556,6 +561,9 @@
     <string name="activity_settings_email_example">
         example@example.com
     </string>
+    <string name="activity_settings_sharing_location">
+        Sharing location
+    </string>
     <string name="activity_settings_change_password">
         Change password
     </string>
@@ -573,6 +581,12 @@
     </string>
     <string name="activity_settings_err_delete_account_invalid_token">
         Problem with deleting account. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_api_access_problem">
+        Problem with your location on server. Check your connection.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_invalid_token">
+        Problem with removing your location on server. Your session is expired. Log in once again.
     </string>
     <string name="activity_splash_screen_logo_desc">
         Lost finder logo

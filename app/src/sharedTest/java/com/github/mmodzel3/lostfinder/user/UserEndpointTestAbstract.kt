@@ -31,6 +31,10 @@ abstract class UserEndpointTestAbstract : ServerEndpointTestAbstract() {
         mockServerJsonResponse(ServerResponse.OK)
     }
 
+    fun mockClearUserLocationResponse() {
+        mockServerJsonResponse(ServerResponse.OK)
+    }
+
     fun mockSuccessChangePasswordResponse() {
         mockServerJsonResponse(ServerResponse.OK)
     }
