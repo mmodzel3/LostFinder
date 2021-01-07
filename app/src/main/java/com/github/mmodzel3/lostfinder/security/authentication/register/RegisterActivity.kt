@@ -72,6 +72,10 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(activity, R.string.activity_register_err_invalid_server_password, Toast.LENGTH_SHORT)
                         .show()
                     enableRegisterButton()
+                } else if (response == ServerResponse.INVALID_PARAM) {
+                    Toast.makeText(activity, R.string.activity_register_err_password_too_short, Toast.LENGTH_SHORT)
+                        .show()
+                    enableRegisterButton()
                 }
             } catch (e: RegisterEndpointAccessErrorException) {
                 Toast.makeText(activity, R.string.activity_register_err_api_access_problem, Toast.LENGTH_LONG)

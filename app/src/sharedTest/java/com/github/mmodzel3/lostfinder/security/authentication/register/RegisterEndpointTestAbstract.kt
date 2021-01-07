@@ -24,4 +24,8 @@ abstract class RegisterEndpointTestAbstract : ServerEndpointTestAbstract() {
     fun mockServerInvalidPasswordResponse() {
         mockServerJsonResponse(ServerResponse.INVALID_PERMISSION)
     }
+
+    fun mockPasswordTooShortResponse() {
+        mockServerJsonResponse(ServerResponse.INVALID_PARAM)
+    }
 }

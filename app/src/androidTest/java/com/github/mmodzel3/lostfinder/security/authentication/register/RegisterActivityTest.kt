@@ -23,6 +23,7 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
         const val PASSWORD = "password"
         const val SERVER_PASSWORD = "server_password"
         const val WRONG_SERVER_PASSWORD = "wrong_server_password"
+        const val TOO_SHORT_PASSWORD = "1"
         const val USERNAME = "user123"
     }
 
@@ -133,6 +134,20 @@ class RegisterActivityTest : RegisterEndpointTestAbstract() {
         onView(withText(R.string.activity_register_err_api_access_problem))
                 .inRoot(withDecorView(Matchers.not(decorView)))
                 .check(matches(isDisplayed()))
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun whenRegisterAndInvalidParamThenErrorToastIsShown() {
+        mockPasswordTooShortResponse()
+
+        fillFields(EMAIL_ADDRESS, TOO_SHORT_PASSWORD, WRONG_SERVER_PASSWORD, USERNAME)
+        performRegister()
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_register_err_password_too_short))
+            .inRoot(withDecorView(Matchers.not(decorView)))
+            .check(matches(isDisplayed()))
         Thread.sleep(2000)
     }
 

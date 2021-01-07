@@ -352,6 +352,10 @@
         Nieprawidłowe hasło serwera. Nie można utworzyć konta.
     </string>
 
+    <string name="activity_register_err_password_too_short">
+        Hasło jest za krótkie. Powinno ono zawierać minimum osiem znaków.
+    </string>
+
     <string name="activity_weather_err_api_access_error">
         Problem z pobraniem danych pogodowych. Sprawdź swoje połączenie z siecią.
     </string>

@@ -352,6 +352,10 @@
         Invalid server password. Cannot register account.
     </string>
 
+    <string name="activity_register_err_password_too_short">
+        Password is too short. It should contain minimum eight characters.
+    </string>
+
     <string name="activity_weather_err_api_access_error">
         Problem with fetching weather data. Check your connection.
     </string>
