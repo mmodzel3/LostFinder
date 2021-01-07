@@ -363,6 +363,11 @@
         Fetching weather data.
     </string>
 
+    <string name="activity_weather_msg_waiting">
+        Weather data will be fetch when current location will be updated.
+        If location with GPS is disabled, turn it on to get weather data based on current location.
+    </string>
+
     <string name="activity_weather_units">metric</string>
     <string name="fragment_weather_now">Now</string>
     <string name="fragment_weather_next_hour">Next hour</string>
