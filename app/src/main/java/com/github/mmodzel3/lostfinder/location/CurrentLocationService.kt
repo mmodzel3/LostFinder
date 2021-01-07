@@ -27,10 +27,8 @@ import com.github.mmodzel3.lostfinder.user.UserEndpoint
 import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.android.gms.location.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.lang.Runnable
 
 
 class CurrentLocationService : Service() {
@@ -104,6 +102,7 @@ class CurrentLocationService : Service() {
 
         stopLocationListening()
         stopPeriodicallyCheckingSharingLocationAvailability()
+
         hideEndpointAccessErrorNotificationIfVisible()
         hideSharingLocationUnavailableNotificationIfVisible()
     }
@@ -312,19 +311,23 @@ class CurrentLocationService : Service() {
 
     private fun sendLocationChangeToServer(location: Location?) {
         ioScope.launch {
-            try {
-                if (location != null) {
-                    userEndpoint.updateUserLocation(Location(location.latitude, location.longitude))
-                } else {
-                    userEndpoint.clearUserLocation()
-                }
+            blockingSendLocationToServer(location)
+        }
+    }
 
-                onEndpointAccessSuccess()
-            } catch (e: UserEndpointAccessErrorException) {
-                onEndpointAccessError()
-            } catch (e: InvalidTokenException) {
-                onEndpointAccessError()
+    private suspend fun blockingSendLocationToServer(location: Location?) {
+        try {
+            if (location != null) {
+                userEndpoint.updateUserLocation(Location(location.latitude, location.longitude))
+            } else {
+                userEndpoint.clearUserLocation()
             }
+
+            onEndpointAccessSuccess()
+        } catch (e: UserEndpointAccessErrorException) {
+            onEndpointAccessError()
+        } catch (e: InvalidTokenException) {
+            onEndpointAccessError()
         }
     }
 

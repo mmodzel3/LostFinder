@@ -449,9 +449,21 @@
     <string name="fragment_weather_overcast_clouds">Overcast clouds</string>
     <string name="fragment_weather_unknown">Unknown</string>
     <string name="activity_toolbar_logout">Logout</string>
-    <string name="activity_toolbar_logout_msg_success">Logout completed</string>
-    <string name="activity_toolbar_logout_err_api_access_error">
+    <string name="activity_toolbar_close">Close</string>
+    <string name="activity_logout_msg_success">Logout completed</string>
+    <string name="activity_logout_err_api_access_error">
         Problem with sending logout request to server. Check your connection.
+    </string>
+    <string name="activity_close_msg_success">Application has closed successfully</string>
+    <string name="activity_close_err_api_access_error">
+        Problem with correct close of application.
+        Problem with sending location clear request to server.
+        Check your connection.
+    </string>
+    <string name="activity_close_err_invalid_token">
+        Problem with correct close of application.
+        Problem with sending location clear request to server.
+        Your session is expired. Log in once again to clear your current location on server.
     </string>
     <string name="activity_user_change_password_old_password">Old password</string>
     <string name="activity_user_change_password_new_password">New password</string>
