@@ -32,7 +32,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".security.authentication.login.LoginActivity" />
+        <activity android:name=".security.authentication.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".security.authentication.register.RegisterActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".chat.ChatActivity"
