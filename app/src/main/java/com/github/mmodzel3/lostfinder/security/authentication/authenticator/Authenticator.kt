@@ -21,7 +21,6 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
         const val INVALID_CREDENTIALS = "Invalid credentials"
         const val ACCOUNT_BLOCKED = "Account blocked"
         const val LOGIN_ENDPOINT_ACCESS_ERROR = "Login endpoint access error"
-        const val USER_DATA_SAVE_PASSWORD = "SAVE_PASSWORD"
         const val USER_DATA_USERNAME = "USER_NAME"
         const val USER_DATA_ROLE = "USER_ROLE"
     }
@@ -98,7 +97,6 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
                                                   authTokenType: String) : Bundle {
         return try {
             val token: String = retrieveAccountAuthToken(account, authTokenType)
-            removeUserPasswordIfNeeded(account)
             accountManager.setAuthToken(account, authTokenType, token)
             createTokenBundle(account, token)
         } catch (e: LoginInvalidCredentialsException) {
@@ -158,13 +156,5 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
 
     private fun createAuthErrorBundle(response: AccountAuthenticatorResponse, error: String) : Bundle {
         return createLoginActivityIntentBundle(response, error)
-    }
-
-    private fun removeUserPasswordIfNeeded(account: Account) {
-        val savePassword: Boolean? = accountManager.getUserData(account, USER_DATA_SAVE_PASSWORD)?.toBoolean()
-
-        if (savePassword == null || !savePassword) {
-            accountManager.clearPassword(account)
-        }
     }
 }
