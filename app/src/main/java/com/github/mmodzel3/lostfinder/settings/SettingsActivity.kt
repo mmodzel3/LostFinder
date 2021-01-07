@@ -1,12 +1,13 @@
 package com.github.mmodzel3.lostfinder.settings
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.R
@@ -18,8 +19,15 @@ import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import kotlinx.coroutines.launch
 
+
 class SettingsActivity : LoggedUserActivityAbstract() {
+    companion object {
+        const val SETTINGS = "Settings"
+        const val SHARE_LOCATION = "SHARE_LOCATION"
+    }
+
     private lateinit var tokenManager: TokenManager
+    private lateinit var settingsSharedPreferences: SharedPreferences
 
     private val userEndpoint: UserEndpoint by lazy {
         UserEndpointFactory.createUserEndpoint(tokenManager)
@@ -31,8 +39,10 @@ class SettingsActivity : LoggedUserActivityAbstract() {
         setContentView(R.layout.activity_settings)
 
         tokenManager = TokenManager.getInstance(applicationContext)
+        settingsSharedPreferences = getSharedPreferences(SETTINGS, Context.MODE_PRIVATE)
 
         setUserInfo()
+        initShareLocationSwitch()
         initChangePasswordButton()
         initDeleteAccountButton()
     }
@@ -43,6 +53,53 @@ class SettingsActivity : LoggedUserActivityAbstract() {
 
         usernameTextView.text = tokenManager.getTokenUsername()
         emailTextView.text = tokenManager.getTokenEmailAddress()
+    }
+
+    private fun initShareLocationSwitch() {
+        val sharingLocationSwitch: SwitchCompat = findViewById(R.id.activity_settings_sw_sharing_location)
+
+        sharingLocationSwitch.isChecked = settingsSharedPreferences.getBoolean(SHARE_LOCATION, true)
+
+        sharingLocationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                onShareLocationTurnOn()
+            } else {
+                onShareLocationTurnOff(sharingLocationSwitch)
+            }
+        }
+    }
+
+    private fun onShareLocationTurnOn() {
+        with (settingsSharedPreferences.edit()) {
+            putBoolean(SHARE_LOCATION, true)
+            apply()
+        }
+    }
+
+    private fun onShareLocationTurnOff(sharingLocationSwitch: SwitchCompat) {
+        lifecycleScope.launch {
+            try {
+                userEndpoint.clearUserLocation()
+
+                with (settingsSharedPreferences.edit()) {
+                    putBoolean(SHARE_LOCATION, false)
+                    apply()
+                }
+            } catch (e: UserEndpointAccessErrorException) {
+                sharingLocationSwitch.isChecked = true
+
+                Toast.makeText(this@SettingsActivity,
+                    R.string.activity_settings_err_stop_sharing_location_api_access_problem,
+                    Toast.LENGTH_LONG).show()
+            } catch (e: InvalidTokenException) {
+                sharingLocationSwitch.isChecked = true
+
+                Toast.makeText(this@SettingsActivity,
+                    R.string.activity_settings_err_stop_sharing_location_invalid_token,
+                    Toast.LENGTH_LONG).show()
+                goToLoginActivity()
+            }
+        }
     }
 
     private fun initChangePasswordButton() {
@@ -96,10 +153,12 @@ class SettingsActivity : LoggedUserActivityAbstract() {
 
                 goToLoginActivity()
             } catch (e: UserEndpointAccessErrorException) {
-                Toast.makeText(this@SettingsActivity, R.string.activity_settings_err_delete_account_api_access_problem,
+                Toast.makeText(this@SettingsActivity,
+                    R.string.activity_settings_err_delete_account_api_access_problem,
                     Toast.LENGTH_LONG).show()
             } catch (e: InvalidTokenException) {
-                Toast.makeText(this@SettingsActivity, R.string.activity_settings_err_delete_account_invalid_token,
+                Toast.makeText(this@SettingsActivity,
+                    R.string.activity_settings_err_delete_account_invalid_token,
                     Toast.LENGTH_LONG).show()
                 goToLoginActivity()
             }

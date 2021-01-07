@@ -4,10 +4,13 @@ import android.Manifest
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
+import android.location.LocationManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
@@ -19,28 +22,32 @@ import com.github.mmodzel3.lostfinder.MainActivity
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.settings.SettingsActivity
 import com.github.mmodzel3.lostfinder.user.UserEndpoint
 import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.android.gms.location.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.lang.Runnable
+
 
 class CurrentLocationService : Service() {
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "Localisation"
-        private const val NOTIFICATION_ID = 1;
+        private const val NOTIFICATION_ID = 1
 
-        private const val LOCATION_ASK_INTERVAL = 10000
-        private const val LOCATION_ASK_FASTEST_INTERVAL = 5000
+        private const val LOCATION_ASK_INTERVAL = 30000L
+        private const val LOCATION_ASK_FASTEST_INTERVAL = 15000L
         private const val LOCATION_ASK_PRIORITY = LocationRequest.PRIORITY_HIGH_ACCURACY
 
         private const val NOTIFICATION_ENDPOINT_ACCESS_ERROR_ID = 2002
+        private const val NOTIFICATION_SHARING_LOCATION_UNAVAILABLE_ID = 2003
+
+        private const val CHECK_LOCATION_SHARING_AVAILABILITY_INTERVAL = 5000L
     }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var settingsSharedPreferences: SharedPreferences
 
     private val binder = CurrentLocationBinder(this)
     private val listeners = ArrayList<CurrentLocationListener>()
@@ -51,8 +58,18 @@ class CurrentLocationService : Service() {
     private var lastLocation : Location? = null
 
     private lateinit var userEndpoint: UserEndpoint
+
     private lateinit var endpointAccessErrorNotification: Notification
+    private lateinit var sharingLocationUnavailableNotification: Notification
     private var endpointAccessErrorNotificationVisible = false
+    private var sharingLocationUnavailableNotificationVisible = false
+
+    private var endpointAccessError = false
+
+    private lateinit var handler: Handler
+    private lateinit var sharingLocationRunnable: Runnable
+
+    private val lock: Any = Any()
     private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
     override fun onCreate() {
@@ -68,19 +85,29 @@ class CurrentLocationService : Service() {
         userEndpoint =
                 UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
         endpointAccessErrorNotification = createEndpointAccessErrorNotification()
+        sharingLocationUnavailableNotification = createLocationSharingUnavailableNotification()
 
+        settingsSharedPreferences = getSharedPreferences(
+            SettingsActivity.SETTINGS,
+            Context.MODE_PRIVATE
+        )
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        startPeriodicallyCheckingSharingLocationAvailability()
         startLocationListeningIfPossible()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        locationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
+        stopLocationListening()
+        stopPeriodicallyCheckingSharingLocationAvailability()
+
         hideEndpointAccessErrorNotificationIfVisible()
+        hideSharingLocationUnavailableNotificationIfVisible()
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
+    override fun onBind(intent: Intent?): IBinder {
         return binder
     }
 
@@ -125,6 +152,29 @@ class CurrentLocationService : Service() {
                 .build()
     }
 
+    private fun createLocationSharingUnavailableNotification() : Notification {
+        val title: CharSequence = getText(R.string.location_notification_title)
+        val text: CharSequence = getText(R.string.location_err_location_sharing_unavailable)
+
+        val intent = Intent(this, SettingsActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentIntent(pendingIntent)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setSmallIcon(R.drawable.ic_person_search)
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setColor(Color.RED)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text).setBigContentTitle(title))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
         val name = getString(R.string.location_notification_channel_name)
@@ -159,6 +209,26 @@ class CurrentLocationService : Service() {
         }
     }
 
+    private fun showSharingLocationUnavailableNotificationIfNotVisible() {
+        if (!sharingLocationUnavailableNotificationVisible) {
+            with(NotificationManagerCompat.from(this)) {
+                notify(NOTIFICATION_SHARING_LOCATION_UNAVAILABLE_ID, sharingLocationUnavailableNotification)
+            }
+
+            sharingLocationUnavailableNotificationVisible = true
+        }
+    }
+
+    private fun hideSharingLocationUnavailableNotificationIfVisible() {
+        if (sharingLocationUnavailableNotificationVisible) {
+            with(NotificationManagerCompat.from(this)) {
+                cancel(NOTIFICATION_SHARING_LOCATION_UNAVAILABLE_ID)
+            }
+
+            sharingLocationUnavailableNotificationVisible = false
+        }
+    }
+
     private fun startLocationListeningIfPossible() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
@@ -166,9 +236,11 @@ class CurrentLocationService : Service() {
             locationRequest = createLocationRequest()
             locationCallback = createLocationCallback()
 
-            fusedLocationClient.requestLocationUpdates(locationRequest,
-                    locationCallback,
-                    Looper.getMainLooper())
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
 
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
@@ -178,29 +250,106 @@ class CurrentLocationService : Service() {
         }
     }
 
+    private fun stopLocationListening() {
+        locationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }
+    }
+
     private fun onLocationChange(location: Location) {
         lastLocation = location
         sendLocationChangeToAll(location)
-        sendLocationChangeToServer(location)
+
+        if (isLocationSharingEnabled()) {
+            sendLocationChangeToServer(location)
+            onLocationSharingAvailable()
+        } else {
+            sendLocationChangeToServer(null)
+            onLocationSharingUnavailable()
+        }
     }
 
-    private fun sendLocationChangeToServer(location: Location) {
-        ioScope.launch {
-            try {
-                userEndpoint.updateUserLocation(Location(location.latitude, location.longitude))
-                hideEndpointAccessErrorNotificationIfVisible()
-            } catch (e: UserEndpointAccessErrorException) {
-                showEndpointAccessErrorNotificationIfNotVisible()
-            } catch (e: InvalidTokenException) {
-                showEndpointAccessErrorNotificationIfNotVisible()
-            }
+    private fun isLocationSharingEnabled(): Boolean {
+        return settingsSharedPreferences.getBoolean(SettingsActivity.SHARE_LOCATION, true)
+    }
+
+    private fun startPeriodicallyCheckingSharingLocationAvailability() {
+        handler = Handler(Looper.getMainLooper())
+        sharingLocationRunnable = Runnable {
+            checkSharingLocationAvailability()
+            handler.postDelayed(sharingLocationRunnable, CHECK_LOCATION_SHARING_AVAILABILITY_INTERVAL)
         }
+
+        handler.post(sharingLocationRunnable)
+    }
+
+    private fun checkSharingLocationAvailability() {
+        val service = getSystemService(LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+        if (isGpsEnabled && isLocationSharingEnabled()) {
+            onLocationSharingAvailable()
+        } else {
+            onLocationSharingUnavailable()
+        }
+    }
+
+    private fun stopPeriodicallyCheckingSharingLocationAvailability() {
+        handler.removeCallbacks(sharingLocationRunnable)
+    }
+
+    private fun onLocationSharingAvailable() = synchronized(lock) {
+        hideSharingLocationUnavailableNotificationIfVisible()
+
+        if (endpointAccessError) {
+            showEndpointAccessErrorNotificationIfNotVisible()
+        }
+    }
+
+    private fun onLocationSharingUnavailable() = synchronized(lock) {
+        hideEndpointAccessErrorNotificationIfVisible()
+        showSharingLocationUnavailableNotificationIfNotVisible()
+    }
+
+    private fun sendLocationChangeToServer(location: Location?) {
+        ioScope.launch {
+            blockingSendLocationToServer(location)
+        }
+    }
+
+    private suspend fun blockingSendLocationToServer(location: Location?) {
+        try {
+            if (location != null) {
+                userEndpoint.updateUserLocation(Location(location.latitude, location.longitude))
+            } else {
+                userEndpoint.clearUserLocation()
+            }
+
+            onEndpointAccessSuccess()
+        } catch (e: UserEndpointAccessErrorException) {
+            onEndpointAccessError()
+        } catch (e: InvalidTokenException) {
+            onEndpointAccessError()
+        }
+    }
+
+    private fun onEndpointAccessSuccess() = synchronized(lock) {
+        hideEndpointAccessErrorNotificationIfVisible()
+        endpointAccessError = false
+    }
+
+    private fun onEndpointAccessError() = synchronized(lock) {
+        if (isLocationSharingEnabled()) {
+            showEndpointAccessErrorNotificationIfNotVisible()
+        } else {
+            showSharingLocationUnavailableNotificationIfNotVisible()
+        }
+
+        endpointAccessError = true
     }
 
     private fun createLocationRequest() : LocationRequest? {
         return LocationRequest.create()?.apply {
-            interval = LOCATION_ASK_INTERVAL.toLong()
-            fastestInterval = LOCATION_ASK_FASTEST_INTERVAL.toLong()
+            interval = LOCATION_ASK_INTERVAL
+            fastestInterval = LOCATION_ASK_FASTEST_INTERVAL
             priority = LOCATION_ASK_PRIORITY
         }
     }

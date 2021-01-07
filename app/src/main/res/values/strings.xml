@@ -72,6 +72,11 @@
         Problem with sending location to server. Check your internet connection.
     </string>
 
+    <string name="location_err_location_sharing_unavailable">
+        Sharing current location is unavailable.
+        Turn on localization with GPS in your mobile phone and enable sharing location in application\'s settings.
+    </string>
+
     <string name="activity_chat_enter_message">
         Enter message
     </string>
@@ -444,9 +449,27 @@
     <string name="fragment_weather_overcast_clouds">Overcast clouds</string>
     <string name="fragment_weather_unknown">Unknown</string>
     <string name="activity_toolbar_logout">Logout</string>
-    <string name="activity_toolbar_logout_msg_success">Logout completed</string>
-    <string name="activity_toolbar_logout_err_api_access_error">
+    <string name="activity_toolbar_close">Close</string>
+    <string name="activity_logout_msg_success">Logout completed.</string>
+    <string name="activity_logout_msg_partial_success">
+        You have been logged out.
+        Your session is expired.
+        Your current location may still be kept on the server.
+        If you want to clear it. Log in and log out once again.
+    </string>
+    <string name="activity_logout_err_api_access_error">
         Problem with sending logout request to server. Check your connection.
+    </string>
+    <string name="activity_close_msg_success">Application has closed successfully</string>
+    <string name="activity_close_err_api_access_error">
+        Problem with correct close of application.
+        Problem with sending location clear request to server.
+        Check your connection.
+    </string>
+    <string name="activity_close_err_invalid_token">
+        Problem with correct close of application.
+        Problem with sending location clear request to server.
+        Your session is expired. Log in once again to clear your current location on server.
     </string>
     <string name="activity_user_change_password_old_password">Old password</string>
     <string name="activity_user_change_password_new_password">New password</string>
@@ -556,6 +579,9 @@
     <string name="activity_settings_email_example">
         example@example.com
     </string>
+    <string name="activity_settings_sharing_location">
+        Sharing location
+    </string>
     <string name="activity_settings_change_password">
         Change password
     </string>
@@ -573,6 +599,12 @@
     </string>
     <string name="activity_settings_err_delete_account_invalid_token">
         Problem with deleting account. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_api_access_problem">
+        Problem with your location on server. Check your connection.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_invalid_token">
+        Problem with removing your location on server. Your session is expired. Log in once again.
     </string>
     <string name="activity_splash_screen_logo_desc">
         Lost finder logo

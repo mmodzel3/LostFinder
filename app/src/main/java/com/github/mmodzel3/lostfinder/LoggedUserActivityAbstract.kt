@@ -22,6 +22,10 @@ import kotlinx.coroutines.launch
 
 abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
+    private val userEndpoint: UserEndpoint by lazy {
+        UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,6 +61,9 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
             true
         } else if (id == R.id.activity_toolbar_it_logout) {
             logout()
+            true
+        } else if (id == R.id.activity_toolbar_it_close) {
+            closeApplication()
             true
         } else if (id == android.R.id.home) {
             onBackPressed()
@@ -125,18 +132,46 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                tokenManager.logout()
-                goToLoginActivity()
+                val fullLogout: Boolean = tokenManager.logout()
 
-                Toast.makeText(
-                    this@LoggedUserActivityAbstract,
-                    R.string.activity_toolbar_logout_msg_success, Toast.LENGTH_LONG
-                ).show()
+                if (fullLogout) {
+                    Toast.makeText(this@LoggedUserActivityAbstract,
+                        R.string.activity_logout_msg_success, Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this@LoggedUserActivityAbstract,
+                        R.string.activity_logout_msg_partial_success, Toast.LENGTH_LONG).show()
+                }
+
+                goToLoginActivity()
             } catch (e: LogoutEndpointAccessErrorException) {
-                Toast.makeText(
-                    this@LoggedUserActivityAbstract,
-                    R.string.activity_toolbar_logout_err_api_access_error, Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this@LoggedUserActivityAbstract,
+                    R.string.activity_logout_err_api_access_error, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun closeApplication() {
+        lifecycleScope.launch {
+            try {
+                userEndpoint.clearUserLocation()
+
+                Toast.makeText(this@LoggedUserActivityAbstract,
+                    R.string.activity_close_msg_success, Toast.LENGTH_LONG).show()
+
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.addCategory(Intent.CATEGORY_HOME)
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+
+                finish()
+            } catch (e: UserEndpointAccessErrorException) {
+                Toast.makeText(this@LoggedUserActivityAbstract,
+                    R.string.activity_close_err_api_access_error, Toast.LENGTH_LONG).show()
+            } catch (e: InvalidTokenException) {
+                Toast.makeText(this@LoggedUserActivityAbstract,
+                    R.string.activity_close_err_invalid_token, Toast.LENGTH_LONG).show()
+
+                goToLoginActivity()
             }
         }
     }
