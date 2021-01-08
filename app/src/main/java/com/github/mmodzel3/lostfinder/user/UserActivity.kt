@@ -16,24 +16,21 @@ import com.github.mmodzel3.lostfinder.server.ServerResponse
 import kotlinx.coroutines.launch
 
 class UserActivity : LoggedUserActivityAbstract() {
-    private lateinit var tokenManager: TokenManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var userAdapter: UserAdapter
 
-    private val userEndpoint: UserEndpoint by lazy {
-        UserEndpointFactory.createUserEndpoint(tokenManager)
+    private val tokenManager: TokenManager by lazy {
+        TokenManager.getInstance(applicationContext)
     }
 
-    private val userEndpointViewModel: UserEndpointViewModel by viewModels {
-        UserEndpointViewModelFactory(userEndpoint)
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(tokenManager)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_user)
-
-        tokenManager = TokenManager.getInstance(applicationContext)
 
         recyclerView = findViewById(R.id.activity_user_rv_user_list)
         userAdapter = UserAdapter(tokenManager)
@@ -46,13 +43,13 @@ class UserActivity : LoggedUserActivityAbstract() {
     override fun onResume() {
         super.onResume()
 
-        userEndpointViewModel.observeUpdates()
+        userViewModel.runUpdates()
     }
 
     override fun onPause() {
         super.onPause()
 
-        userEndpointViewModel.unObserveUpdates()
+        userViewModel.stopUpdates()
     }
 
     private fun initRecyclerView() {
@@ -102,7 +99,7 @@ class UserActivity : LoggedUserActivityAbstract() {
                 }
             }
 
-            userEndpointViewModel.forceUpdate()
+            userViewModel.forceUpdate()
         } catch (e : UserEndpointAccessErrorException) {
             Toast.makeText(this, R.string.activity_user_err_api_access_problem, Toast.LENGTH_LONG)
                 .show()
@@ -120,7 +117,7 @@ class UserActivity : LoggedUserActivityAbstract() {
     }
 
     private suspend fun sendUpdateUserRole(user: User, role: UserRole) {
-        sendUpdateUserAccount { userEndpoint.updateUserRole(user.email, role) }
+        sendUpdateUserAccount { userViewModel.updateUserRole(user.email, role) }
     }
 
     private fun onDecreaseRole(user: User) {
@@ -136,7 +133,7 @@ class UserActivity : LoggedUserActivityAbstract() {
     }
 
     private suspend fun sendUpdateBlock(user: User, isBlocked: Boolean) {
-        sendUpdateUserAccount { userEndpoint.updateUserBlock(user.email, isBlocked) }
+        sendUpdateUserAccount { userViewModel.updateUserBlock(user.email, isBlocked) }
     }
 
     private fun onUnblockAccount(user: User) {
@@ -152,16 +149,16 @@ class UserActivity : LoggedUserActivityAbstract() {
     }
 
     private suspend fun deleteUser(user: User) {
-        sendUpdateUserAccount { userEndpoint.deleteUser(user.email) }
+        sendUpdateUserAccount { userViewModel.deleteUser(user.email) }
     }
 
     private fun observeUserUpdates() {
-        userEndpointViewModel.allUsers.observe(this, Observer {
+        userViewModel.allUsers.observe(this, Observer {
             userAdapter.users = it.values.toMutableList()
             userAdapter.notifyDataSetChanged()
         })
 
-        userEndpointViewModel.status.observe(this, Observer {
+        userViewModel.status.observe(this, Observer {
             when(it) {
                 ServerEndpointStatus.ERROR -> Toast.makeText(this, R.string.activity_user_err_fetching_api_access_error,
                     Toast.LENGTH_LONG).show()

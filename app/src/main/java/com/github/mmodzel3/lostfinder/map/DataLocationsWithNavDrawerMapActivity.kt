@@ -64,13 +64,13 @@ open class DataLocationsWithNavDrawerMapActivity : DataLocationsMapActivity() {
     }
 
     private fun observeAlertsUpdates() {
-        alertEndpointViewModel.alerts.observe(this, Observer {
+        alertViewModel.alerts.observe(this, Observer {
             updateAlertsNavigationMenuItems(it)
         })
     }
 
     private fun observeUsersUpdates() {
-        userEndpointViewModel.users.observe(this, Observer {
+        userViewModel.users.observe(this, Observer {
             updateUsersNavigationMenuItems(it)
         })
     }

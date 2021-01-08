@@ -3,6 +3,7 @@ package com.github.mmodzel3.lostfinder.map.overlays
 import android.content.Context
 import com.github.mmodzel3.lostfinder.user.User
 import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.user.UserRepositoryTestAbstract
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -11,7 +12,7 @@ import org.mockito.Mockito.mock
 import org.osmdroid.views.MapView
 import org.osmdroid.views.MapViewRepository
 
-class UsersLocationsOverlayTest : UserEndpointTestAbstract() {
+class UsersLocationsOverlayTest : UserRepositoryTestAbstract() {
     companion object {
         const val USER_EMAIL = "example@example.com"
         const val USER_NAME = "example"

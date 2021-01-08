@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.mmodzel3.lostfinder.location.Location
-import com.github.mmodzel3.lostfinder.server.ServerEndpointViewModelAbstract
 import kotlinx.coroutines.launch
 
 class WeatherEndpointViewModel(private val weatherEndpoint: WeatherEndpoint,

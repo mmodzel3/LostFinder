@@ -18,22 +18,20 @@ import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import kotlinx.coroutines.launch
 
-
 open class AlertActivity : LoggedUserActivityAbstract() {
-    private val alertEndpoint: AlertEndpoint by lazy {
-        AlertEndpointFactory.createAlertEndpoint(TokenManager.getInstance(applicationContext))
+    private val tokenManager: TokenManager by lazy {
+        TokenManager.getInstance(applicationContext)
     }
 
-    private val alertEndpointViewModel: AlertEndpointViewModel by viewModels {
-        AlertEndpointViewModelFactory(alertEndpoint)
+    private val alertViewModel: AlertViewModel by viewModels {
+        AlertViewModelFactory(tokenManager)
     }
 
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var alertAdapter: AlertAdapter
-    private lateinit var tokenManager: TokenManager
-    private lateinit var alertEndpointViewModelDataObserver: Observer<in MutableMap<String, Alert>>
-    private lateinit var alertEndpointViewModelStatusObserver: Observer<ServerEndpointStatus>
+    private lateinit var alertViewModelDataObserver: Observer<in MutableMap<String, Alert>>
+    private lateinit var alertViewModelStatusObserver: Observer<ServerEndpointStatus>
 
     private var firstFetchAlerts = true
 
@@ -42,35 +40,33 @@ open class AlertActivity : LoggedUserActivityAbstract() {
 
         setContentView(R.layout.activity_alert)
 
-        tokenManager = TokenManager.getInstance(applicationContext)
-
         recyclerView = findViewById(R.id.activity_alert_rv_alert_list)
 
         alertAdapter = AlertAdapter(tokenManager)
 
         initRecyclerView()
         initAddButton()
-        observeAlertEndpointViewModel()
+        observealertViewModel()
         observeEndAlert()
     }
 
     override fun onResume() {
         super.onResume()
 
-        alertEndpointViewModel.observeUpdates()
+        alertViewModel.runUpdates()
     }
 
     override fun onPause() {
         super.onPause()
 
-        alertEndpointViewModel.unObserveUpdates()
+        alertViewModel.stopUpdates()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        alertEndpointViewModel.alerts.removeObserver(alertEndpointViewModelDataObserver)
-        alertEndpointViewModel.status.removeObserver(alertEndpointViewModelStatusObserver)
+        alertViewModel.alerts.removeObserver(alertViewModelDataObserver)
+        alertViewModel.status.removeObserver(alertViewModelStatusObserver)
     }
 
     private fun initRecyclerView() {
@@ -78,13 +74,13 @@ open class AlertActivity : LoggedUserActivityAbstract() {
         recyclerView.adapter = alertAdapter
     }
 
-    private fun observeAlertEndpointViewModel() {
-        observeAlertEndpointViewModelData()
-        observeAlertEndpointViewModelStatus()
+    private fun observealertViewModel() {
+        observealertViewModelData()
+        observealertViewModelStatus()
     }
 
-    private fun observeAlertEndpointViewModelData() {
-        alertEndpointViewModelDataObserver = Observer {
+    private fun observealertViewModelData() {
+        alertViewModelDataObserver = Observer {
             alertAdapter.alerts = it.values.toMutableList()
             alertAdapter.notifyDataSetChanged()
 
@@ -94,13 +90,13 @@ open class AlertActivity : LoggedUserActivityAbstract() {
             }
         }
 
-        alertEndpointViewModel.alerts.observe(this, alertEndpointViewModelDataObserver)
+        alertViewModel.alerts.observe(this, alertViewModelDataObserver)
     }
 
-    private fun observeAlertEndpointViewModelStatus() {
+    private fun observealertViewModelStatus() {
         val activity: Activity = this
 
-        alertEndpointViewModelStatusObserver = Observer {
+        alertViewModelStatusObserver = Observer {
             if (it == ServerEndpointStatus.ERROR) {
                 Toast.makeText(activity, R.string.activity_alert_err_fetching_alerts_api_access_problem,
                         Toast.LENGTH_LONG).show()
@@ -111,7 +107,7 @@ open class AlertActivity : LoggedUserActivityAbstract() {
             }
         }
 
-        alertEndpointViewModel.status.observe(this, alertEndpointViewModelStatusObserver)
+        alertViewModel.status.observe(this, alertViewModelStatusObserver)
     }
 
     private fun observeEndAlert() {
@@ -126,7 +122,7 @@ open class AlertActivity : LoggedUserActivityAbstract() {
         val activity: Activity = this
         lifecycleScope.launch {
             try {
-                val response: ServerResponse = alertEndpoint.endAlert(alertId)
+                val response: ServerResponse = alertViewModel.endAlert(alertId)
 
                 if (response == ServerResponse.INVALID_PERMISSION) {
                     Toast.makeText(activity, R.string.activity_alert_err_end_alert_invalid_permission,

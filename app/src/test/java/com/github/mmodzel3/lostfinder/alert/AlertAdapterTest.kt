@@ -14,7 +14,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import java.util.*
 
-class AlertAdapterTest : AlertEndpointTestAbstract() {
+class AlertAdapterTest : AlertRepositoryTestAbstract() {
     companion object {
         const val DAY_BEFORE_IN_MILLISECONDS = 24 * 60 * 60 * 1000
         const val MINUTE_IN_MILLISECONDS = 60 * 1000

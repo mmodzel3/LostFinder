@@ -10,7 +10,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.alert.AlertActivity
+import com.github.mmodzel3.lostfinder.alert.AlertRepository
 import com.github.mmodzel3.lostfinder.chat.ChatActivity
+import com.github.mmodzel3.lostfinder.chat.ChatRepository
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
@@ -122,6 +124,10 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
     protected fun goToLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+        AlertRepository.clear()
+        ChatRepository.clear()
+        UserRepository.clear()
 
         startActivity(intent)
         finish()
