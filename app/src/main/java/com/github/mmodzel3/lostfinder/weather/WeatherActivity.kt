@@ -33,7 +33,7 @@ class WeatherActivity: LoggedUserActivityAbstract() {
     private var currentLocationListener: CurrentLocationListener? = null
     private var lastLocation: Location? = null
 
-    private var fetchedWeatherData: Boolean = false
+    private var fetchedFirstWeatherData: Boolean = false
 
     private lateinit var handler: Handler
     private var checkLocationPresenceRunnable: Runnable? = null
@@ -63,7 +63,8 @@ class WeatherActivity: LoggedUserActivityAbstract() {
         super.onResume()
 
         if (lastLocation != null) {
-            weatherEndpointViewModel.forceFetchData(lastLocation!!.latitude, lastLocation!!.longitude)
+            weatherEndpointViewModel.updateWeatherLocation(lastLocation!!.latitude, lastLocation!!.longitude)
+            weatherEndpointViewModel.runPeriodicFetchData()
         } else {
             runDelayedLocationPresenceCheck()
         }
@@ -73,12 +74,15 @@ class WeatherActivity: LoggedUserActivityAbstract() {
         super.onDestroy()
         unbindFromCurrentLocationService()
         stopDelayedLocationPresenceCheck()
+        weatherEndpointViewModel.stopPeriodicFetchData()
     }
 
     internal fun onLocationChange(latitude: Double, longitude: Double) {
-        if (!fetchedWeatherData) {
-            fetchedWeatherData = true
-            weatherEndpointViewModel.forceFetchData(latitude, longitude)
+        weatherEndpointViewModel.updateWeatherLocation(latitude, longitude)
+
+        if (!fetchedFirstWeatherData) {
+            weatherEndpointViewModel.runPeriodicFetchData()
+            fetchedFirstWeatherData = true
         }
     }
 
@@ -154,7 +158,6 @@ class WeatherActivity: LoggedUserActivityAbstract() {
                 WeatherEndpointStatus.FETCHING -> Toast.makeText(activity, R.string.activity_weather_msg_fetching,
                         Toast.LENGTH_SHORT).show()
                 WeatherEndpointStatus.ERROR -> {
-                    fetchedWeatherData = false
                     Toast.makeText(activity, R.string.activity_weather_err_api_access_error,
                             Toast.LENGTH_LONG).show()
                 }

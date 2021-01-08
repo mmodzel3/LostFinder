@@ -1,8 +1,12 @@
 package com.github.mmodzel3.lostfinder.weather
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.mmodzel3.lostfinder.location.Location
+import com.github.mmodzel3.lostfinder.server.ServerEndpointViewModelAbstract
 import kotlinx.coroutines.launch
 
 class WeatherEndpointViewModel(private val weatherEndpoint: WeatherEndpoint,
@@ -11,6 +15,7 @@ class WeatherEndpointViewModel(private val weatherEndpoint: WeatherEndpoint,
     companion object {
         private const val SECONDS_IN_HOUR = 60 * 60
         private const val SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR
+        private const val WEATHER_UPDATE_INTERVAL = 10 * 60 * 1000L
     }
 
     val now: MutableLiveData<Weather> = MutableLiveData()
@@ -19,13 +24,52 @@ class WeatherEndpointViewModel(private val weatherEndpoint: WeatherEndpoint,
     val tomorrow: MutableLiveData<Weather> = MutableLiveData()
     val weatherStatus: MutableLiveData<WeatherEndpointStatus> = MutableLiveData()
 
-    fun forceFetchData(latitude: Double, longitude: Double) {
+    private val handler: Handler = Handler(Looper.getMainLooper())
+    private var updateRunnable: Runnable? = null
+    private var lastLocation: Location? = null
+
+    fun updateWeatherLocation(location: Location) {
+        lastLocation = location
+    }
+
+    fun updateWeatherLocation(latitude: Double, longitude: Double) {
+        lastLocation = Location(latitude, longitude)
+    }
+
+    fun runPeriodicFetchData() {
+        stopPeriodicFetchData()
+        initPeriodicFetchDataTask()
+        handler.post(updateRunnable!!)
+    }
+
+    fun stopPeriodicFetchData() {
+        if (updateRunnable != null) {
+            handler.removeCallbacks(updateRunnable!!)
+        }
+    }
+
+    protected fun initPeriodicFetchDataTask() {
+        updateRunnable = Runnable {
+            viewModelScope.launch {
+                if (lastLocation != null) {
+                    forceFetchData()
+                }
+                handler.postDelayed(updateRunnable!!, WEATHER_UPDATE_INTERVAL)
+            }
+        }
+    }
+
+    fun forceFetchData() {
         weatherStatus.postValue(WeatherEndpointStatus.FETCHING)
 
         viewModelScope.launch {
             try {
-                fetchData(latitude, longitude)
-                weatherStatus.postValue(WeatherEndpointStatus.OK)
+                if (lastLocation != null) {
+                    fetchData(lastLocation!!.latitude, lastLocation!!.longitude)
+                    weatherStatus.postValue(WeatherEndpointStatus.OK)
+                } else {
+                    weatherStatus.postValue(WeatherEndpointStatus.ERROR)
+                }
             } catch (e: WeatherEndpointAccessErrorException) {
                 weatherStatus.postValue(WeatherEndpointStatus.ERROR)
             }
