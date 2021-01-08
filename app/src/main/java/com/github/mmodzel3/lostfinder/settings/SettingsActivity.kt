@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
@@ -13,10 +14,7 @@ import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
-import com.github.mmodzel3.lostfinder.user.UserChangePasswordActivity
-import com.github.mmodzel3.lostfinder.user.UserEndpoint
-import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
-import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
+import com.github.mmodzel3.lostfinder.user.*
 import kotlinx.coroutines.launch
 
 
@@ -29,8 +27,8 @@ class SettingsActivity : LoggedUserActivityAbstract() {
     private lateinit var tokenManager: TokenManager
     private lateinit var settingsSharedPreferences: SharedPreferences
 
-    private val userEndpoint: UserEndpoint by lazy {
-        UserEndpointFactory.createUserEndpoint(tokenManager)
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(TokenManager.getInstance(applicationContext))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +77,7 @@ class SettingsActivity : LoggedUserActivityAbstract() {
     private fun onShareLocationTurnOff(sharingLocationSwitch: SwitchCompat) {
         lifecycleScope.launch {
             try {
-                userEndpoint.clearUserLocation()
+                userViewModel.clearUserLocation()
 
                 with (settingsSharedPreferences.edit()) {
                     putBoolean(SHARE_LOCATION, false)
@@ -146,7 +144,7 @@ class SettingsActivity : LoggedUserActivityAbstract() {
     private fun sendDeleteRequest() {
         lifecycleScope.launch {
             try {
-                userEndpoint.deleteUser()
+                userViewModel.deleteUser()
 
                 Toast.makeText(this@SettingsActivity, R.string.activity_settings_msg_delete_account_success,
                     Toast.LENGTH_LONG).show()

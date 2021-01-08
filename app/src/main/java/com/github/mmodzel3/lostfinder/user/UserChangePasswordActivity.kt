@@ -5,25 +5,26 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.R
+import com.github.mmodzel3.lostfinder.alert.AlertViewModel
+import com.github.mmodzel3.lostfinder.alert.AlertViewModelFactory
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import kotlinx.coroutines.launch
 
 class UserChangePasswordActivity : LoggedUserActivityAbstract() {
-    private lateinit var tokenManager: TokenManager
-    private lateinit var userEndpoint: UserEndpoint
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(TokenManager.getInstance(applicationContext))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_user_change_password)
-
-        tokenManager = TokenManager.getInstance(applicationContext)
-        userEndpoint = UserEndpointFactory.createUserEndpoint(tokenManager)
 
         initChangePasswordButton()
     }
@@ -65,7 +66,7 @@ class UserChangePasswordActivity : LoggedUserActivityAbstract() {
         disableChangePasswordButton()
         lifecycleScope.launch {
             try {
-                val serverResponse: ServerResponse = userEndpoint.updateUserPassword(oldPassword, newPassword)
+                val serverResponse: ServerResponse = userViewModel.updateUserPassword(oldPassword, newPassword)
 
                 if (serverResponse == ServerResponse.OK) {
                     Toast.makeText(activity, R.string.activity_user_change_password_msg_success,

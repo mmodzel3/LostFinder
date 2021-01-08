@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.R
@@ -46,8 +47,8 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         }
     }
 
-    private val alertEndpoint: AlertEndpoint by lazy {
-        AlertEndpointFactory.createAlertEndpoint(TokenManager.getInstance(applicationContext))
+    private val alertViewModel: AlertViewModel by viewModels {
+        AlertViewModelFactory(TokenManager.getInstance(applicationContext))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -162,7 +163,7 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
 
     private suspend fun addUserAlert(userAlert: UserAlert) {
         try {
-            val response: ServerResponse = alertEndpoint.addAlert(userAlert)
+            val response: ServerResponse = alertViewModel.addAlert(userAlert)
 
             if (response == ServerResponse.OK) {
                 Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,

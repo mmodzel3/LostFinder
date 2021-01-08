@@ -1,6 +1,5 @@
 package com.github.mmodzel3.lostfinder.user
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.location.Location
 import com.github.mmodzel3.lostfinder.server.ServerResponse
