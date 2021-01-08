@@ -363,6 +363,11 @@
         Pobieranie danych pogodowych.
     </string>
 
+    <string name="activity_weather_msg_waiting">
+        Dane pogodowe zostaną pobrane, gdy bieżąca lokalizacja zostanie zaktualizowana.
+        Jeżeli lokalizacja GPS została wyłączona, uruchom ją w celu pobrania pogody na podstawie położenia.
+    </string>
+
     <string name="activity_weather_units">metric</string>
     <string name="fragment_weather_now">Teraz</string>
     <string name="fragment_weather_next_hour">1H</string>
