@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.user
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.location.Location
 import com.github.mmodzel3.lostfinder.server.ServerResponse
@@ -22,35 +23,35 @@ class UserViewModel(private val userRepository: UserRepository)
         runPeriodicUpdates { fetchAllData() }
     }
 
-    suspend fun updateUserLocation(location: Location): ServerResponse {
-        return userRepository.updateUserLocation(location)
+    fun updateUserLocation(location: Location): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { userRepository.updateUserLocation(location) }
     }
 
-    suspend fun clearUserLocation(): ServerResponse {
-        return userRepository.clearUserLocation()
+    fun clearUserLocation(): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { userRepository.clearUserLocation() }
     }
 
-    suspend fun updateUserNotificationDestToken(token: String): ServerResponse {
-        return userRepository.updateUserNotificationDestToken(token)
+    fun updateUserNotificationDestToken(token: String): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { userRepository.updateUserNotificationDestToken(token) }
     }
 
-    suspend fun updateUserPassword(oldPassword: String,
-                                   newPassword: String): ServerResponse {
-        return userRepository.updateUserPassword(oldPassword, newPassword)
+    fun updateUserPassword(oldPassword: String,
+                                   newPassword: String): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { userRepository.updateUserPassword(oldPassword, newPassword) }
     }
 
-    suspend fun updateUserRole(email: String,
-                               role: UserRole): ServerResponse {
-        return userRepository.updateUserRole(email, role)
+    fun updateUserRole(email: String,
+                               role: UserRole): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { userRepository.updateUserRole(email, role) }
     }
 
-    suspend fun updateUserBlock(email: String,
-                                isBlocked: Boolean): ServerResponse {
-        return userRepository.updateUserBlock(email, isBlocked)
+    fun updateUserBlock(email: String,
+                                isBlocked: Boolean): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { userRepository.updateUserBlock(email, isBlocked) }
     }
 
-    suspend fun deleteUser(email: String = ""): ServerResponse {
-        return userRepository.deleteUser(email)
+    fun deleteUser(email: String = ""): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { userRepository.deleteUser(email) }
     }
 
     internal suspend fun fetchAllData(): List<User> {

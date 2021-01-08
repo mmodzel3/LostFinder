@@ -23,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
-class UserActivityTest : UserEndpointTestAbstract() {
+class UserActivityTest : UserRepositoryTestAbstract() {
     private lateinit var userScenario: ActivityScenario<UserActivity>
     private lateinit var decorView: View
 

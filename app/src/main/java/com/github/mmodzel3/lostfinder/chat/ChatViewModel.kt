@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.chat
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.server.ServerViewModelAbstract
@@ -14,8 +15,8 @@ class ChatViewModel (private val chatRepository: ChatRepository)
         runSingleUpdate { chatRepository.fetchAllMessages() }
     }
 
-    suspend fun addMessage(chatUserMessage: ChatUserMessage): ServerResponse {
-        return chatRepository.addMessage(chatUserMessage)
+    fun addMessage(chatUserMessage: ChatUserMessage): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { chatRepository.addMessage(chatUserMessage) }
     }
 
     fun forceFetchAdditionalMessages() {

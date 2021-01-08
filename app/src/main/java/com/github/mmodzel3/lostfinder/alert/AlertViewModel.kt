@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.alert
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.server.ServerViewModelAbstract
@@ -13,12 +14,12 @@ class AlertViewModel (private val alertRepository: AlertRepository)
         runSingleUpdate { fetchAllData() }
     }
 
-    suspend fun addAlert(userAlert: UserAlert): ServerResponse {
-        return alertRepository.addAlert(userAlert)
+    fun addAlert(userAlert: UserAlert): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { alertRepository.addAlert(userAlert) }
     }
 
-    suspend fun endAlert(alertId: String): ServerResponse {
-        return alertRepository.endAlert(alertId)
+    fun endAlert(alertId: String): LiveData<ServerResponse> {
+        return convertServerRequestToLiveData { alertRepository.endAlert(alertId) }
     }
 
     internal suspend fun fetchAllData(): List<Alert> {

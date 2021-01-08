@@ -18,7 +18,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class UserChangePasswordActivityTest : UserEndpointTestAbstract() {
+class UserChangePasswordActivityTest : UserRepositoryTestAbstract() {
     companion object {
         const val TEST_NEW_PASSWORD = "new_password"
         const val TEST_OLD_PASSWORD = "old_password"
@@ -48,7 +48,7 @@ class UserChangePasswordActivityTest : UserEndpointTestAbstract() {
     }
 
     @Test
-    fun whenChangePasswordWithCorrectOldPasswordThenActivitIsFinished() {
+    fun whenChangePasswordWithCorrectOldPasswordThenActivityIsFinished() {
         mockSuccessChangePasswordResponse()
         fillFields(TEST_OLD_PASSWORD, TEST_NEW_PASSWORD, TEST_NEW_PASSWORD)
 

@@ -3,13 +3,13 @@ package com.github.mmodzel3.lostfinder.user
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.server.ServerResponse
@@ -81,9 +81,14 @@ class UserActivity : LoggedUserActivityAbstract() {
         })
     }
 
-    private suspend fun sendUpdateUserAccount(requestFunction: suspend () -> ServerResponse) {
-        try {
-            when (requestFunction()) {
+    private fun sendUpdateUserAccount(requestFunction: () -> LiveData<ServerResponse>) {
+        requestFunction().observe(this, {
+            when(it) {
+                ServerResponse.OK -> {
+                    userViewModel.forceUpdate()
+                    Toast.makeText(this, R.string.activity_user_msg_success, Toast.LENGTH_SHORT)
+                        .show()
+                }
                 ServerResponse.NOT_FOUND -> {
                     Toast.makeText(this, R.string.activity_user_err_not_found, Toast.LENGTH_LONG)
                         .show()
@@ -93,46 +98,37 @@ class UserActivity : LoggedUserActivityAbstract() {
                         .show()
                     goToLoginActivity()
                 }
-                else -> {
-                    Toast.makeText(this, R.string.activity_user_msg_success, Toast.LENGTH_SHORT)
+                ServerResponse.API_ERROR -> {
+                    Toast.makeText(this, R.string.activity_user_err_api_access_problem, Toast.LENGTH_LONG)
                         .show()
                 }
+                ServerResponse.INVALID_TOKEN -> {
+                    Toast.makeText(this, R.string.activity_user_err_invalid_token, Toast.LENGTH_SHORT)
+                        .show()
+                    goToLoginActivity()
+                }
+                else -> {}
             }
-
-            userViewModel.forceUpdate()
-        } catch (e : UserEndpointAccessErrorException) {
-            Toast.makeText(this, R.string.activity_user_err_api_access_problem, Toast.LENGTH_LONG)
-                .show()
-        } catch (e : InvalidTokenException) {
-            Toast.makeText(this, R.string.activity_user_err_invalid_token, Toast.LENGTH_SHORT)
-                .show()
-            goToLoginActivity()
-        }
+        })
     }
 
     private fun onIncreaseRole(user: User) {
-        lifecycleScope.launch {
-            sendUpdateUserRole(user, UserRole.MANAGER)
-        }
+        sendUpdateUserRole(user, UserRole.MANAGER)
     }
 
-    private suspend fun sendUpdateUserRole(user: User, role: UserRole) {
+    private fun sendUpdateUserRole(user: User, role: UserRole) {
         sendUpdateUserAccount { userViewModel.updateUserRole(user.email, role) }
     }
 
     private fun onDecreaseRole(user: User) {
-        lifecycleScope.launch {
-            sendUpdateUserRole(user, UserRole.USER)
-        }
+        sendUpdateUserRole(user, UserRole.USER)
     }
 
     private fun onBlockAccount(user: User) {
-        lifecycleScope.launch {
-            sendUpdateBlock(user, true)
-        }
+        sendUpdateBlock(user, true)
     }
 
-    private suspend fun sendUpdateBlock(user: User, isBlocked: Boolean) {
+    private fun sendUpdateBlock(user: User, isBlocked: Boolean) {
         sendUpdateUserAccount { userViewModel.updateUserBlock(user.email, isBlocked) }
     }
 
@@ -148,7 +144,7 @@ class UserActivity : LoggedUserActivityAbstract() {
         }
     }
 
-    private suspend fun deleteUser(user: User) {
+    private fun deleteUser(user: User) {
         sendUpdateUserAccount { userViewModel.deleteUser(user.email) }
     }
 

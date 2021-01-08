@@ -1,22 +1,18 @@
 package com.github.mmodzel3.lostfinder.alert
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
+import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.github.mmodzel3.lostfinder.server.ServerResponse
-import kotlinx.coroutines.launch
 
 open class AlertActivity : LoggedUserActivityAbstract() {
     private val tokenManager: TokenManager by lazy {
@@ -46,7 +42,7 @@ open class AlertActivity : LoggedUserActivityAbstract() {
 
         initRecyclerView()
         initAddButton()
-        observealertViewModel()
+        observeAlertViewModel()
         observeEndAlert()
     }
 
@@ -74,12 +70,12 @@ open class AlertActivity : LoggedUserActivityAbstract() {
         recyclerView.adapter = alertAdapter
     }
 
-    private fun observealertViewModel() {
-        observealertViewModelData()
-        observealertViewModelStatus()
+    private fun observeAlertViewModel() {
+        observeAlertViewModelData()
+        observeAlertViewModelStatus()
     }
 
-    private fun observealertViewModelData() {
+    private fun observeAlertViewModelData() {
         alertViewModelDataObserver = Observer {
             alertAdapter.alerts = it.values.toMutableList()
             alertAdapter.notifyDataSetChanged()
@@ -93,15 +89,13 @@ open class AlertActivity : LoggedUserActivityAbstract() {
         alertViewModel.alerts.observe(this, alertViewModelDataObserver)
     }
 
-    private fun observealertViewModelStatus() {
-        val activity: Activity = this
-
+    private fun observeAlertViewModelStatus() {
         alertViewModelStatusObserver = Observer {
             if (it == ServerEndpointStatus.ERROR) {
-                Toast.makeText(activity, R.string.activity_alert_err_fetching_alerts_api_access_problem,
+                Toast.makeText(this, R.string.activity_alert_err_fetching_alerts_api_access_problem,
                         Toast.LENGTH_LONG).show()
             } else if (it == ServerEndpointStatus.INVALID_TOKEN) {
-                Toast.makeText(activity, R.string.activity_alert_err_fetching_alerts_invalid_token,
+                Toast.makeText(this, R.string.activity_alert_err_fetching_alerts_invalid_token,
                         Toast.LENGTH_LONG).show()
                 goToLoginActivity()
             }
@@ -119,27 +113,28 @@ open class AlertActivity : LoggedUserActivityAbstract() {
     }
 
     private fun onEndAlertInRecyclerView(alertId: String) {
-        val activity: Activity = this
-        lifecycleScope.launch {
-            try {
-                val response: ServerResponse = alertViewModel.endAlert(alertId)
-
-                if (response == ServerResponse.INVALID_PERMISSION) {
-                    Toast.makeText(activity, R.string.activity_alert_err_end_alert_invalid_permission,
-                        Toast.LENGTH_LONG).show()
-                } else if (response == ServerResponse.NOT_FOUND) {
-                    Toast.makeText(activity, R.string.activity_alert_err_end_alert_not_found,
+        alertViewModel.endAlert(alertId).observe(this, {
+            when (it) {
+                ServerResponse.INVALID_PERMISSION -> {
+                    Toast.makeText(this, R.string.activity_alert_err_end_alert_invalid_permission,
                         Toast.LENGTH_LONG).show()
                 }
-            } catch (e: AlertEndpointAccessErrorException) {
-                Toast.makeText(activity, R.string.activity_alert_err_end_alert_api_access_problem,
+                ServerResponse.NOT_FOUND -> {
+                    Toast.makeText(this, R.string.activity_alert_err_end_alert_not_found,
                         Toast.LENGTH_LONG).show()
-            } catch (e: InvalidTokenException) {
-                Toast.makeText(activity, R.string.activity_alert_err_end_alert_invalid_token,
-                    Toast.LENGTH_LONG).show()
-                goToLoginActivity()
+                }
+                ServerResponse.API_ERROR -> {
+                    Toast.makeText(this, R.string.activity_alert_err_end_alert_api_access_problem,
+                        Toast.LENGTH_LONG).show()
+                }
+                ServerResponse.INVALID_TOKEN -> {
+                    Toast.makeText(this, R.string.activity_alert_err_end_alert_invalid_token,
+                        Toast.LENGTH_LONG).show()
+                    goToLoginActivity()
+                }
+                else -> {}
             }
-        }
+        })
     }
 
     private fun initAddButton() {

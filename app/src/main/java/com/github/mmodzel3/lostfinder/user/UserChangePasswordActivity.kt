@@ -6,15 +6,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.alert.AlertViewModel
-import com.github.mmodzel3.lostfinder.alert.AlertViewModelFactory
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerResponse
-import kotlinx.coroutines.launch
 
 class UserChangePasswordActivity : LoggedUserActivityAbstract() {
     private val userViewModel: UserViewModel by viewModels {
@@ -64,30 +59,30 @@ class UserChangePasswordActivity : LoggedUserActivityAbstract() {
         val activity: Activity = this
 
         disableChangePasswordButton()
-        lifecycleScope.launch {
-            try {
-                val serverResponse: ServerResponse = userViewModel.updateUserPassword(oldPassword, newPassword)
-
-                if (serverResponse == ServerResponse.OK) {
+        userViewModel.updateUserPassword(oldPassword, newPassword).observe(this, {
+            when (it) {
+                ServerResponse.OK -> {
                     Toast.makeText(activity, R.string.activity_user_change_password_msg_success,
                         Toast.LENGTH_SHORT).show()
                     finish()
-                } else if (serverResponse == ServerResponse.INVALID_PARAM) {
+                }
+                ServerResponse.INVALID_PARAM -> {
                     Toast.makeText(activity, R.string.activity_user_change_password_err_invalid_old_password,
                         Toast.LENGTH_LONG).show()
                     enableChangePasswordButton()
                 }
-
-            } catch (e: InvalidTokenException) {
-                Toast.makeText(activity, R.string.activity_user_change_password_err_invalid_token,
-                    Toast.LENGTH_LONG).show()
-                goToLoginActivity()
-            } catch (e: UserEndpointAccessErrorException) {
-                Toast.makeText(activity, R.string.activity_user_change_password_err_api_access_error,
-                    Toast.LENGTH_LONG).show()
-                enableChangePasswordButton()
+                ServerResponse.INVALID_TOKEN -> {
+                    Toast.makeText(activity, R.string.activity_user_change_password_err_invalid_token,
+                        Toast.LENGTH_LONG).show()
+                    goToLoginActivity()
+                }
+                ServerResponse.API_ERROR -> {
+                    Toast.makeText(activity, R.string.activity_user_change_password_err_api_access_error,
+                        Toast.LENGTH_LONG).show()
+                    enableChangePasswordButton()
+                }
             }
-        }
+        })
     }
 
     private fun enableChangePasswordButton() {

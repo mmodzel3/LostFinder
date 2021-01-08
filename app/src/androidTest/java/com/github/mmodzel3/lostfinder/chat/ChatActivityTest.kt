@@ -22,7 +22,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
-class ChatActivityTest : ChatEndpointTestAbstract() {
+class ChatActivityTest : ChatRepositoryTestAbstract() {
     companion object {
         const val TEST_MESSAGE = "message"
         const val TEST_EMPTY_MESSAGE = "      "

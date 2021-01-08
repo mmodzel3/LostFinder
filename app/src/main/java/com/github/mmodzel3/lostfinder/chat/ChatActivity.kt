@@ -7,16 +7,14 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
+import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.notification.PushNotificationChatMessageConverter
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
-import kotlinx.coroutines.launch
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import java.util.*
 
 open class ChatActivity : LoggedUserActivityAbstract() {
@@ -150,25 +148,22 @@ open class ChatActivity : LoggedUserActivityAbstract() {
     }
 
     private fun sendMessage(message: ChatUserMessage) {
-        val activity: Activity = this
-
-        lifecycleScope.launch {
-            try {
-                chatViewModel.addMessage(message)
+        chatViewModel.addMessage(message).observe(this, {
+            if (it == ServerResponse.OK) {
                 messageEditText.setText("")
                 recyclerView.smoothScrollToPosition(0)
-            } catch (e: ChatEndpointAccessErrorException) {
-                Toast.makeText(activity, R.string.activity_chat_err_sending_msg_api_access_problem,
+            } else if (it == ServerResponse.API_ERROR) {
+                Toast.makeText(this, R.string.activity_chat_err_sending_msg_api_access_problem,
                     Toast.LENGTH_SHORT).show()
-            } catch (e: InvalidTokenException) {
-                Toast.makeText(activity, R.string.activity_chat_err_sending_msg_invalid_token,
+            } else if (it == ServerResponse.INVALID_TOKEN) {
+                Toast.makeText(this, R.string.activity_chat_err_sending_msg_invalid_token,
                     Toast.LENGTH_LONG).show()
 
                 goToLoginActivity()
             }
 
             enableSendButton()
-        }
+        })
     }
 
     private fun onChatScrollToEnd() {

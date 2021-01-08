@@ -109,7 +109,7 @@ class AlertActivityTest : AlertRepositoryTestAbstract() {
     }
 
     @Test
-    fun whenEndAlertInRecyclerViewthatDoesNotExistThenErrorToastIsShown() {
+    fun whenEndAlertInRecyclerViewThatDoesNotExistThenErrorToastIsShown() {
         startActivityNormally()
 
         mockEndAlertNotFoundResponse()
