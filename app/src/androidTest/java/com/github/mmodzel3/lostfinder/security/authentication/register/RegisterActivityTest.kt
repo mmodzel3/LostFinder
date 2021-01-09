@@ -24,6 +24,7 @@ class RegisterActivityTest : RegisterRepositoryTestAbstract() {
         const val SERVER_PASSWORD = "server_password"
         const val WRONG_SERVER_PASSWORD = "wrong_server_password"
         const val TOO_SHORT_PASSWORD = "1"
+        const val INVALID_EMAIL_ADDRESS = "example."
         const val USERNAME = "user123"
     }
 
@@ -113,7 +114,7 @@ class RegisterActivityTest : RegisterRepositoryTestAbstract() {
     fun whenRegisterAndInvalidServerPasswordThenErrorToastIsShown() {
         mockServerInvalidPasswordResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, USERNAME)
+        fillFields(EMAIL_ADDRESS, PASSWORD, WRONG_SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
@@ -127,7 +128,7 @@ class RegisterActivityTest : RegisterRepositoryTestAbstract() {
     fun whenRegisterAndApiAccessErrorThenErrorToastIsShown() {
         mockServerFailureResponse()
 
-        fillFields(EMAIL_ADDRESS, PASSWORD, WRONG_SERVER_PASSWORD, USERNAME)
+        fillFields(EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
@@ -141,11 +142,25 @@ class RegisterActivityTest : RegisterRepositoryTestAbstract() {
     fun whenRegisterAndInvalidParamThenErrorToastIsShown() {
         mockPasswordTooShortResponse()
 
-        fillFields(EMAIL_ADDRESS, TOO_SHORT_PASSWORD, WRONG_SERVER_PASSWORD, USERNAME)
+        fillFields(EMAIL_ADDRESS, TOO_SHORT_PASSWORD, SERVER_PASSWORD, USERNAME)
         performRegister()
 
         Thread.sleep(1000)
         onView(withText(R.string.activity_register_err_password_too_short))
+            .inRoot(withDecorView(Matchers.not(decorView)))
+            .check(matches(isDisplayed()))
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun whenRegisterWithInvalidEmailThenErrorToastIsShown() {
+        mockPasswordTooShortResponse()
+
+        fillFields(INVALID_EMAIL_ADDRESS, PASSWORD, SERVER_PASSWORD, USERNAME)
+        performRegister()
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_register_err_invalid_email))
             .inRoot(withDecorView(Matchers.not(decorView)))
             .check(matches(isDisplayed()))
         Thread.sleep(2000)

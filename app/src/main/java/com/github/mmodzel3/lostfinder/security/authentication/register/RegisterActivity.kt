@@ -1,6 +1,7 @@
 package com.github.mmodzel3.lostfinder.security.authentication.register
 
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -37,18 +38,31 @@ class RegisterActivity : AppCompatActivity() {
         val passwordEditText: EditText = findViewById(R.id.activity_register_et_password)
         val serverPasswordEditText: EditText = findViewById(R.id.activity_register_et_server_password)
 
-        val email: String = emailEditText.text.toString()
+        val email: String = emailEditText.text.toString().trim()
         val username: String = usernameEditText.text.toString()
         val password: String = passwordEditText.text.toString()
         val serverPassword: String = serverPasswordEditText.text.toString()
 
-        if (email.trim() != "" && username != "" && password != "") {
+        if (checkIfNonEmptyFieldsValues(email, username, password)) {
+            registerAndValidateFieldsValues(email, username, password, serverPassword)
+        } else {
+            Toast.makeText(this, R.string.activity_register_err_blank_fields, Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
+    private fun registerAndValidateFieldsValues(email: String, username: String, password: String, serverPassword: String) {
+        if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             disableRegisterButton()
             registerAccount(email, password, serverPassword, username)
         } else {
-            Toast.makeText(this, R.string.activity_register_err_blank_fields, Toast.LENGTH_SHORT)
-                    .show()
+            Toast.makeText(this, R.string.activity_register_err_invalid_email, Toast.LENGTH_SHORT)
+                .show()
         }
+    }
+
+    private fun checkIfNonEmptyFieldsValues(email: String, username: String, password: String): Boolean {
+        return email != "" && username != "" && password != ""
     }
 
     private fun registerAccount(emailAddress: String, password: String, serverPassword: String, username: String) {

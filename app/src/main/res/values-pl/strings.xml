@@ -343,6 +343,10 @@
         Wszystkie pola z danymi użytkownika powinny być wypełnione.
     </string>
 
+    <string name="activity_register_err_invalid_email">
+        Niepoprawny adres email. Spróbuj jeszcze raz.
+    </string>
+
     <string name="activity_register_err_duplicated">
         Adres mailowy lub nazwa użytkownika jest zarezerwowana. Konto o podanych danych już istnieje.
     </string>
