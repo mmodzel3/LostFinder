@@ -2,7 +2,6 @@ package com.github.mmodzel3.lostfinder.map.overlays
 
 import android.content.Context
 import com.github.mmodzel3.lostfinder.user.User
-import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.user.UserRepositoryTestAbstract
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before

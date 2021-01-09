@@ -6,7 +6,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.security.authentication.login.LoginRepositoryTestAbstract
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.google.common.truth.Truth.assertThat
@@ -15,7 +15,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class TokenManagerTest : LoginEndpointTestAbstract() {
+class TokenManagerTest : LoginRepositoryTestAbstract() {
     companion object {
         const val EMAIL_ADDRESS = "example@example.com"
         const val PASSWORD = "password"

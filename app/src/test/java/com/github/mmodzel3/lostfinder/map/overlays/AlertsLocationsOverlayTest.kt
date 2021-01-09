@@ -3,7 +3,6 @@ package com.github.mmodzel3.lostfinder.map.overlays
 import android.content.Context
 import android.content.res.Resources
 import com.github.mmodzel3.lostfinder.alert.Alert
-import com.github.mmodzel3.lostfinder.alert.AlertEndpointTestAbstract
 import com.github.mmodzel3.lostfinder.alert.AlertRepositoryTestAbstract
 import com.github.mmodzel3.lostfinder.user.User
 import com.google.common.truth.Truth.assertThat

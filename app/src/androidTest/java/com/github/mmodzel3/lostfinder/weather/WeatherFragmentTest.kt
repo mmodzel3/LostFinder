@@ -12,7 +12,7 @@ import com.github.mmodzel3.lostfinder.weather.WeatherFragment.Companion.WEATHER_
 import org.junit.Before
 import org.junit.Test
 
-class WeatherFragmentTest : WeatherEndpointTestAbstract() {
+class WeatherFragmentTest : WeatherRepositoryTestAbstract() {
     private lateinit var fragmentScenario: FragmentScenario<WeatherFragment>
     private lateinit var weatherData: MutableLiveData<Weather>
 

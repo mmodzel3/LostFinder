@@ -17,7 +17,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManagerStub
-import com.github.mmodzel3.lostfinder.user.UserEndpointTestAbstract
+import com.github.mmodzel3.lostfinder.user.UserRepositoryTestAbstract
 import com.google.common.truth.Truth.assertThat
 import org.hamcrest.BaseMatcher
 import org.hamcrest.CoreMatchers
@@ -27,7 +27,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class SettingsActivityTest : UserEndpointTestAbstract() {
+class SettingsActivityTest : UserRepositoryTestAbstract() {
     private lateinit var settingsScenario: ActivityScenario<SettingsActivity>
     private lateinit var decorView: View
     private lateinit var tokenManager: TokenManager

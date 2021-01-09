@@ -14,7 +14,6 @@ import com.github.mmodzel3.lostfinder.security.encryption.Decryptor
 import com.github.mmodzel3.lostfinder.security.encryption.DecryptorInterface
 import kotlinx.coroutines.runBlocking
 
-
 class Authenticator(private val context: Context) : AbstractAccountAuthenticator(context) {
     companion object {
         const val AUTHENTICATOR_INFO = "AUTH_INFO"
@@ -26,7 +25,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
     }
 
     private val accountManager: AccountManager = AccountManager.get(context)
-    private val loginEndpoint: LoginEndpoint = LoginEndpointFactory.createLoginEndpoint()
+    private val loginRepository: LoginRepository = LoginRepository.getInstance()
 
     override fun editProperties(response: AccountAuthenticatorResponse?,
                                 accountType: String?): Bundle {
@@ -135,7 +134,7 @@ class Authenticator(private val context: Context) : AbstractAccountAuthenticator
                                                            password: String) : LoginInfo {
 
         val pushNotificationDestToken: String? = PushNotificationService.getNotificationDestToken(context)
-        val loginInfo: LoginInfo = loginEndpoint.login(account.name, password, pushNotificationDestToken)
+        val loginInfo: LoginInfo = loginRepository.login(account.name, password, pushNotificationDestToken)
 
         if (loginInfo.token.isNotEmpty() && !loginInfo.blocked) {
             return loginInfo
