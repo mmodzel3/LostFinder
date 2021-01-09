@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.security.authentication.authenticator.Authenticator
 import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.github.mmodzel3.lostfinder.security.encryption.EncryptorInterface
 
@@ -36,6 +35,7 @@ abstract class LoginAccountManagerActivityAbstract : AppCompatActivity() {
         accountManager.getAccountsByType(accountType).forEach { removeAccount(it) }
     }
 
+    @Suppress("DEPRECATION")
     private fun removeAccount(account: Account) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
             accountManager.removeAccount(account, {}, null)
