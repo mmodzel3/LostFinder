@@ -495,6 +495,9 @@
     <string name="activity_user_change_password_err_not_same_new_passwords">
         New password and repeated password are not same.
     </string>
+    <string name="activity_user_change_password_err_too_short_password">
+        New password should have minimum eight characters.
+    </string>
     <string name="activity_user_change_password_err_invalid_old_password">
         Invalid old password for account. Try again.
     </string>

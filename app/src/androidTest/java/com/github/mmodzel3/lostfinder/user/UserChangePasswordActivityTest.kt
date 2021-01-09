@@ -22,6 +22,7 @@ class UserChangePasswordActivityTest : UserRepositoryTestAbstract() {
     companion object {
         const val TEST_NEW_PASSWORD = "new_password"
         const val TEST_OLD_PASSWORD = "old_password"
+        const val TEST_TOO_SHORT_PASSWORD = "123"
         const val TEST_INVALID_PASSWORD = TEST_NEW_PASSWORD + "1"
     }
 
@@ -85,6 +86,21 @@ class UserChangePasswordActivityTest : UserRepositoryTestAbstract() {
 
         Thread.sleep(1000)
         onView(withText(R.string.activity_user_change_password_err_not_same_new_passwords))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()));
+
+        Thread.sleep(2000)
+    }
+
+    @Test
+    fun whenChangePasswordWithTooShortNewPasswordThenErrorToastIsShown() {
+        fillFields(TEST_OLD_PASSWORD, TEST_TOO_SHORT_PASSWORD, TEST_TOO_SHORT_PASSWORD)
+
+        onView(withId(R.id.activity_user_change_password_bt_change_password))
+            .perform(click())
+
+        Thread.sleep(1000)
+        onView(withText(R.string.activity_user_change_password_err_too_short_password))
             .inRoot(withDecorView(not(decorView)))
             .check(matches(isDisplayed()));
 

@@ -47,8 +47,11 @@ class UserChangePasswordActivity : LoggedUserActivityAbstract() {
         val newPassword: String = newPasswordEditText.text.toString()
         val repeatedNewPassword: String = repeatedNewPasswordEditText.text.toString()
 
-        if (newPassword == repeatedNewPassword) {
+        if (newPassword.length >= 8 && newPassword == repeatedNewPassword) {
             changePassword(oldPassword, newPassword)
+        } else if (newPassword.length < 8) {
+            Toast.makeText(this, R.string.activity_user_change_password_err_too_short_password,
+                Toast.LENGTH_LONG).show()
         } else {
             Toast.makeText(this, R.string.activity_user_change_password_err_not_same_new_passwords,
                 Toast.LENGTH_LONG).show()
@@ -56,29 +59,30 @@ class UserChangePasswordActivity : LoggedUserActivityAbstract() {
     }
 
     private fun changePassword(oldPassword: String, newPassword: String) {
-        val activity: Activity = this
-
         disableChangePasswordButton()
         userViewModel.updateUserPassword(oldPassword, newPassword).observe(this, {
             when (it) {
                 ServerResponse.OK -> {
-                    Toast.makeText(activity, R.string.activity_user_change_password_msg_success,
+                    Toast.makeText(this, R.string.activity_user_change_password_msg_success,
                         Toast.LENGTH_SHORT).show()
                     finish()
                 }
                 ServerResponse.INVALID_PARAM -> {
-                    Toast.makeText(activity, R.string.activity_user_change_password_err_invalid_old_password,
+                    Toast.makeText(this, R.string.activity_user_change_password_err_invalid_old_password,
                         Toast.LENGTH_LONG).show()
                     enableChangePasswordButton()
                 }
                 ServerResponse.INVALID_TOKEN -> {
-                    Toast.makeText(activity, R.string.activity_user_change_password_err_invalid_token,
+                    Toast.makeText(this, R.string.activity_user_change_password_err_invalid_token,
                         Toast.LENGTH_LONG).show()
                     goToLoginActivity()
                 }
                 ServerResponse.API_ERROR -> {
-                    Toast.makeText(activity, R.string.activity_user_change_password_err_api_access_error,
+                    Toast.makeText(this, R.string.activity_user_change_password_err_api_access_error,
                         Toast.LENGTH_LONG).show()
+                    enableChangePasswordButton()
+                }
+                else -> {
                     enableChangePasswordButton()
                 }
             }

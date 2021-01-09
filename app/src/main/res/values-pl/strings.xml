@@ -495,6 +495,9 @@
     <string name="activity_user_change_password_err_not_same_new_passwords">
         Nowe hasło oraz powtórzone nowe hasło nie są takie same.
     </string>
+    <string name="activity_user_change_password_err_too_short_password">
+        Nowe hasło powinno mieć co najmniej osiem znaków.
+    </string>
     <string name="activity_user_change_password_err_invalid_old_password">
         Nieprawidłowe stare hasło do konta. Spróbuj jeszcze raz.
     </string>
