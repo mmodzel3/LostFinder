@@ -13,12 +13,12 @@ class ServerCachedRepositoryAbstractTest {
         const val DAY_BEFORE_IN_MILLISECONDS = 24 * 60 * 60 * 1000
     }
 
-    private lateinit var serverRepositoryAbstract: ServerRepositoryImpl
+    private lateinit var serverRepositoryAbstract: ServerCachedRepositoryImpl
     private lateinit var testData: MutableList<ServerEndpointDataImpl>
 
     @Before
     fun setUp() {
-        serverRepositoryAbstract = ServerRepositoryImpl()
+        serverRepositoryAbstract = ServerCachedRepositoryImpl()
 
         createTestData()
     }

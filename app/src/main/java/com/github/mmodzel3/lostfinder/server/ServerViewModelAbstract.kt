@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 abstract class ServerViewModelAbstract : ViewModel() {
 
-    protected fun convertServerRequestToLiveData(serverRequestFunction: suspend () -> ServerResponse)
+    internal fun convertServerRequestToLiveData(serverRequestFunction: suspend () -> ServerResponse)
     : LiveData<ServerResponse> {
         val liveData = MutableLiveData<ServerResponse>()
 
