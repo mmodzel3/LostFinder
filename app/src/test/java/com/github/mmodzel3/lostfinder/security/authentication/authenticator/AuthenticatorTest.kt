@@ -11,6 +11,7 @@ import com.github.mmodzel3.lostfinder.security.encryption.Encryptor
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,6 +37,11 @@ class AuthenticatorTest : LoginAccountManagerTestAbstract() {
 
         authenticator = Authenticator(context)
         mockPushNotificationService()
+    }
+
+    @After
+    override fun tearDown() {
+        super.tearDown()
     }
 
     @Test

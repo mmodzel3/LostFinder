@@ -6,7 +6,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerPushRepositoryAbstract
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 
-class ChatRepository(private val tokenManager: TokenManager?) : ServerPushRepositoryAbstract<ChatMessage>() {
+class ChatRepository private constructor (private val tokenManager: TokenManager?) : ServerPushRepositoryAbstract<ChatMessage>() {
     companion object {
         const val MESSAGES_PER_PAGE = 10
 
