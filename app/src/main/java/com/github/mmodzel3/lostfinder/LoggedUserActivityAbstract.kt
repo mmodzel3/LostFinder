@@ -21,6 +21,7 @@ import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.settings.SettingsActivity
 import com.github.mmodzel3.lostfinder.user.*
 import com.github.mmodzel3.lostfinder.weather.WeatherActivity
+import com.github.mmodzel3.lostfinder.weather.WeatherRepository
 import kotlinx.coroutines.launch
 
 abstract class LoggedUserActivityAbstract : AppCompatActivity() {
@@ -129,6 +130,7 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
         AlertRepository.clear()
         ChatRepository.clear()
         UserRepository.clear()
+        WeatherRepository.clear()
 
         startActivity(intent)
         finish()

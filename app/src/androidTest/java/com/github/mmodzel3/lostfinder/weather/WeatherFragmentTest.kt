@@ -29,13 +29,13 @@ class WeatherFragmentTest : WeatherEndpointTestAbstract() {
 
     @Test
     fun whenUpdateWeatherDataThenFragmentIsUpdatedWithCorrectData() {
-        var typeName: String = ""
+        var typeName = ""
         val weather: Weather = createTestWeatherCurrent().convertToWeather()
 
         fragmentScenario.onFragment(object : FragmentScenario.FragmentAction<WeatherFragment> {
             override fun perform(fragment: WeatherFragment) {
-                val weatherEndpointViewModel: WeatherEndpointViewModel = fragment.weatherEndpointViewModel
-                weatherEndpointViewModel.tomorrow.value = weather
+                val weatherViewModel: WeatherViewModel = fragment.weatherViewModel
+                weatherViewModel.tomorrow.value = weather
 
                 typeName = fragment.getString(R.string.fragment_weather_tomorrow_full)
             }

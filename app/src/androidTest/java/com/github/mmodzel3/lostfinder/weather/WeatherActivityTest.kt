@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
-class WeatherActivityTest : WeatherEndpointTestAbstract() {
+class WeatherActivityTest : WeatherRepositoryTestAbstract() {
     private lateinit var weatherScenario: ActivityScenario<WeatherActivity>
     private lateinit var decorView: View
 

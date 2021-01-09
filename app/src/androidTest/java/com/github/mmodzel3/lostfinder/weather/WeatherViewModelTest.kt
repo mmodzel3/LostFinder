@@ -10,15 +10,15 @@ import org.junit.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class WeatherEndpointViewModelTest : WeatherEndpointTestAbstract() {
-    private lateinit var weatherEndpointViewModel: WeatherEndpointViewModel
+class WeatherViewModelTest : WeatherRepositoryTestAbstract() {
+    private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var latch: CountDownLatch
 
     @Before
     override fun setUp() {
         super.setUp()
 
-        weatherEndpointViewModel = WeatherEndpointViewModel(weatherEndpoint, WEATHER_API_KEY, WEATHER_UNITS)
+        weatherViewModel = WeatherViewModel(WEATHER_API_KEY, WEATHER_UNITS)
         latch = CountDownLatch(1)
     }
 
@@ -26,37 +26,37 @@ class WeatherEndpointViewModelTest : WeatherEndpointTestAbstract() {
     fun whenFetchDataThenNowDataIsUpdated() {
         val weatherForecast: WeatherForecast = prepareFetchWeatherData()
 
-        assertThat(weatherEndpointViewModel.now.value).isEqualTo(weatherForecast.now.convertToWeather())
+        assertThat(weatherViewModel.now.value).isEqualTo(weatherForecast.now.convertToWeather())
     }
 
     @Test
     fun whenFetchDataThenNextHourDataIsUpdated() {
         val weatherForecast: WeatherForecast = prepareFetchWeatherData()
 
-        assertThat(weatherEndpointViewModel.nextHour.value).isEqualTo(weatherForecast.hourly[0].convertToWeather())
+        assertThat(weatherViewModel.nextHour.value).isEqualTo(weatherForecast.hourly[0].convertToWeather())
     }
 
     @Test
     fun whenFetchDataThenTodayDataIsUpdated() {
         val weatherForecast: WeatherForecast = prepareFetchWeatherData()
 
-        assertThat(weatherEndpointViewModel.today.value).isEqualTo(weatherForecast.daily[0].convertToWeather())
+        assertThat(weatherViewModel.today.value).isEqualTo(weatherForecast.daily[0].convertToWeather())
     }
 
     @Test
     fun whenFetchDataThenTomorrowDataIsUpdated() {
         val weatherForecast: WeatherForecast = prepareFetchWeatherData()
 
-        assertThat(weatherEndpointViewModel.tomorrow.value).isEqualTo(weatherForecast.daily[1].convertToWeather())
+        assertThat(weatherViewModel.tomorrow.value).isEqualTo(weatherForecast.daily[1].convertToWeather())
     }
 
     private fun prepareFetchWeatherData(): WeatherForecast {
         val weatherForecast: WeatherForecast = createTestWeatherForecast()
         mockGetWeatherForecastResponse(weatherForecast)
 
-        observeAndWaitForStatusChange(weatherEndpointViewModel.now) {
+        observeAndWaitForStatusChange(weatherViewModel.now) {
             runBlocking {
-                weatherEndpointViewModel.fetchData(LATITUDE, LONGITUDE)
+                weatherViewModel.fetchDataAndUpdate(LATITUDE, LONGITUDE)
             }
         }
 
