@@ -1,6 +1,5 @@
 package com.github.mmodzel3.lostfinder.security.authentication.logout
 
-import com.github.mmodzel3.lostfinder.security.authentication.login.LoginRepository
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerRepositoryAbstract
 import com.github.mmodzel3.lostfinder.server.ServerResponse

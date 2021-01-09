@@ -1,7 +1,6 @@
 package com.github.mmodzel3.lostfinder.alert
 
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible

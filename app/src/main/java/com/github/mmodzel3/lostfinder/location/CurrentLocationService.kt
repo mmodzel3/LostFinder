@@ -27,8 +27,10 @@ import com.github.mmodzel3.lostfinder.user.UserEndpoint
 import com.github.mmodzel3.lostfinder.user.UserEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.user.UserEndpointFactory
 import com.google.android.gms.location.*
-import kotlinx.coroutines.*
-import java.lang.Runnable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 
 class CurrentLocationService : Service() {

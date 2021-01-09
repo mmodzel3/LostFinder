@@ -2,8 +2,8 @@ package com.github.mmodzel3.lostfinder.alert
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.server.ServerCachedViewModelAbstract
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 
 class AlertViewModel (private val alertRepository: AlertRepository)
     : ServerCachedViewModelAbstract<Alert>(alertRepository) {

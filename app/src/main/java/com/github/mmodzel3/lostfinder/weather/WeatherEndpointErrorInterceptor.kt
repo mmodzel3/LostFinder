@@ -3,8 +3,6 @@ package com.github.mmodzel3.lostfinder.weather
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import java.net.ConnectException
-import java.net.SocketTimeoutException
 
 open class WeatherEndpointErrorInterceptor : Interceptor {
 

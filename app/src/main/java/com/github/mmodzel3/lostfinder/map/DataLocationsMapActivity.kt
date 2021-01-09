@@ -4,12 +4,15 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.github.mmodzel3.lostfinder.R
-import com.github.mmodzel3.lostfinder.alert.*
+import com.github.mmodzel3.lostfinder.alert.AlertViewModel
+import com.github.mmodzel3.lostfinder.alert.AlertViewModelFactory
 import com.github.mmodzel3.lostfinder.map.overlays.AlertsLocationsOverlay
 import com.github.mmodzel3.lostfinder.map.overlays.UsersLocationsOverlay
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
-import com.github.mmodzel3.lostfinder.user.*
+import com.github.mmodzel3.lostfinder.user.User
+import com.github.mmodzel3.lostfinder.user.UserViewModel
+import com.github.mmodzel3.lostfinder.user.UserViewModelFactory
 
 open class DataLocationsMapActivity : CurrentLocationMapWithCenteringActivity() {
 
