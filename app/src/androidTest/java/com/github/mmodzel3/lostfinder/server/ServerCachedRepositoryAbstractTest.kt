@@ -7,7 +7,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ServerRepositoryAbstractTest {
+class ServerCachedRepositoryAbstractTest {
     companion object {
         const val MINUTE_IN_MILLISECONDS = 60 * 1000
         const val DAY_BEFORE_IN_MILLISECONDS = 24 * 60 * 60 * 1000

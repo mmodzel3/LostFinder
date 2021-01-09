@@ -1,13 +1,12 @@
 package com.github.mmodzel3.lostfinder.user
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.location.Location
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
-import com.github.mmodzel3.lostfinder.server.ServerRepositoryAbstract
+import com.github.mmodzel3.lostfinder.server.ServerCachedRepositoryAbstract
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 
-class UserRepository private constructor(private val tokenManager: TokenManager?) : ServerRepositoryAbstract<User>() {
+class UserRepository private constructor(private val tokenManager: TokenManager?) : ServerCachedRepositoryAbstract<User>() {
     companion object {
         var userRepository: UserRepository? = null
 

@@ -3,10 +3,10 @@ package com.github.mmodzel3.lostfinder.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.server.ServerResponse
-import com.github.mmodzel3.lostfinder.server.ServerViewModelAbstract
+import com.github.mmodzel3.lostfinder.server.ServerCachedViewModelAbstract
 
 class ChatViewModel (private val chatRepository: ChatRepository)
-    : ServerViewModelAbstract<ChatMessage>(chatRepository) {
+    : ServerCachedViewModelAbstract<ChatMessage>(chatRepository) {
 
     val messages: MutableLiveData<MutableMap<String, ChatMessage>>
         get() = data

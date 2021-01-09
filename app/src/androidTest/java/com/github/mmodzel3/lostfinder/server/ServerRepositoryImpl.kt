@@ -1,5 +1,5 @@
 package com.github.mmodzel3.lostfinder.server
 
-class ServerRepositoryImpl : ServerRepositoryAbstract<ServerEndpointDataImpl>() {
+class ServerRepositoryImpl : ServerCachedRepositoryAbstract<ServerEndpointDataImpl>() {
 
 }

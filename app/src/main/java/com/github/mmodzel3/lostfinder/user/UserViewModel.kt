@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.location.Location
 import com.github.mmodzel3.lostfinder.server.ServerResponse
-import com.github.mmodzel3.lostfinder.server.ServerViewModelAbstract
+import com.github.mmodzel3.lostfinder.server.ServerCachedViewModelAbstract
 
 class UserViewModel(private val userRepository: UserRepository)
-    : ServerViewModelAbstract<User>(userRepository) {
+    : ServerCachedViewModelAbstract<User>(userRepository) {
 
     val users: MutableLiveData<MutableMap<String, User>>
         get() = data
