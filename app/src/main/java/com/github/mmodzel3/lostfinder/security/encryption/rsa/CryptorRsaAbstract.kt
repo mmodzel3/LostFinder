@@ -2,7 +2,7 @@ package com.github.mmodzel3.lostfinder.security.encryption.rsa
 
 import android.content.Context
 import android.os.Build
-import android.security.KeyPairGeneratorSpec
+import android.security.*
 import androidx.annotation.RequiresApi
 import com.github.mmodzel3.lostfinder.security.encryption.CryptorAbstract
 import java.math.BigInteger
@@ -35,6 +35,7 @@ abstract class CryptorRsaAbstract : CryptorAbstract() {
         }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    @Suppress("DEPRECATION")
     protected fun generateRsaKeys(context: Context): KeyPair {
         val start: Calendar = Calendar.getInstance()
         val end: Calendar = Calendar.getInstance()

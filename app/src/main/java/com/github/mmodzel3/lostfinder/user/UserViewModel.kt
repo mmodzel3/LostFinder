@@ -3,8 +3,8 @@ package com.github.mmodzel3.lostfinder.user
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.mmodzel3.lostfinder.location.Location
-import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.server.ServerCachedViewModelAbstract
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 
 class UserViewModel(private val userRepository: UserRepository)
     : ServerCachedViewModelAbstract<User>(userRepository) {

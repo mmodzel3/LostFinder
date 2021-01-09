@@ -1,12 +1,9 @@
 package com.github.mmodzel3.lostfinder.server
 
-import android.util.Log
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import java.net.ConnectException
-import java.net.SocketTimeoutException
 
 open class ServerEndpointErrorInterceptor : Interceptor {
 

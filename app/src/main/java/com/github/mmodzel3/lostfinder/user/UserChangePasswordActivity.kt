@@ -1,6 +1,5 @@
 package com.github.mmodzel3.lostfinder.user
 
-import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
