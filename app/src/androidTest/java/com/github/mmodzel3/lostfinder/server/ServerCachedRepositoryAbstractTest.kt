@@ -7,30 +7,30 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ServerEndpointViewModelAbstractTest {
+class ServerCachedRepositoryAbstractTest {
     companion object {
         const val MINUTE_IN_MILLISECONDS = 60 * 1000
         const val DAY_BEFORE_IN_MILLISECONDS = 24 * 60 * 60 * 1000
     }
 
-    private lateinit var serverEndpointViewModelAbstract: ServerEndpointViewModelImpl
+    private lateinit var serverRepositoryAbstract: ServerCachedRepositoryImpl
     private lateinit var testData: MutableList<ServerEndpointDataImpl>
 
     @Before
     fun setUp() {
-        serverEndpointViewModelAbstract = ServerEndpointViewModelImpl()
+        serverRepositoryAbstract = ServerCachedRepositoryImpl()
 
         createTestData()
     }
 
     @Test
     fun whenUpdateDataAndHasNoDataCachedThenGotItAdded() {
-        serverEndpointViewModelAbstract.update(testData)
+        serverRepositoryAbstract.update(testData)
 
-        assertThat(serverEndpointViewModelAbstract.dataCache).hasSize(testData.size)
+        assertThat(serverRepositoryAbstract.dataCache).hasSize(testData.size)
 
         val ids: List<String> = testData.map { it.id }
-        serverEndpointViewModelAbstract.dataCache.forEach {
+        serverRepositoryAbstract.dataCache.forEach {
             assertThat(ids).contains(it.key)
             assertThat(ids).contains(it.value.id)
         }
@@ -39,14 +39,14 @@ class ServerEndpointViewModelAbstractTest {
     @Test
     fun whenUpdateDataAndHasDataCachedThenGotItUpdated() {
         addTestDataToCache()
-        serverEndpointViewModelAbstract.update(updateTestData())
+        serverRepositoryAbstract.update(updateTestData())
 
-        assertThat(serverEndpointViewModelAbstract.dataCache).hasSize(testData.size)
+        assertThat(serverRepositoryAbstract.dataCache).hasSize(testData.size)
 
         val ids: List<String> = testData.map { it.id }
         val minuteAfterYesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS + MINUTE_IN_MILLISECONDS)
 
-        serverEndpointViewModelAbstract.dataCache.forEach {
+        serverRepositoryAbstract.dataCache.forEach {
             assertThat(ids).contains(it.key)
             assertThat(ids).contains(it.value.id)
             assertThat(it.value.lastUpdateDate).isAtLeast(minuteAfterYesterday)
@@ -60,13 +60,13 @@ class ServerEndpointViewModelAbstractTest {
         updateTestData()
         addTestDataToCache()
 
-        serverEndpointViewModelAbstract.update(oldTestData)
-        assertThat(serverEndpointViewModelAbstract.dataCache).hasSize(testData.size)
+        serverRepositoryAbstract.update(oldTestData)
+        assertThat(serverRepositoryAbstract.dataCache).hasSize(testData.size)
 
         val ids: List<String> = testData.map { it.id }
         val minuteAfterYesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS + MINUTE_IN_MILLISECONDS)
 
-        serverEndpointViewModelAbstract.dataCache.forEach {
+        serverRepositoryAbstract.dataCache.forEach {
             assertThat(ids).contains(it.key)
             assertThat(ids).contains(it.value.id)
             assertThat(it.value.lastUpdateDate).isAtLeast(minuteAfterYesterday)
@@ -95,7 +95,7 @@ class ServerEndpointViewModelAbstractTest {
     }
 
     private fun addTestDataToCache() {
-        serverEndpointViewModelAbstract.dataCache.putAll(testDataToMap())
+        serverRepositoryAbstract.dataCache.putAll(testDataToMap())
     }
 
     private fun updateTestData() : List<ServerEndpointDataImpl> {

@@ -30,7 +30,7 @@ class WeatherFragment: Fragment() {
         }
     }
 
-    internal lateinit var weatherEndpointViewModel: WeatherEndpointViewModel
+    internal lateinit var weatherViewModel: WeatherViewModel
 
     private lateinit var weatherTypeNameTextView: TextView
     private lateinit var weatherConditionTextView: TextView
@@ -65,7 +65,7 @@ class WeatherFragment: Fragment() {
         windSpeedTextView = view.findViewById(R.id.fragment_weather_tv_wind_speed)
         windDegreeTextView = view.findViewById(R.id.fragment_weather_tv_wind_degree)
 
-        weatherEndpointViewModel = provideWeatherEndpointViewModel()
+        weatherViewModel = provideWeatherViewModel()
 
         showWeatherType()
         observeWeatherData()
@@ -78,28 +78,27 @@ class WeatherFragment: Fragment() {
 
         when (arguments?.getInt(TYPE)) {
             WEATHER_NOW_TYPE -> {
-                weatherEndpointViewModel.now.observe(viewLifecycleOwner, observer)
+                weatherViewModel.now.observe(viewLifecycleOwner, observer)
             }
             WEATHER_NEXT_HOUR_TYPE -> {
-                weatherEndpointViewModel.nextHour.observe(viewLifecycleOwner, observer)
+                weatherViewModel.nextHour.observe(viewLifecycleOwner, observer)
             }
             WEATHER_TODAY_TYPE -> {
-                weatherEndpointViewModel.today.observe(viewLifecycleOwner, observer)
+                weatherViewModel.today.observe(viewLifecycleOwner, observer)
             }
             else -> {
-                weatherEndpointViewModel.tomorrow.observe(viewLifecycleOwner, observer)
+                weatherViewModel.tomorrow.observe(viewLifecycleOwner, observer)
             }
         }
     }
 
-    private fun provideWeatherEndpointViewModel(): WeatherEndpointViewModel {
-        val weatherEndpoint: WeatherEndpoint = WeatherEndpointFactory.createWeatherEndpoint()
+    private fun provideWeatherViewModel(): WeatherViewModel {
         val weatherApiKey: String = requireView().context.getString(R.string.weather_api_key)
         val weatherUnits: String = requireView().context.getString(R.string.activity_weather_units)
-        val viewModelFactory = WeatherEndpointViewModelFactory(weatherEndpoint, weatherApiKey, weatherUnits)
+        val viewModelFactory = WeatherViewModelFactory(weatherApiKey, weatherUnits)
 
         return ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(WeatherEndpointViewModel::class.java)
+                .get(WeatherViewModel::class.java)
     }
 
     private fun showWeatherType() {

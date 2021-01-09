@@ -9,18 +9,16 @@ import android.os.Bundle
 import android.os.IBinder
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.lifecycleScope
+import androidx.activity.viewModels
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.location.CurrentLocationBinder
 import com.github.mmodzel3.lostfinder.location.CurrentLocationListener
 import com.github.mmodzel3.lostfinder.location.CurrentLocationService
 import com.github.mmodzel3.lostfinder.map.ChooseLocationMapActivity
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.user.UserRole
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -46,8 +44,8 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         }
     }
 
-    private val alertEndpoint: AlertEndpoint by lazy {
-        AlertEndpointFactory.createAlertEndpoint(TokenManager.getInstance(applicationContext))
+    private val alertViewModel: AlertViewModel by viewModels {
+        AlertViewModelFactory(TokenManager.getInstance(applicationContext))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,9 +132,7 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         val userAlert = UserAlert(type, location, range, description, sendDate)
 
         disableAddButton()
-        lifecycleScope.launch {
-            addUserAlert(userAlert)
-        }
+        addUserAlert(userAlert)
     }
 
     private fun listenToCurrentLocation() {
@@ -160,31 +156,36 @@ class AlertAddActivity : LoggedUserActivityAbstract() {
         }
     }
 
-    private suspend fun addUserAlert(userAlert: UserAlert) {
-        try {
-            val response: ServerResponse = alertEndpoint.addAlert(userAlert)
+    private fun addUserAlert(userAlert: UserAlert) {
+        alertViewModel.addAlert(userAlert).observe(this, {
+            when (it) {
+                ServerResponse.OK -> {
+                    Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
+                        Toast.LENGTH_SHORT).show()
 
-            if (response == ServerResponse.OK) {
-                Toast.makeText(this, R.string.activity_alert_add_msg_add_alert_success,
-                    Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                ServerResponse.INVALID_PERMISSION -> {
+                    Toast.makeText(this, R.string.activity_alert_add_err_add_alert_invalid_permission,
+                        Toast.LENGTH_SHORT).show()
 
-                finish()
-            } else if (response == ServerResponse.INVALID_PERMISSION) {
-                Toast.makeText(this, R.string.activity_alert_add_err_add_alert_invalid_permission,
-                    Toast.LENGTH_SHORT).show()
+                    enableAddButton()
+                }
+                ServerResponse.API_ERROR -> {
+                    Toast.makeText(this, R.string.activity_alert_add_err_add_alert_api_access_problem,
+                        Toast.LENGTH_LONG).show()
+
+                    enableAddButton()
+                }
+                ServerResponse.INVALID_TOKEN -> {
+                    Toast.makeText(this, R.string.activity_alert_add_err_add_alert_invalid_token,
+                        Toast.LENGTH_LONG).show()
+
+                    goToLoginActivity()
+                }
+                else -> {}
             }
-
-        } catch (e: AlertEndpointAccessErrorException) {
-            Toast.makeText(this, R.string.activity_alert_add_err_add_alert_api_access_problem,
-                    Toast.LENGTH_LONG).show()
-
-            enableAddButton()
-        } catch (e: InvalidTokenException) {
-            Toast.makeText(this, R.string.activity_alert_add_err_add_alert_invalid_token,
-                    Toast.LENGTH_LONG).show()
-
-            goToLoginActivity()
-        }
+        })
     }
 
     private fun bindAlertTitles() {

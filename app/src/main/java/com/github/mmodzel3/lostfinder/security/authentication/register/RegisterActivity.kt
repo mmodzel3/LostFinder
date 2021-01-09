@@ -1,19 +1,17 @@
 package com.github.mmodzel3.lostfinder.security.authentication.register
 
-import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.server.ServerResponse
-import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
-    private val registerEndpoint: RegisterEndpoint by lazy {
-        RegisterEndpointFactory.createRegisterEndpoint()
+    private val registerViewModel: RegisterViewModel by viewModels {
+        RegisterViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,36 +52,38 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerAccount(emailAddress: String, password: String, serverPassword: String, username: String) {
-        val activity: Activity = this
-        lifecycleScope.launch {
-            try {
-                val response: ServerResponse = registerEndpoint.register(emailAddress, password, serverPassword, username)
-
-                if (response == ServerResponse.OK) {
-                    Toast.makeText(activity, R.string.activity_register_msg_success, Toast.LENGTH_SHORT)
-                            .show()
+        registerViewModel.register(emailAddress, password, serverPassword, username).observe(this, {
+            when (it) {
+                ServerResponse.OK -> {
+                    Toast.makeText(this, R.string.activity_register_msg_success, Toast.LENGTH_SHORT)
+                        .show()
 
                     finish()
-                } else if (response == ServerResponse.DUPLICATED) {
-                    Toast.makeText(activity, R.string.activity_register_err_duplicated, Toast.LENGTH_SHORT)
-                            .show()
-                    enableRegisterButton()
-                } else if (response == ServerResponse.INVALID_PERMISSION) {
-                    Toast.makeText(activity, R.string.activity_register_err_invalid_server_password, Toast.LENGTH_SHORT)
-                        .show()
-                    enableRegisterButton()
-                } else if (response == ServerResponse.INVALID_PARAM) {
-                    Toast.makeText(activity, R.string.activity_register_err_password_too_short, Toast.LENGTH_SHORT)
+                }
+                ServerResponse.DUPLICATED -> {
+                    Toast.makeText(this, R.string.activity_register_err_duplicated, Toast.LENGTH_SHORT)
                         .show()
                     enableRegisterButton()
                 }
-            } catch (e: RegisterEndpointAccessErrorException) {
-                Toast.makeText(activity, R.string.activity_register_err_api_access_problem, Toast.LENGTH_LONG)
+                ServerResponse.INVALID_PERMISSION -> {
+                    Toast.makeText(this, R.string.activity_register_err_invalid_server_password, Toast.LENGTH_SHORT)
+                        .show()
+                    enableRegisterButton()
+                }
+                ServerResponse.INVALID_PARAM -> {
+                    Toast.makeText(this, R.string.activity_register_err_password_too_short, Toast.LENGTH_SHORT)
+                        .show()
+                    enableRegisterButton()
+                }
+                ServerResponse.API_ERROR -> {
+                    Toast.makeText(this, R.string.activity_register_err_api_access_problem, Toast.LENGTH_LONG)
                         .show()
 
-                enableRegisterButton()
+                    enableRegisterButton()
+                }
+                else -> {}
             }
-        }
+        })
     }
 
     private fun disableRegisterButton() {

@@ -14,7 +14,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import java.util.*
 
-class UserAdapterTest : UserEndpointTestAbstract() {
+class UserAdapterTest : UserRepositoryTestAbstract() {
     private lateinit var parentView: View
     private lateinit var userAdapter: UserAdapter
 

@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class RegisterActivityTest : RegisterEndpointTestAbstract() {
+class RegisterActivityTest : RegisterRepositoryTestAbstract() {
     companion object {
         const val EMAIL_ADDRESS = "example@example.com"
         const val PASSWORD = "password"

@@ -14,20 +14,24 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
+class ChatViewModelTest: ChatRepositoryTestAbstract() {
     companion object {
         const val MINUTE_IN_MILLISECONDS = 60 * 1000
     }
 
-    private lateinit var chatEndpointViewModel: ChatEndpointViewModel
+    private lateinit var chatViewModel: ChatViewModel
     private lateinit var latch: CountDownLatch
 
     @Before
     override fun setUp() {
         super.setUp()
 
-        chatEndpointViewModel = ChatEndpointViewModel(chatEndpoint)
+        chatViewModel = ChatViewModel(chatRepository)
         latch = CountDownLatch(1)
+
+        runBlocking(Dispatchers.Main) {
+            chatViewModel.data.value = HashMap()
+        }
     }
 
     @After
@@ -41,11 +45,11 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking {
-                chatEndpointViewModel.updateTask { chatEndpointViewModel.fetchAdditionalMessages() }
+                chatViewModel.updateTask { chatViewModel.fetchAdditionalMessages() }
             }
         }
 
-        assertThat(chatEndpointViewModel.status.value).isEqualTo(ServerEndpointStatus.ERROR)
+        assertThat(chatViewModel.status.value).isEqualTo(ServerEndpointStatus.ERROR)
     }
 
     @Test
@@ -54,14 +58,14 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking {
-                chatEndpointViewModel.updateTask { chatEndpointViewModel.fetchAdditionalMessages() }
+                chatViewModel.updateTask { chatViewModel.fetchAdditionalMessages() }
             }
         }
 
-        assertThat(chatEndpointViewModel.dataCache).hasSize(messages.size)
+        assertThat(chatViewModel.data.value).hasSize(messages.size)
 
         val messagesIds = messages.map { it.id }
-        chatEndpointViewModel.dataCache.forEach {
+        chatViewModel.data.value!!.forEach {
             assertThat(messagesIds).contains(it.key)
             assertThat(messagesIds).contains(it.value.id)
         }
@@ -69,22 +73,22 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
 
     @Test
     fun whenFetchAdditionalMessagesAndHasDataCachedThenGotDataUpdated() {
-        chatEndpointViewModel.dataCache.putAll(changeTestMessagesToMap())
+        chatViewModel.data.value!!.putAll(changeTestMessagesToMap())
         updateTestMessages()
 
         mockGetMessagesResponse()
 
         observeAndWaitForStatusChange {
             runBlocking {
-                chatEndpointViewModel.updateTask { chatEndpointViewModel.fetchAdditionalMessages() }
+                chatViewModel.updateTask { chatViewModel.fetchAdditionalMessages() }
             }
         }
 
-        assertThat(chatEndpointViewModel.dataCache).hasSize(messages.size)
+        assertThat(chatViewModel.data.value).hasSize(messages.size)
 
         val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS + MINUTE_IN_MILLISECONDS)
         val messagesIds = messages.map { it.id }
-        chatEndpointViewModel.dataCache.forEach {
+        chatViewModel.data.value!!.forEach {
             assertThat(messagesIds).contains(it.key)
             assertThat(messagesIds).contains(it.value.id)
             assertThat(it.value.lastUpdateDate).isAtLeast(yesterday)
@@ -97,14 +101,14 @@ class ChatEndpointViewModelTest: ChatEndpointTestAbstract() {
         }
 
         runBlocking(Dispatchers.Main) {
-            chatEndpointViewModel.status.observeForever(observer)
+            chatViewModel.status.observeForever(observer)
         }
 
         doAfterObserving()
         latch.await(2000, TimeUnit.MILLISECONDS)
 
         runBlocking(Dispatchers.Main) {
-            chatEndpointViewModel.status.removeObserver(observer)
+            chatViewModel.status.removeObserver(observer)
         }
     }
 

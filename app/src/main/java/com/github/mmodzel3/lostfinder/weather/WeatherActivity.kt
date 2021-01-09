@@ -38,14 +38,10 @@ class WeatherActivity: LoggedUserActivityAbstract() {
     private lateinit var handler: Handler
     private var checkLocationPresenceRunnable: Runnable? = null
 
-    private val weatherEndpoint: WeatherEndpoint by lazy {
-        WeatherEndpointFactory.createWeatherEndpoint()
-    }
-
-    private val weatherEndpointViewModel: WeatherEndpointViewModel by viewModels {
+    private val weatherViewModel: WeatherViewModel by viewModels {
         val weatherApiKey: String = applicationContext.getString(R.string.weather_api_key)
         val weatherUnits: String = applicationContext.getString(R.string.activity_weather_units)
-        WeatherEndpointViewModelFactory(weatherEndpoint, weatherApiKey, weatherUnits)
+        WeatherViewModelFactory(weatherApiKey, weatherUnits)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +59,8 @@ class WeatherActivity: LoggedUserActivityAbstract() {
         super.onResume()
 
         if (lastLocation != null) {
-            weatherEndpointViewModel.updateWeatherLocation(lastLocation!!.latitude, lastLocation!!.longitude)
-            weatherEndpointViewModel.runPeriodicFetchData()
+            weatherViewModel.updateWeatherLocation(lastLocation!!.latitude, lastLocation!!.longitude)
+            weatherViewModel.runPeriodicFetchData()
         } else {
             runDelayedLocationPresenceCheck()
         }
@@ -74,21 +70,21 @@ class WeatherActivity: LoggedUserActivityAbstract() {
         super.onDestroy()
         unbindFromCurrentLocationService()
         stopDelayedLocationPresenceCheck()
-        weatherEndpointViewModel.stopPeriodicFetchData()
+        weatherViewModel.stopPeriodicFetchData()
     }
 
     internal fun onLocationChange(latitude: Double, longitude: Double) {
-        weatherEndpointViewModel.updateWeatherLocation(latitude, longitude)
+        weatherViewModel.updateWeatherLocation(latitude, longitude)
 
         if (!fetchedFirstWeatherData) {
-            weatherEndpointViewModel.runPeriodicFetchData()
+            weatherViewModel.runPeriodicFetchData()
             fetchedFirstWeatherData = true
         }
     }
 
     private fun initViewPager() {
         viewPager = findViewById(R.id.activity_weather_pager)
-        viewPager.adapter = WeatherFragmentAdapter(this, weatherEndpointViewModel)
+        viewPager.adapter = WeatherFragmentAdapter(this)
     }
 
     private fun initTabLayout() {
@@ -152,7 +148,7 @@ class WeatherActivity: LoggedUserActivityAbstract() {
 
     private fun observeWeatherStatus() {
         val activity: Activity = this
-        weatherEndpointViewModel.weatherStatus.observe(this, {
+        weatherViewModel.weatherStatus.observe(this, {
             when(it!!) {
                 WeatherEndpointStatus.OK -> {}
                 WeatherEndpointStatus.FETCHING -> Toast.makeText(activity, R.string.activity_weather_msg_fetching,

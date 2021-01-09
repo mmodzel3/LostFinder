@@ -7,26 +7,23 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.LoggedUserActivityAbstract
+import com.github.mmodzel3.lostfinder.R
 import com.github.mmodzel3.lostfinder.notification.PushNotificationChatMessageConverter
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
-import kotlinx.coroutines.launch
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import java.util.*
 
-
 open class ChatActivity : LoggedUserActivityAbstract() {
-    private val chatEndpoint: ChatEndpoint by lazy {
-        ChatEndpointFactory.createChatEndpoint(TokenManager.getInstance(applicationContext))
+    private val tokenManager: TokenManager by lazy {
+        TokenManager.getInstance(applicationContext)
     }
 
-    private val chatEndpointViewModel: ChatEndpointViewModel by viewModels {
-        ChatEndpointViewModelFactory(chatEndpoint)
+    private val chatViewModel: ChatViewModel by viewModels {
+        ChatViewModelFactory(tokenManager)
     }
 
     private lateinit var recyclerView: RecyclerView
@@ -34,9 +31,8 @@ open class ChatActivity : LoggedUserActivityAbstract() {
     private lateinit var messageEditText: EditText
 
     private lateinit var chatAdapter: ChatAdapter
-    private lateinit var tokenManager: TokenManager
-    private lateinit var chatEndpointViewModelDataObserver: Observer<in MutableMap<String, ChatMessage>>
-    private lateinit var chatEndpointViewModelStatusObserver: Observer<ServerEndpointStatus>
+    private lateinit var chatViewModelDataObserver: Observer<in MutableMap<String, ChatMessage>>
+    private lateinit var chatViewModelStatusObserver: Observer<ServerEndpointStatus>
 
     private var firstFetchMessages = true
 
@@ -44,7 +40,6 @@ open class ChatActivity : LoggedUserActivityAbstract() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_chat)
-        tokenManager = TokenManager.getInstance(applicationContext)
 
         recyclerView = findViewById(R.id.activity_chat_rv_message_list)
         sendButton = findViewById(R.id.activity_chat_bt_send)
@@ -53,14 +48,14 @@ open class ChatActivity : LoggedUserActivityAbstract() {
         chatAdapter = ChatAdapter(tokenManager)
 
         initRecyclerView()
-        observeChatEndpointViewModel()
+        observechatViewModel()
         initSendButton()
     }
 
     override fun onResume() {
         super.onResume()
 
-        chatEndpointViewModel.observeUpdates()
+        chatViewModel.runUpdates()
         PushNotificationChatMessageConverter.getInstance().showNotifications = false
     }
 
@@ -68,14 +63,14 @@ open class ChatActivity : LoggedUserActivityAbstract() {
         super.onPause()
 
         PushNotificationChatMessageConverter.getInstance().showNotifications = true
-        chatEndpointViewModel.unObserveUpdates()
+        chatViewModel.stopUpdates()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        chatEndpointViewModel.messages.removeObserver(chatEndpointViewModelDataObserver)
-        chatEndpointViewModel.status.removeObserver(chatEndpointViewModelStatusObserver)
+        chatViewModel.messages.removeObserver(chatViewModelDataObserver)
+        chatViewModel.status.removeObserver(chatViewModelStatusObserver)
 
         PushNotificationChatMessageConverter.getInstance().showNotifications = true
     }
@@ -98,13 +93,13 @@ open class ChatActivity : LoggedUserActivityAbstract() {
         })
     }
 
-    private fun observeChatEndpointViewModel() {
-        observeChatEndpointViewModelData()
-        observeChatEndpointViewModelStatus()
+    private fun observechatViewModel() {
+        observechatViewModelData()
+        observechatViewModelStatus()
     }
 
-    private fun observeChatEndpointViewModelData() {
-        chatEndpointViewModelDataObserver = Observer {
+    private fun observechatViewModelData() {
+        chatViewModelDataObserver = Observer {
             chatAdapter.messages = it.values.toMutableList()
             chatAdapter.notifyDataSetChanged()
 
@@ -114,13 +109,13 @@ open class ChatActivity : LoggedUserActivityAbstract() {
             }
         }
 
-        chatEndpointViewModel.messages.observe(this, chatEndpointViewModelDataObserver)
+        chatViewModel.messages.observe(this, chatViewModelDataObserver)
     }
 
-    private fun observeChatEndpointViewModelStatus() {
+    private fun observechatViewModelStatus() {
         val activity: Activity = this
 
-        chatEndpointViewModelStatusObserver = Observer {
+        chatViewModelStatusObserver = Observer {
             if (it == ServerEndpointStatus.ERROR) {
                 Toast.makeText(activity, R.string.activity_chat_err_fetching_msg_api_access_problem,
                     Toast.LENGTH_LONG).show()
@@ -131,7 +126,7 @@ open class ChatActivity : LoggedUserActivityAbstract() {
             }
         }
 
-        chatEndpointViewModel.status.observe(this, chatEndpointViewModelStatusObserver)
+        chatViewModel.status.observe(this, chatViewModelStatusObserver)
     }
 
     private fun initSendButton() {
@@ -153,30 +148,27 @@ open class ChatActivity : LoggedUserActivityAbstract() {
     }
 
     private fun sendMessage(message: ChatUserMessage) {
-        val activity: Activity = this
-
-        lifecycleScope.launch {
-            try {
-                chatEndpoint.sendMessage(message)
+        chatViewModel.addMessage(message).observe(this, {
+            if (it == ServerResponse.OK) {
                 messageEditText.setText("")
                 recyclerView.smoothScrollToPosition(0)
-            } catch (e: ChatEndpointAccessErrorException) {
-                Toast.makeText(activity, R.string.activity_chat_err_sending_msg_api_access_problem,
+            } else if (it == ServerResponse.API_ERROR) {
+                Toast.makeText(this, R.string.activity_chat_err_sending_msg_api_access_problem,
                     Toast.LENGTH_SHORT).show()
-            } catch (e: InvalidTokenException) {
-                Toast.makeText(activity, R.string.activity_chat_err_sending_msg_invalid_token,
+            } else if (it == ServerResponse.INVALID_TOKEN) {
+                Toast.makeText(this, R.string.activity_chat_err_sending_msg_invalid_token,
                     Toast.LENGTH_LONG).show()
 
                 goToLoginActivity()
             }
 
             enableSendButton()
-        }
+        })
     }
 
     private fun onChatScrollToEnd() {
-        if (!chatEndpointViewModel.status.equals(ServerEndpointStatus.FETCHING)) {
-            chatEndpointViewModel.forceFetchAdditionalMessages()
+        if (!chatViewModel.status.equals(ServerEndpointStatus.FETCHING)) {
+            chatViewModel.forceFetchAdditionalMessages()
         }
     }
 

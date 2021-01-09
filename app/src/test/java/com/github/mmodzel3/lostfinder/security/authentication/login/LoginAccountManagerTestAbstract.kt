@@ -21,7 +21,7 @@ import org.powermock.reflect.Whitebox
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(Encryptor::class, Decryptor::class, AccountManager::class)
 @PowerMockIgnore("javax.net.ssl.*")
-abstract class LoginAccountManagerTestAbstract : LoginEndpointTestAbstract() {
+abstract class LoginAccountManagerTestAbstract : LoginRepositoryTestAbstract() {
     companion object {
         const val EMAIL_ADDRESS = "example@example.com"
         const val PASSWORD = "password"

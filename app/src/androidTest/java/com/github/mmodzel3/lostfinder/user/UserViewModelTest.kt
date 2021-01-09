@@ -14,20 +14,24 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class UserEndpointViewModelTest: UserEndpointTestAbstract() {
+class UserViewModelTest: UserRepositoryTestAbstract() {
     companion object {
         const val MINUTE_IN_MILLISECONDS = 60 * 1000
     }
 
-    private lateinit var userEndpointViewModel: UserEndpointViewModel
+    private lateinit var userViewModel: UserViewModel
     private lateinit var latch: CountDownLatch
 
     @Before
     override fun setUp() {
         super.setUp()
 
-        userEndpointViewModel = UserEndpointViewModel(userEndpoint)
+        userViewModel = UserViewModel(userRepository)
         latch = CountDownLatch(1)
+
+        runBlocking(Dispatchers.Main) {
+            userViewModel.data.value = HashMap()
+        }
     }
 
     @After
@@ -41,11 +45,11 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                userEndpointViewModel.updateTask { userEndpointViewModel.fetchAllData() }
+                userViewModel.updateTask { userViewModel.fetchAllData() }
             }
         }
 
-        assertThat(userEndpointViewModel.status.value).isEqualTo(ServerEndpointStatus.ERROR)
+        assertThat(userViewModel.status.value).isEqualTo(ServerEndpointStatus.ERROR)
     }
 
     @Test
@@ -54,14 +58,14 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                userEndpointViewModel.updateTask { userEndpointViewModel.fetchAllData() }
+                userViewModel.updateTask { userViewModel.fetchAllData() }
             }
         }
 
-        assertThat(userEndpointViewModel.dataCache).hasSize(users.size)
+        assertThat(userViewModel.data.value).hasSize(users.size)
 
         val usersIds = users.map { it.id }
-        userEndpointViewModel.dataCache.forEach {
+        userViewModel.data.value!!.forEach {
             assertThat(usersIds).contains(it.key)
             assertThat(usersIds).contains(it.value.id)
         }
@@ -72,20 +76,20 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
         val usersMap: MutableMap<String, User> = changeTestUsersToMap()
         val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS + MINUTE_IN_MILLISECONDS)
 
-        userEndpointViewModel.dataCache.putAll(usersMap)
+        userViewModel.data.value!!.putAll(usersMap)
         updateTestUsers()
         mockGetAllUsersResponse()
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                userEndpointViewModel.updateTask { userEndpointViewModel.fetchAllData() }
+                userViewModel.updateTask { userViewModel.fetchAllData() }
             }
         }
 
-        assertThat(userEndpointViewModel.dataCache).hasSize(users.size)
+        assertThat(userViewModel.data.value).hasSize(users.size)
 
         val usersIds = users.map { it.id }
-        userEndpointViewModel.users.value?.forEach {
+        userViewModel.users.value?.forEach {
             assertThat(usersIds).contains(it.key)
             assertThat(usersIds).contains(it.value.id)
             assertThat(it.value.lastUpdateDate).isAtLeast(yesterday)
@@ -98,14 +102,14 @@ class UserEndpointViewModelTest: UserEndpointTestAbstract() {
         }
 
         runBlocking(Dispatchers.Main) {
-            userEndpointViewModel.status.observeForever(observer)
+            userViewModel.status.observeForever(observer)
         }
 
         doAfterObserving()
         latch.await(2000, TimeUnit.MILLISECONDS)
 
         runBlocking(Dispatchers.Main) {
-            userEndpointViewModel.status.removeObserver(observer)
+            userViewModel.status.removeObserver(observer)
         }
     }
 

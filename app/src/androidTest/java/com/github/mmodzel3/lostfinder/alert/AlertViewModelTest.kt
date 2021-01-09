@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer
 import com.github.mmodzel3.lostfinder.server.ServerEndpointStatus
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -14,20 +15,24 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
+class AlertViewModelTest: AlertRepositoryTestAbstract() {
     companion object {
         const val MINUTE_IN_MILLISECONDS = 60 * 1000
     }
 
-    private lateinit var alertEndpointViewModel: AlertEndpointViewModel
+    private lateinit var alertViewModel: AlertViewModel
     private lateinit var latch: CountDownLatch
 
     @Before
     override fun setUp() {
         super.setUp()
 
-        alertEndpointViewModel = AlertEndpointViewModel(alertEndpoint)
+        alertViewModel = AlertViewModel(alertRepository)
         latch = CountDownLatch(1)
+
+        runBlocking(Dispatchers.Main) {
+            alertViewModel.data.value = HashMap()
+        }
     }
 
     @After
@@ -41,11 +46,11 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                alertEndpointViewModel.updateTask { alertEndpointViewModel.fetchAllData() }
+                alertViewModel.updateTask { alertViewModel.fetchAllData() }
             }
         }
 
-        assertThat(alertEndpointViewModel.status.value).isEqualTo(ServerEndpointStatus.ERROR)
+        assertThat(alertViewModel.status.value).isEqualTo(ServerEndpointStatus.ERROR)
     }
 
     @Test
@@ -54,14 +59,14 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                alertEndpointViewModel.updateTask { alertEndpointViewModel.fetchAllData() }
+                alertViewModel.updateTask { alertViewModel.fetchAllData() }
             }
         }
 
-        assertThat(alertEndpointViewModel.dataCache).hasSize(alerts.size)
+        assertThat(alertViewModel.data.value).hasSize(alerts.size)
 
         val alertsIds = alerts.map { it.id }
-        alertEndpointViewModel.dataCache.forEach {
+        alertViewModel.data.value!!.forEach {
             assertThat(alertsIds).contains(it.key)
             assertThat(alertsIds).contains(it.value.id)
         }
@@ -69,22 +74,22 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
 
     @Test
     fun whenUpdateDataAndHasDataCachedThenGotDataUpdated() {
-        alertEndpointViewModel.dataCache.putAll(changeTestAlertsToMap())
+        alertViewModel.data.value!!.putAll(changeTestAlertsToMap())
         updateTestAlerts()
 
         mockGetActiveAlertsResponse()
 
         observeAndWaitForStatusChange {
             runBlocking(Dispatchers.IO) {
-                alertEndpointViewModel.updateTask { alertEndpointViewModel.fetchAllData() }
+                alertViewModel.updateTask { alertViewModel.fetchAllData() }
             }
         }
 
-        assertThat(alertEndpointViewModel.dataCache).hasSize(alerts.size)
+        assertThat(alertViewModel.data.value).hasSize(alerts.size)
 
         val yesterday = Date(System.currentTimeMillis() - DAY_BEFORE_IN_MILLISECONDS + MINUTE_IN_MILLISECONDS)
         val alertsIds = alerts.map { it.id }
-        alertEndpointViewModel.dataCache.forEach {
+        alertViewModel.data.value!!.forEach {
             assertThat(alertsIds).contains(it.key)
             assertThat(alertsIds).contains(it.value.id)
             assertThat(it.value.lastUpdateDate).isAtLeast(yesterday)
@@ -97,14 +102,14 @@ class AlertEndpointViewModelTest: AlertEndpointTestAbstract() {
         }
 
         runBlocking(Dispatchers.Main) {
-            alertEndpointViewModel.status.observeForever(observer)
+            alertViewModel.status.observeForever(observer)
         }
 
         doAfterObserving()
         latch.await(2000, TimeUnit.MILLISECONDS)
 
         runBlocking(Dispatchers.Main) {
-            alertEndpointViewModel.status.removeObserver(observer)
+            alertViewModel.status.removeObserver(observer)
         }
     }
 

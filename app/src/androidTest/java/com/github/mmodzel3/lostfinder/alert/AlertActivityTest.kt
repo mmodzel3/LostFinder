@@ -23,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.TimeUnit
 
-class AlertActivityTest : AlertEndpointTestAbstract() {
+class AlertActivityTest : AlertRepositoryTestAbstract() {
     private lateinit var alertScenario: ActivityScenario<AlertActivity>
     private lateinit var decorView: View
 
@@ -109,7 +109,7 @@ class AlertActivityTest : AlertEndpointTestAbstract() {
     }
 
     @Test
-    fun whenEndAlertInRecyclerViewthatDoesNotExistThenErrorToastIsShown() {
+    fun whenEndAlertInRecyclerViewThatDoesNotExistThenErrorToastIsShown() {
         startActivityNormally()
 
         mockEndAlertNotFoundResponse()

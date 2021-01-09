@@ -3,21 +3,20 @@ package com.github.mmodzel3.lostfinder.server
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import kotlinx.coroutines.launch
 
-abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewModel() {
+abstract class ServerCachedViewModelAbstract<T : ServerEndpointData>
+    (serverCachedRepository: ServerCachedRepositoryAbstract<T>) : ServerViewModelAbstract() {
+
     companion object {
         const val UPDATE_INTERVALS = 60 * 1000L
         const val FAILURE_REDOWNLOAD_TIME = 40 * 1000L
     }
 
+    open val data: MutableLiveData<MutableMap<String, T>> = serverCachedRepository.data
     val status: MutableLiveData<ServerEndpointStatus> = MutableLiveData()
-    protected open val data: MutableLiveData<MutableMap<String, T>> = MutableLiveData()
-    internal val dataCache: MutableMap<String, T> = mutableMapOf()
-    internal val lock = Any()
     private val handler: Handler = Handler(Looper.getMainLooper())
     private var updateRunnable: Runnable? = null
 
@@ -26,16 +25,15 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         stopUpdates()
     }
 
-    abstract fun observeUpdates()
-    abstract fun unObserveUpdates()
+    abstract fun runUpdates()
 
-    protected fun stopUpdates() {
+    fun stopUpdates() {
         if (updateRunnable != null) {
             handler.removeCallbacks(updateRunnable!!)
         }
     }
 
-    protected fun runUpdate(fetchData: suspend () -> List<T>) {
+    protected fun runSingleUpdate(fetchData: suspend () -> List<T>) {
         stopUpdates()
         initUpdateTask(fetchData)
         handler.post(updateRunnable!!)
@@ -71,7 +69,7 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
         }
 
         try {
-            update(fetchData())
+            fetchData()
         } catch (e: InvalidTokenException) {
             status.postValue(ServerEndpointStatus.INVALID_TOKEN)
         } catch (e: ServerEndpointAccessErrorException) {
@@ -81,48 +79,5 @@ abstract class ServerEndpointViewModelAbstract<T : ServerEndpointData> : ViewMod
                 handler.postDelayed(updateRunnable!!, FAILURE_REDOWNLOAD_TIME)
             }
         }
-    }
-
-    internal open fun update(dataToUpdate: List<T>) {
-        synchronized(lock) {
-            if (updateCache(dataToUpdate)) {
-                data.postValue(dataCache)
-            }
-
-            if (status.value != ServerEndpointStatus.OK) {
-                status.postValue(ServerEndpointStatus.OK)
-            }
-        }
-    }
-
-    internal open fun updateCache(dataToUpdate: List<T>): Boolean {
-        var dataChanged = false
-
-        dataToUpdate.forEach {
-            val cachedElement: T? = dataCache[it.id]
-
-            if (cachedElement != null) {
-                val updateMade: Boolean = updateElementIfNecessary(cachedElement, it)
-                dataChanged = updateMade || dataChanged
-            } else {
-                dataChanged = true
-                addElement(it)
-            }
-        }
-
-        return dataChanged
-    }
-
-    private fun updateElementIfNecessary(cachedElement: T, elementToUpdate: T): Boolean {
-        return if (cachedElement.lastUpdateDate.before(elementToUpdate.lastUpdateDate)) {
-            dataCache[elementToUpdate.id] = elementToUpdate
-            true
-        } else {
-            false
-        }
-    }
-
-    private fun addElement(element: T) {
-        dataCache[element.id] = element
     }
 }

@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.github.mmodzel3.lostfinder.alert.AlertActivity
+import com.github.mmodzel3.lostfinder.alert.AlertRepository
 import com.github.mmodzel3.lostfinder.chat.ChatActivity
+import com.github.mmodzel3.lostfinder.chat.ChatRepository
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpointAccessErrorException
 import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
@@ -18,12 +21,13 @@ import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
 import com.github.mmodzel3.lostfinder.settings.SettingsActivity
 import com.github.mmodzel3.lostfinder.user.*
 import com.github.mmodzel3.lostfinder.weather.WeatherActivity
+import com.github.mmodzel3.lostfinder.weather.WeatherRepository
 import kotlinx.coroutines.launch
 
 abstract class LoggedUserActivityAbstract : AppCompatActivity() {
 
-    private val userEndpoint: UserEndpoint by lazy {
-        UserEndpointFactory.createUserEndpoint(TokenManager.getInstance(applicationContext))
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(TokenManager.getInstance(applicationContext))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,6 +127,11 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
+        AlertRepository.clear()
+        ChatRepository.clear()
+        UserRepository.clear()
+        WeatherRepository.clear()
+
         startActivity(intent)
         finish()
     }
@@ -153,7 +162,7 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
     private fun closeApplication() {
         lifecycleScope.launch {
             try {
-                userEndpoint.clearUserLocation()
+                userViewModel.clearUserLocation()
 
                 Toast.makeText(this@LoggedUserActivityAbstract,
                     R.string.activity_close_msg_success, Toast.LENGTH_LONG).show()
