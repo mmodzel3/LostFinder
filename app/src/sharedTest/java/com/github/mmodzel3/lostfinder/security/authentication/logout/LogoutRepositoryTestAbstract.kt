@@ -1,5 +1,6 @@
 package com.github.mmodzel3.lostfinder.security.authentication.logout
 
+import org.junit.After
 import org.junit.Before
 
 abstract class LogoutRepositoryTestAbstract : LogoutEndpointTestAbstract() {
@@ -9,5 +10,12 @@ abstract class LogoutRepositoryTestAbstract : LogoutEndpointTestAbstract() {
     override fun setUp() {
         super.setUp()
         logoutRepository = LogoutRepository.getInstance(null)
+    }
+
+    @After
+    override fun tearDown() {
+        super.tearDown()
+
+        LogoutRepository.clear()
     }
 }

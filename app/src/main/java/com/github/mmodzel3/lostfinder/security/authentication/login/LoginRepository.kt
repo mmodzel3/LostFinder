@@ -13,6 +13,10 @@ class LoginRepository private constructor() : ServerRepositoryAbstract() {
 
             return loginRepository!!
         }
+
+        fun clear() {
+            loginRepository = null
+        }
     }
 
     private val loginEndpoint: LoginEndpoint by lazy {
