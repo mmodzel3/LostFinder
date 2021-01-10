@@ -164,7 +164,11 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
                     Toast.makeText(this@LoggedUserActivityAbstract,
                         R.string.activity_close_msg_success, Toast.LENGTH_LONG).show()
 
-                    finishAffinity()
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        finishAndRemoveTask()
+                    } else {
+                        finishAffinity()
+                    }
                 }
                 ServerResponse.API_ERROR -> {
                     Toast.makeText(this@LoggedUserActivityAbstract,
