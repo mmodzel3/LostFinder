@@ -14,8 +14,8 @@ import com.github.mmodzel3.lostfinder.chat.ChatActivity
 import com.github.mmodzel3.lostfinder.chat.ChatRepository
 import com.github.mmodzel3.lostfinder.security.authentication.login.LoginActivity
 import com.github.mmodzel3.lostfinder.security.authentication.logout.LogoutEndpointAccessErrorException
-import com.github.mmodzel3.lostfinder.security.authentication.token.InvalidTokenException
 import com.github.mmodzel3.lostfinder.security.authentication.token.TokenManager
+import com.github.mmodzel3.lostfinder.server.ServerResponse
 import com.github.mmodzel3.lostfinder.settings.SettingsActivity
 import com.github.mmodzel3.lostfinder.user.*
 import com.github.mmodzel3.lostfinder.weather.WeatherActivity
@@ -158,28 +158,26 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
     }
 
     private fun closeApplication() {
-        lifecycleScope.launch {
-            try {
-                userViewModel.clearUserLocation()
+        userViewModel.clearUserLocation().observe(this, {
+            when(it) {
+                ServerResponse.OK -> {
+                    Toast.makeText(this@LoggedUserActivityAbstract,
+                        R.string.activity_close_msg_success, Toast.LENGTH_LONG).show()
 
-                Toast.makeText(this@LoggedUserActivityAbstract,
-                    R.string.activity_close_msg_success, Toast.LENGTH_LONG).show()
+                    finishAffinity()
+                }
+                ServerResponse.API_ERROR -> {
+                    Toast.makeText(this@LoggedUserActivityAbstract,
+                        R.string.activity_close_err_api_access_error, Toast.LENGTH_LONG).show()
+                }
+                ServerResponse.INVALID_TOKEN -> {
+                    Toast.makeText(this@LoggedUserActivityAbstract,
+                        R.string.activity_close_err_invalid_token, Toast.LENGTH_LONG).show()
 
-                val intent = Intent(Intent.ACTION_MAIN)
-                intent.addCategory(Intent.CATEGORY_HOME)
-                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-
-                finish()
-            } catch (e: UserEndpointAccessErrorException) {
-                Toast.makeText(this@LoggedUserActivityAbstract,
-                    R.string.activity_close_err_api_access_error, Toast.LENGTH_LONG).show()
-            } catch (e: InvalidTokenException) {
-                Toast.makeText(this@LoggedUserActivityAbstract,
-                    R.string.activity_close_err_invalid_token, Toast.LENGTH_LONG).show()
-
-                goToLoginActivity()
+                    goToLoginActivity()
+                }
+                else -> {}
             }
-        }
+        })
     }
 }
