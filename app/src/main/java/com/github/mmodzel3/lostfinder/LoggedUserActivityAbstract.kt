@@ -131,7 +131,7 @@ abstract class LoggedUserActivityAbstract : AppCompatActivity() {
         WeatherRepository.clear()
 
         startActivity(intent)
-        finish()
+        finishAffinity()
     }
 
     private fun logout() {
