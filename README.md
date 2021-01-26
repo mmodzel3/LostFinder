@@ -6,7 +6,7 @@
 * [Languages](#languages)
 * [Setup](#setup)
 
-# General info
+## General info
 This project is a mobile application for Android that can be used to help searching of missing people.
 Participants of searching can see location of each other on map.
 Map is powered by OpenStreetMap (osmdroid - https://github.com/osmdroid/osmdroid).
@@ -23,7 +23,7 @@ With appropriate permissions users' accounts can be managed from application.
 Server code for managing searching of missing people can be found on:
 https://github.com/mmodzel3/LostFinderServer
 
-# Technologies
+## Technologies
 * Android
 * Kotlin
 * Gradle
@@ -31,17 +31,17 @@ https://github.com/mmodzel3/LostFinderServer
 * PowerMock
 * Espresso
 
-# Used external services
+## Used external services
 * OpenStreetMap
 * OpenWeatherMap
 * Firebase Cloud Messaging
 
-# Languages
+## Languages
 Application supports languages:
 * English
 * Polish
 
-# Setup
+## Setup
 Before compiling project Weather API key has to be added to project.
 It can be generated on page: https://openweathermap.org/appid
 File "secrets.xml" inside "app/src/main/res/values" directory has to be modified with appropriate Weather API key.
