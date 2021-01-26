@@ -1,0 +1,627 @@
+<resources>
+    <string name="app_name">LostFinder</string>
+    <string name="location_notification_title">LostFinder</string>
+
+    <string name="activity_toolbar_map">
+        Map
+    </string>
+
+    <string name="activity_toolbar_chat">
+        Messages
+    </string>
+
+    <string name="activity_toolbar_alert">
+        Alerts
+    </string>
+
+    <string name="activity_toolbar_weather">
+        Weather
+    </string>
+
+    <string name="activity_toolbar_user">
+        User
+    </string>
+
+    <string name="activity_toolbar_settings">
+        Settings
+    </string>
+
+    <string name="location_notification_message">
+        Your location is used to track your movement.
+    </string>
+
+    <string name="location_notification_channel_name">
+        Location
+    </string>
+
+    <string name="location_notification_channel_description">
+        Location service notification
+    </string>
+
+    <string name="denied_location_permission_msg">
+        Without location permission application will not work properly.
+        Your location is needed to take part in lost finding.
+        Restart application and accept requested permission.
+    </string>
+
+    <string name="activity_map_current_location_marker_title">Me</string>
+    <string name="desc_center_map_user_location">Center map to user location</string>
+    <string name="activity_map_chosen_location_title">Chosen location</string>
+    <string name="email">Email address</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="server_password">Server password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="account_type">com.github.mmodzel3.lostfinder</string>
+    <string name="token_type">jwt</string>
+    <string name="err_login_access">Problem with connection to server.</string>
+    <string name="err_login_invalid_credentials">Invalid login or password. Try again.</string>
+    <string name="err_login_account_blocked">Your account is blocked. You cannot log in to your account.</string>
+    <string name="err_login">Problem while trying to login to server.</string>
+    <string name="err_fetching">Problem with fetching data. Try checking your connection.</string>
+    <string name="err_invalid_token">Token expired. Log in to the server once again.</string>
+    <string name="msg_fetching">Data is downloaded from the server.</string>
+
+    <string name="role_user">User</string>
+    <string name="role_manager">Manager</string>
+    <string name="role_owner">Owner</string>
+
+    <string name="location_err_endpoint_access">
+        Problem with sending location to server. Check your internet connection.
+    </string>
+
+    <string name="location_err_location_sharing_unavailable">
+        Sharing current location is unavailable.
+        Turn on localization with GPS in your mobile phone and enable sharing location in application\'s settings.
+    </string>
+
+    <string name="activity_chat_enter_message">
+        Enter message
+    </string>
+
+    <string name="activity_chat_send">
+        Send
+    </string>
+
+    <string name="activity_chat_msg_example_name">
+        Bob
+    </string>
+
+    <string name="activity_chat_msg_example_text">
+        Hello, how are you?
+    </string>
+
+    <string name="activity_chat_msg_example_time">
+        17:45
+    </string>
+
+    <string name="activity_chat_msg_me">
+        Me
+    </string>
+
+    <string name="activity_chat_err_sending_msg_api_access_problem">
+        Problem with sending message. Check your internet connection.
+    </string>
+
+    <string name="activity_chat_err_sending_msg_invalid_token">
+        Problem with sending message. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_chat_err_fetching_msg_api_access_problem">
+        Problem with fetching messages. Check your internet connection.
+    </string>
+
+    <string name="activity_chat_err_fetching_msg_invalid_token">
+        Problem with fetching messages. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_alert_info_user_name_example_text">
+        Bob
+    </string>
+
+    <string name="activity_alert_info_title_example_text">
+        Help
+    </string>
+
+    <string name="activity_alert_info_example_time_text">
+        17:45
+    </string>
+
+    <string name="activity_alert_info_location_example_text">
+        (51.0, 52.3)
+    </string>
+
+    <string name="activity_alert_info_range_example_text">
+        180 m
+    </string>
+
+    <string name="activity_alert_info_distance_text">
+        m
+    </string>
+
+    <string name="activity_alert_info_description_example_text">
+        Long text description that contains example information. It is for show purpose.
+    </string>
+
+    <string name="activity_alert_info_bt_end_alert_description">
+        End alert
+    </string>
+
+    <string name="activity_alert_err_fetching_alerts_api_access_problem">
+        Problem with fetching alerts. Check your internet connection.
+    </string>
+
+    <string name="activity_alert_err_fetching_alerts_invalid_token">
+        Problem with fetching alerts. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_alert_err_end_alert_invalid_token">
+        Problem with ending alert. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_alert_err_end_alert_api_access_problem">
+        Problem with ending alert. Check your internet connection.
+    </string>
+
+    <string name="activity_alert_err_end_alert_invalid_permission">
+        Problem with ending alert. You do not have permission to end it.
+    </string>
+
+    <string name="activity_alert_err_end_alert_not_found">
+        Problem with ending alert. Alert does not exist.
+    </string>
+
+    <string-array name="activity_alert_add_predefined_user">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+    </string-array>
+
+    <string-array name="activity_alert_add_predefined_manager">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+        <item>Search!</item>
+        <item>Gather!</item>
+    </string-array>
+
+    <string-array name="activity_alert_add_predefined_owner">
+        <item>Help!</item>
+        <item>Animal!</item>
+        <item>Found something!</item>
+        <item>Found lost!</item>
+        <item>Found witness!</item>
+        <item>Lost!</item>
+        <item>Search!</item>
+        <item>Gather!</item>
+    </string-array>
+
+    <string name="activity_alert_add_title">
+        Title
+    </string>
+
+    <string name="activity_alert_add_title_hint">
+        Enter title of alert.
+    </string>
+
+    <string name="activity_alert_add_description">
+        Description
+    </string>
+
+    <string name="activity_alert_add_description_hint">
+        Enter description of alert or leave blank.
+    </string>
+
+    <string name="activity_alert_add_range">
+        Range
+    </string>
+
+    <string name="activity_alert_add_range_hint">
+        180
+    </string>
+
+    <string name="activity_alert_add_distance">
+        m
+    </string>
+
+    <string name="activity_alert_add_location">
+        Location
+    </string>
+
+    <string name="activity_alert_add_longitude">
+        Longitude
+    </string>
+
+    <string name="activity_alert_add_latitude">
+        Latitude
+    </string>
+
+    <string name="activity_alert_add_longitude_hint">
+        52.12
+    </string>
+
+    <string name="activity_alert_add_latitude_hint">
+        21.55
+    </string>
+
+    <string name="activity_alert_add_choose_location_button_desc">
+        Choose location on map
+    </string>
+
+    <string name="activity_alert_add_add_button">
+        Send
+    </string>
+
+    <string name="activity_alert_add_err_add_alert_api_access_problem">
+        Problem with sending alert. Check your internet connection.
+    </string>
+
+    <string name="activity_alert_add_err_add_alert_invalid_token">
+        Problem with sending alert. Your session is expired. Log in to account once again.
+    </string>
+
+    <string name="activity_alert_add_msg_add_alert_success">
+        Alert was sent to server.
+    </string>
+
+    <string name="activity_alert_add_err_add_alert_invalid_permission">
+        You do not have permission to send alert.
+    </string>
+
+    <string name="activity_map_add_alert_desc">
+        Add alert
+    </string>
+
+    <string name="activity_choose_location_map_confirm_desc">
+        Confirm location
+    </string>
+
+    <string name="activity_choose_location_map_cancel_desc">
+        Cancel
+    </string>
+
+    <string name="activity_choose_location_map_info_set">
+        Tap on the map to choose location and click confirm button.
+    </string>
+
+    <string name="activity_choose_location_map_default_location_accuracy_desc">
+        (default current location\'s accuracy)
+    </string>
+
+    <string name="activity_choose_location_map_default_accuracy_desc">
+        (default current location)
+    </string>
+
+    <string name="chat_message_notification_channel_name">
+        Chat messages
+    </string>
+
+    <string name="chat_message_notification_channel_description">
+        Chat messages notification description
+    </string>
+
+    <string name="alert_notification_channel_name">
+        Alerts
+    </string>
+
+    <string name="alert_notification_channel_description">
+        Alerts notification description
+    </string>
+
+    <string name="alert_notification_start_alert_title_prefix">
+        Start:
+    </string>
+
+    <string name="alert_notification_end_alert_title_prefix">
+        End:
+    </string>
+
+    <string name="alert_notification_title_from">
+        from
+    </string>
+
+    <string name="chat_message_notification_title_prefix">
+        Message from
+    </string>
+
+    <string name="activity_register_err_api_access_problem">
+        Problem with sending register request. Check your internet connection.
+    </string>
+
+    <string name="activity_register_msg_success">
+        Account registered.
+    </string>
+
+    <string name="activity_register_err_blank_fields">
+        All user data fields should be filled.
+    </string>
+
+    <string name="activity_register_err_invalid_email">
+        Incorrect email format. Try once again.
+    </string>
+
+    <string name="activity_register_err_duplicated">
+        Email address or username is reserved. Account exists with specific credentials.
+    </string>
+
+    <string name="activity_register_err_invalid_server_password">
+        Invalid server password. Cannot register account.
+    </string>
+
+    <string name="activity_register_err_password_too_short">
+        Password is too short. It should contain minimum eight characters.
+    </string>
+
+    <string name="activity_weather_err_api_access_error">
+        Problem with fetching weather data. Check your connection.
+    </string>
+
+    <string name="activity_weather_msg_fetching">
+        Fetching weather data.
+    </string>
+
+    <string name="activity_weather_msg_waiting">
+        Weather data will be fetch when current location will be updated.
+        If location with GPS is disabled, turn it on to get weather data based on current location.
+    </string>
+
+    <string name="activity_weather_units">metric</string>
+    <string name="fragment_weather_now">Now</string>
+    <string name="fragment_weather_next_hour">Next hour</string>
+    <string name="fragment_weather_today">Today</string>
+    <string name="fragment_weather_tomorrow">Tomorrow</string>
+    <string name="fragment_weather_now_full">Now</string>
+    <string name="fragment_weather_next_hour_full">Next hour</string>
+    <string name="fragment_weather_today_full">Today</string>
+    <string name="fragment_weather_tomorrow_full">Tomorrow</string>
+    <string name="fragment_weather_temperature">Temperature:</string>
+    <string name="fragment_weather_temperature_example">20</string>
+    <string name="fragment_weather_temperature_postfix">°C</string>
+    <string name="fragment_weather_pressure">Pressure:</string>
+    <string name="fragment_weather_pressure_example">1024</string>
+    <string name="fragment_weather_pressure_postfix">hPa</string>
+    <string name="fragment_weather_humidity">Humidity:</string>
+    <string name="fragment_weather_humidity_example">30</string>
+    <string name="fragment_weather_humidity_postfix">%</string>
+    <string name="fragment_weather_clouds">Clouds:</string>
+    <string name="fragment_weather_clouds_example">0</string>
+    <string name="fragment_weather_clouds_postfix">%</string>
+    <string name="fragment_weather_visibility">Visibility:</string>
+    <string name="fragment_weather_visibility_example">10000</string>
+    <string name="fragment_weather_visibility_postfix">m</string>
+    <string name="fragment_weather_wind_speed">Wind speed:</string>
+    <string name="fragment_weather_wind_speed_example">1000</string>
+    <string name="fragment_weather_wind_speed_postfix">m/s</string>
+    <string name="fragment_weather_wind_direction">Wind direction:</string>
+    <string name="fragment_weather_wind_direction_example">270</string>
+    <string name="fragment_weather_wind_direction_postfix">°</string>
+    <string name="fragment_weather_blank">x</string>
+    <string name="fragment_weather_no_data">No data</string>
+    <string name="fragment_weather_thunderstorm_with_light_rain">Thunderstorm with light rain</string>
+    <string name="fragment_weather_thunderstorm_with_rain">Thunderstorm with rain</string>
+    <string name="fragment_weather_thunderstorm_with_heavy_rain">Thunderstorm with heavy rain</string>
+    <string name="fragment_weather_light_thunderstorm">Light thunderstorm</string>
+    <string name="fragment_weather_thunderstorm">Thunderstorm</string>
+    <string name="fragment_weather_heavy_thunderstorm">Heavy thunderstorm</string>
+    <string name="fragment_weather_ragged_thunderstorm">Ragged thunderstorm</string>
+    <string name="fragment_weather_thunderstorm_with_light_drizzle">Thunderstorm with light drizzle</string>
+    <string name="fragment_weather_thunderstorm_with_drizzle">Thunderstorm with drizzle</string>
+    <string name="fragment_weather_thunderstorm_with_heavy_drizzle">Thunderstorm with heavy drizzle</string>
+    <string name="fragment_weather_light_intensity_drizzle">light_intensity_drizzle</string>
+    <string name="fragment_weather_drizzle">light_intensity_drizzle</string>
+    <string name="fragment_weather_heavy_intensity_drizzle">heavy intensity drizzle</string>
+    <string name="fragment_weather_light_intensity_drizzle_rain">light intensity drizzle rain</string>
+    <string name="fragment_weather_drizzle_rain">drizzle rain</string>
+    <string name="fragment_weather_heavy_intensity_drizzle_rain">heavy intensity drizzle rain</string>
+    <string name="fragment_weather_shower_rain_and_drizzle">shower rain and drizzle</string>
+    <string name="fragment_weather_heavy_shower_rain_and_drizzle">heavy shower rain and drizzle</string>
+    <string name="fragment_weather_shower_drizzle">shower drizzle</string>
+    <string name="fragment_weather_light_rain">light rain</string>
+    <string name="fragment_weather_moderate_rain">moderate rain</string>
+    <string name="fragment_weather_heavy_intensity_rain">heavy intensity rain</string>
+    <string name="fragment_weather_very_heavy_rain">very heavy rain</string>
+    <string name="fragment_weather_extreme_rain">extreme rain</string>
+    <string name="fragment_weather_freezing_rain">freezing rain</string>
+    <string name="fragment_weather_light_intensity_shower_rain">light intensity shower rain</string>
+    <string name="fragment_weather_shower_rain">shower rain</string>
+    <string name="fragment_weather_heavy_intensity_shower_rain">heavy intensity shower rain</string>
+    <string name="fragment_weather_ragged_shower_rain">ragged shower rain</string>
+    <string name="fragment_weather_light_snow">Light snow</string>
+    <string name="fragment_weather_snow">Snow </string>
+    <string name="fragment_weather_heavy_snow">Heavy snow</string>
+    <string name="fragment_weather_sleet">Sleet</string>
+    <string name="fragment_weather_light_shower_sleet">Light shower sleet</string>
+    <string name="fragment_weather_shower_sleet">Shower sleet</string>
+    <string name="fragment_weather_light_rain_and_snow">Light rain and snow</string>
+    <string name="fragment_weather_rain_and_snow">Rain and snow</string>
+    <string name="fragment_weather_light_shower_snow">Light shower snow</string>
+    <string name="fragment_weather_shower_snow">Shower snow</string>
+    <string name="fragment_weather_heavy_shower_snow">Heavy shower snow</string>
+    <string name="fragment_weather_mist">Mist</string>
+    <string name="fragment_weather_smoke">Smoke</string>
+    <string name="fragment_weather_haze">Haze</string>
+    <string name="fragment_weather_sand_dust_whirls">Sand dust whirls</string>
+    <string name="fragment_weather_fog">Fog</string>
+    <string name="fragment_weather_sand">Sand</string>
+    <string name="fragment_weather_dust">Dust</string>
+    <string name="fragment_weather_volcanic_ash">Volcanic ash</string>
+    <string name="fragment_weather_squalls">Squalls</string>
+    <string name="fragment_weather_tornado">Tornado</string>
+    <string name="fragment_weather_clear_sky">Clear sky</string>
+    <string name="fragment_weather_few_clouds">Few clouds</string>
+    <string name="fragment_weather_scattered_clouds">Scattered clouds</string>
+    <string name="fragment_weather_broken_clouds">Broken clouds</string>
+    <string name="fragment_weather_overcast_clouds">Overcast clouds</string>
+    <string name="fragment_weather_unknown">Unknown</string>
+    <string name="activity_toolbar_logout">Logout</string>
+    <string name="activity_toolbar_close">Close</string>
+    <string name="activity_logout_msg_success">Logout completed.</string>
+    <string name="activity_logout_msg_partial_success">
+        You have been logged out.
+        Your session is expired.
+        Your current location may still be kept on the server.
+        If you want to clear it. Log in and log out once again.
+    </string>
+    <string name="activity_logout_err_api_access_error">
+        Problem with sending logout request to server. Check your connection.
+    </string>
+    <string name="activity_close_msg_success">Application has closed successfully</string>
+    <string name="activity_close_err_api_access_error">
+        Problem with correct close of application.
+        Problem with sending location clear request to server.
+        Check your connection.
+    </string>
+    <string name="activity_close_err_invalid_token">
+        Problem with correct close of application.
+        Problem with sending location clear request to server.
+        Your session is expired. Log in once again to clear your current location on server.
+    </string>
+    <string name="activity_user_change_password_old_password">Old password</string>
+    <string name="activity_user_change_password_new_password">New password</string>
+    <string name="activity_user_change_password_repeated_new_password">Repeated new password</string>
+    <string name="activity_user_change_password_change_password">Change password</string>
+    <string name="activity_user_change_password_err_api_access_error">
+        Problem with sending change password request to server. Check your connection.
+    </string>
+    <string name="activity_user_change_password_err_invalid_token">
+        Problem with sending change password request to server. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_user_change_password_msg_success">
+        Account password changed.
+    </string>
+    <string name="activity_user_change_password_err_not_same_new_passwords">
+        New password and repeated password are not same.
+    </string>
+    <string name="activity_user_change_password_err_too_short_password">
+        New password should have minimum eight characters.
+    </string>
+    <string name="activity_user_change_password_err_invalid_old_password">
+        Invalid old password for account. Try again.
+    </string>
+    <string name="activity_map_navigation_drawer_open">Open</string>
+    <string name="activity_map_navigation_drawer_close">Close</string>
+    <string name="activity_map_navigation_drawer_alerts_title">
+        Alerts
+    </string>
+    <string name="activity_map_navigation_drawer_users_title">
+        Users
+    </string>
+    <string name="activity_user_info_user_desc">
+        User
+    </string>
+    <string name="activity_user_info_example_username">
+        Bob
+    </string>
+    <string name="activity_user_info_example_email">
+        example@example.com
+    </string>
+    <string name="activity_user_info_role">
+        Role:
+    </string>
+    <string name="activity_user_info_example_role">
+        Owner
+    </string>
+    <string name="activity_user_info_last_login">
+        Last login:
+    </string>
+    <string name="activity_user_info_example_last_login">
+        2020-12-12 15:16:00
+    </string>
+    <string name="activity_user_info_last_login_no_information">
+        No information
+    </string>
+    <string name="activity_user_info_increase_permissions_desc">
+        Increase permissions
+    </string>
+    <string name="activity_user_info_decrease_permissions_desc">
+        Decrease permissions
+    </string>
+    <string name="activity_user_info_block_account_desc">
+        Block account
+    </string>
+    <string name="activity_user_info_unblock_account_desc">
+        Unblock account
+    </string>
+    <string name="activity_user_info_delete_account_desc">
+        Delete account
+    </string>
+    <string name="activity_user_msg_success">
+        Account updated.
+    </string>
+    <string name="activity_user_err_api_access_problem">
+        Problem with sending account update request to server. Check your connection.
+    </string>
+    <string name="activity_user_err_invalid_token">
+        Problem with sending account update request to server. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_user_err_not_found">
+        Problem with account updating. Account for your request does not exist.
+    </string>
+    <string name="activity_user_err_invalid_permission">
+        Problem with account updating. You do not have required permissions to send request.
+    </string>
+    <string name="activity_user_err_fetching_api_access_error">
+        Problem with fetching users data. Check your connection.
+    </string>
+    <string name="activity_user_err_fetching_invalid_token">
+        Problem with fetching users data. Your session is expired. Log in once again.
+    </string>
+    <string name="yes">
+        Yes
+    </string>
+    <string name="no">
+        No
+    </string>
+    <string name="activity_settings_user_desc">
+        User
+    </string>
+    <string name="activity_settings_username">
+        Username:
+    </string>
+    <string name="activity_settings_username_example">
+        Bob
+    </string>
+    <string name="activity_settings_email">
+        Email:
+    </string>
+    <string name="activity_settings_email_example">
+        example@example.com
+    </string>
+    <string name="activity_settings_sharing_location">
+        Sharing location
+    </string>
+    <string name="activity_settings_change_password">
+        Change password
+    </string>
+    <string name="activity_settings_delete_account">
+        Delete account
+    </string>
+    <string name="activity_settings_msg_delete_account_are_you_sure">
+        Are you sure to delete account?
+    </string>
+    <string name="activity_settings_msg_delete_account_success">
+        Account is deleted.
+    </string>
+    <string name="activity_settings_err_delete_account_api_access_problem">
+        Problem with deleting account. Check your connection.
+    </string>
+    <string name="activity_settings_err_delete_account_invalid_token">
+        Problem with deleting account. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_api_access_problem">
+        Problem with your location on server. Check your connection.
+    </string>
+    <string name="activity_settings_err_stop_sharing_location_invalid_token">
+        Problem with removing your location on server. Your session is expired. Log in once again.
+    </string>
+    <string name="activity_splash_screen_logo_desc">
+        Lost finder logo
+    </string>
+</resources>

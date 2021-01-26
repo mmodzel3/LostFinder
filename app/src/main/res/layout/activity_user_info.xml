@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_user"
+            android:contentDescription="@string/activity_user_info_user_desc" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/activity_user_info_tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_user_info_example_username"
+                android:textStyle="bold"
+                android:drawablePadding="4dp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/activity_user_info_tv_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_user_info_example_email"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_user_info_role"
+                    android:textColor="@color/dark_gray" />
+
+                <TextView
+                    android:id="@+id/activity_user_info_tv_role"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/activity_user_info_example_role"
+                    android:textColor="@color/dark_gray" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_user_info_last_login"
+                    android:textColor="@color/dark_gray" />
+
+                <TextView
+                    android:id="@+id/activity_user_info_tv_last_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/activity_user_info_example_last_login"
+                    android:textColor="@color/dark_gray" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/activity_user_info_bt_increase_permissions_role"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_circular_button"
+                android:contentDescription="@string/activity_user_info_increase_permissions_desc"
+                android:enabled="false"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_up"
+                app:layout_constraintBottom_toTopOf="@+id/activity_choose_location_map_cancel"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/activity_user_info_bt_decrease_permissions_role"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_circular_button"
+                android:contentDescription="@string/activity_user_info_decrease_permissions_desc"
+                android:enabled="false"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                android:src="@drawable/ic_down"
+                app:layout_constraintBottom_toTopOf="@+id/activity_choose_location_map_cancel"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/activity_user_info_bt_block_account"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_circular_button"
+                android:contentDescription="@string/activity_user_info_block_account_desc"
+                android:enabled="false"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_block"
+                app:layout_constraintBottom_toTopOf="@+id/activity_choose_location_map_cancel"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/activity_user_info_bt_unblock_account"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_circular_button"
+                android:contentDescription="@string/activity_user_info_unblock_account_desc"
+                android:enabled="false"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                android:src="@drawable/ic_redo"
+                app:layout_constraintBottom_toTopOf="@+id/activity_choose_location_map_cancel"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageButton
+                android:id="@+id/activity_user_info_bt_delete_account"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_margin="2dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_circular_button"
+                android:contentDescription="@string/activity_user_info_delete_account_desc"
+                android:enabled="false"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintBottom_toTopOf="@+id/activity_choose_location_map_cancel"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray" />
+
+</LinearLayout>
